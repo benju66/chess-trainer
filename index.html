@@ -44,12 +44,6 @@
         }
 
         /* Menu */
-        .menu-screen {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
         .section-title {
             font-size: 0.75rem;
             text-transform: uppercase;
@@ -57,6 +51,26 @@
             color: #64748b;
             margin-top: 16px;
             margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .edit-mode-toggle {
+            font-size: 0.7rem;
+            background: rgba(251, 191, 36, 0.1);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            color: #fbbf24;
+            padding: 4px 10px;
+            border-radius: 12px;
+            cursor: pointer;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+
+        .edit-mode-toggle.active {
+            background: rgba(251, 191, 36, 0.2);
+            border-color: #fbbf24;
         }
 
         .opening-card {
@@ -64,6 +78,7 @@
             border: 1px solid #334155;
             border-radius: 12px;
             padding: 16px;
+            margin-bottom: 12px;
             cursor: pointer;
             transition: all 0.2s;
             position: relative;
@@ -78,6 +93,7 @@
         .opening-card h3 {
             font-size: 1.125rem;
             margin-bottom: 4px;
+            padding-right: 70px;
         }
 
         .opening-card p {
@@ -111,27 +127,39 @@
             color: #e2e8f0;
         }
 
-        .delete-btn {
+        .card-actions {
             position: absolute;
             top: 12px;
             right: 12px;
-            background: rgba(239, 68, 68, 0.2);
+            display: none;
+            gap: 6px;
+        }
+
+        .card-actions.visible {
+            display: flex;
+        }
+
+        .card-action-btn {
+            background: rgba(71, 85, 105, 0.8);
             border: none;
-            color: #f87171;
+            color: #cbd5e1;
             width: 28px;
             height: 28px;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 1rem;
-            display: none;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .opening-card.custom .delete-btn {
-            display: block;
+        .card-action-btn:hover {
+            background: rgba(100, 116, 139, 0.9);
         }
 
-        .delete-btn:hover {
+        .card-action-btn.delete:hover {
             background: rgba(239, 68, 68, 0.4);
+            color: #f87171;
         }
 
         /* Screens */
@@ -487,11 +515,11 @@
             cursor: pointer;
             transition: all 0.2s;
             text-align: center;
+            border: none;
         }
 
         .btn-primary {
             background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-            border: none;
             color: white;
         }
 
@@ -509,10 +537,7 @@
             background: rgba(71, 85, 105, 0.8);
         }
 
-        /* ============================================ */
-        /* OPENING BUILDER STYLES */
-        /* ============================================ */
-
+        /* Builder */
         .builder-section {
             background: rgba(30, 41, 59, 0.5);
             border: 1px solid #334155;
@@ -551,15 +576,9 @@
         }
 
         .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
+        .form-group textarea:focus {
             outline: none;
             border-color: #fbbf24;
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 60px;
         }
 
         .color-toggle {
@@ -599,14 +618,13 @@
             border-color: #94a3b8;
         }
 
-        /* Move Builder */
         .move-list {
             background: #1e293b;
             border-radius: 8px;
             padding: 12px;
             margin-bottom: 12px;
-            min-height: 100px;
-            max-height: 300px;
+            min-height: 80px;
+            max-height: 250px;
             overflow-y: auto;
         }
 
@@ -627,7 +645,7 @@
         .move-item .move-number {
             color: #64748b;
             font-size: 0.8rem;
-            min-width: 30px;
+            min-width: 24px;
         }
 
         .move-item .move-notation {
@@ -636,29 +654,16 @@
             flex: 1;
         }
 
-        .move-item .move-notation.white {
-            color: #fbbf24;
-        }
-
-        .move-item .move-notation.black {
-            color: #cbd5e1;
-        }
-
-        .move-item .move-explanation {
-            font-size: 0.75rem;
-            color: #64748b;
-            flex: 2;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+        .move-item .move-notation.white { color: #fbbf24; }
+        .move-item .move-notation.black { color: #cbd5e1; }
 
         .move-item .delete-move {
             background: none;
             border: none;
             color: #64748b;
             cursor: pointer;
-            padding: 4px;
+            padding: 4px 8px;
+            font-size: 1rem;
         }
 
         .move-item .delete-move:hover {
@@ -673,7 +678,7 @@
 
         .add-move-form input {
             flex: 1;
-            min-width: 100px;
+            min-width: 80px;
             padding: 10px;
             background: #1e293b;
             border: 1px solid #334155;
@@ -684,7 +689,7 @@
 
         .add-move-form .explanation-input {
             flex: 2;
-            min-width: 150px;
+            min-width: 120px;
             font-family: inherit;
         }
 
@@ -698,50 +703,12 @@
             cursor: pointer;
         }
 
-        .add-move-form button:hover {
-            background: #16a34a;
-        }
-
-        .branch-indicator {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 12px;
-            background: rgba(168, 85, 247, 0.1);
-            border: 1px solid rgba(168, 85, 247, 0.3);
-            border-radius: 6px;
-            margin-bottom: 12px;
-            font-size: 0.8rem;
-            color: #c084fc;
-        }
-
-        .branch-controls {
-            display: flex;
-            gap: 8px;
-            margin-top: 12px;
-        }
-
-        .branch-btn {
-            padding: 8px 12px;
-            background: rgba(168, 85, 247, 0.1);
-            border: 1px solid rgba(168, 85, 247, 0.3);
-            border-radius: 6px;
-            color: #c084fc;
-            font-size: 0.8rem;
-            cursor: pointer;
-        }
-
-        .branch-btn:hover {
-            background: rgba(168, 85, 247, 0.2);
-        }
-
         .help-text {
             font-size: 0.75rem;
             color: #64748b;
             margin-top: 8px;
         }
 
-        /* Tabs */
         .tabs {
             display: flex;
             gap: 8px;
@@ -758,7 +725,6 @@
             font-weight: 600;
             cursor: pointer;
             text-align: center;
-            transition: all 0.2s;
         }
 
         .tab.active {
@@ -767,17 +733,16 @@
             color: #fbbf24;
         }
 
-        /* JSON View */
         .json-preview {
             background: #0f172a;
             border-radius: 8px;
             padding: 12px;
             font-family: monospace;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             overflow-x: auto;
             white-space: pre-wrap;
             word-break: break-all;
-            max-height: 300px;
+            max-height: 200px;
             overflow-y: auto;
         }
 
@@ -792,19 +757,41 @@
             font-size: 0.8rem;
         }
 
-        .copy-btn:hover {
-            background: #64748b;
+        /* Reset confirmation */
+        .reset-bar {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
         }
 
-        /* Responsive */
-        @media (min-width: 640px) {
-            .header h1 {
-                font-size: 2rem;
-            }
+        .reset-bar button {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
 
-            .choices-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
+        .reset-bar .reset-confirm {
+            background: #ef4444;
+            color: white;
+        }
+
+        .reset-bar .reset-cancel {
+            background: #475569;
+            color: white;
+            margin-left: 8px;
+        }
+
+        @media (min-width: 640px) {
+            .header h1 { font-size: 2rem; }
+            .choices-grid { grid-template-columns: repeat(3, 1fr); }
         }
     </style>
 </head>
@@ -821,6 +808,14 @@
 
             <div class="btn-row">
                 <button class="btn btn-primary" onclick="showBuilder()">+ Create Opening</button>
+            </div>
+
+            <div class="reset-bar" id="resetBar" style="display: none;">
+                <span>Reset all openings to defaults?</span>
+                <div>
+                    <button class="reset-confirm" onclick="resetToDefaults()">Reset</button>
+                    <button class="reset-cancel" onclick="hideResetBar()">Cancel</button>
+                </div>
             </div>
         </div>
 
@@ -843,7 +838,7 @@
 
             <div class="progress-dots" id="progressDots"></div>
 
-            <div class="tip-box" id="tipBox">
+            <div class="tip-box">
                 <span>💡</span>
                 <span id="tipText">Click on moves to explore the line</span>
             </div>
@@ -855,15 +850,14 @@
 
             <div class="header">
                 <h1>🛠️ Opening Builder</h1>
-                <p>Create your own opening repertoire</p>
+                <p id="builderSubtitle">Create your own opening repertoire</p>
             </div>
 
             <div class="tabs">
                 <button class="tab active" onclick="switchTab('visual')" id="tabVisual">Visual Builder</button>
-                <button class="tab" onclick="switchTab('json')" id="tabJson">Import JSON</button>
+                <button class="tab" onclick="switchTab('json')" id="tabJson">Import/Export</button>
             </div>
 
-            <!-- Visual Builder Tab -->
             <div id="visualBuilder">
                 <div class="builder-section">
                     <h3>Opening Info</h3>
@@ -886,49 +880,36 @@
 
                 <div class="builder-section">
                     <h3>Build the Line</h3>
-                    
-                    <div id="branchIndicator" class="branch-indicator" style="display: none;">
-                        📍 Currently editing: <span id="branchPath">Main Line</span>
-                    </div>
-
                     <div class="move-list" id="moveList">
-                        <p style="color: #64748b; text-align: center; padding: 20px;">Add moves below to build your opening</p>
+                        <p style="color: #64748b; text-align: center; padding: 16px;">Add moves below</p>
                     </div>
 
                     <div class="add-move-form">
-                        <input type="text" id="newMove" placeholder="e.g., e4 or Nf6">
-                        <input type="text" id="newExplanation" class="explanation-input" placeholder="Explanation (optional)">
+                        <input type="text" id="newMove" placeholder="e4, Nf3...">
+                        <input type="text" id="newExplanation" class="explanation-input" placeholder="Explanation">
                         <button onclick="addBuilderMove()">Add</button>
                     </div>
-                    <p class="help-text">Enter moves in standard notation (e4, Nf3, O-O, etc.)</p>
-
-                    <div class="branch-controls" id="branchControls" style="display: none;">
-                        <button class="branch-btn" onclick="addBranch()">➕ Add Alternative Move</button>
-                        <button class="branch-btn" onclick="goBackBranch()">⬆️ Go Up</button>
-                    </div>
+                    <p class="help-text">Use standard notation: e4, Nf3, O-O, Qxd5, etc.</p>
                 </div>
 
                 <div class="btn-row">
                     <button class="btn btn-secondary" onclick="previewOpening()">👁️ Preview</button>
-                    <button class="btn btn-primary" onclick="saveOpening()">💾 Save Opening</button>
+                    <button class="btn btn-primary" onclick="saveOpening()">💾 Save</button>
                 </div>
             </div>
 
-            <!-- JSON Tab -->
             <div id="jsonBuilder" style="display: none;">
                 <div class="builder-section">
-                    <h3>Import from JSON</h3>
+                    <h3>Import Opening (JSON)</h3>
                     <div class="form-group">
-                        <label>Paste your opening JSON here:</label>
-                        <textarea id="jsonInput" rows="10" placeholder='{"name": "My Opening", "color": "white", ...}'></textarea>
+                        <textarea id="jsonInput" rows="6" placeholder='Paste JSON here...'></textarea>
                     </div>
-                    <button class="btn btn-primary" onclick="importJson()" style="width: 100%;">Import Opening</button>
+                    <button class="btn btn-primary" onclick="importJson()" style="width: 100%;">Import</button>
                 </div>
 
                 <div class="builder-section">
-                    <h3>Export Current Opening</h3>
-                    <p class="help-text" style="margin-bottom: 12px;">Build an opening in the Visual Builder, then export it here:</p>
-                    <div class="json-preview" id="jsonPreview">// Build an opening first</div>
+                    <h3>Export Current Build</h3>
+                    <div class="json-preview" id="jsonPreview">// Create moves first</div>
                     <button class="copy-btn" onclick="copyJson()">📋 Copy JSON</button>
                 </div>
             </div>
@@ -937,49 +918,269 @@
 
     <script>
         // ============================================================
-        // OPENING DATA
+        // FULL OPENING DATA WITH DEEP LINES
         // ============================================================
         
         const DEFAULT_OPENINGS = {
             italian_game: {
                 name: "Italian Game",
                 color: "white",
-                description: "Classic 1.e4 opening targeting f7",
+                description: "Classic 1.e4 opening targeting f7 with deep lines",
                 startingMoves: "1. e4 e5 2. Nf3 Nc6 3. Bc4",
-                isDefault: true,
                 tree: {
-                    id: 'start', move: '1. e4', player: 'white',
-                    explanation: 'King\'s Pawn opening.',
+                    id: 'start',
+                    move: '1. e4',
+                    player: 'white',
+                    explanation: 'King\'s Pawn opening. Wait for Black\'s response...',
                     children: [
                         {
-                            id: 'e5', move: '1... e5', player: 'black', label: 'Classical',
+                            id: 'e5',
+                            move: '1... e5',
+                            player: 'black',
+                            label: 'Classical',
                             response: {
-                                id: 'Nf3', move: '2. Nf3', player: 'white',
-                                explanation: 'Attack e5!',
+                                id: 'Nf3',
+                                move: '2. Nf3',
+                                player: 'white',
+                                explanation: 'Attack the e5 pawn and develop toward the Italian!',
                                 children: [
                                     {
-                                        id: 'Nc6', move: '2... Nc6', player: 'black', label: 'Main',
+                                        id: 'Nc6',
+                                        move: '2... Nc6',
+                                        player: 'black',
+                                        label: 'Main Line',
                                         response: {
-                                            id: 'Bc4', move: '3. Bc4', player: 'white',
-                                            explanation: 'Italian Game! Target f7.',
+                                            id: 'Bc4',
+                                            move: '3. Bc4',
+                                            player: 'white',
+                                            explanation: 'The Italian Game begins! Your bishop targets f7.',
                                             children: [
+                                                // GIUOCO PIANO
                                                 {
-                                                    id: 'Bc5', move: '3... Bc5', player: 'black', label: 'Giuoco Piano',
+                                                    id: 'Bc5',
+                                                    move: '3... Bc5',
+                                                    player: 'black',
+                                                    label: 'Giuoco Piano',
                                                     response: {
-                                                        id: 'c3', move: '4. c3', player: 'white',
-                                                        explanation: 'Prepare d4!',
+                                                        id: 'c3',
+                                                        move: '4. c3',
+                                                        player: 'white',
+                                                        explanation: 'Prepare to push d4 and build a powerful center!',
                                                         children: [
                                                             {
-                                                                id: 'Nf6_gp', move: '4... Nf6', player: 'black', label: 'Main',
+                                                                id: 'Nf6_gp',
+                                                                move: '4... Nf6',
+                                                                player: 'black',
+                                                                label: 'Main Line',
                                                                 response: {
-                                                                    id: 'd4', move: '5. d4', player: 'white',
-                                                                    explanation: 'Strike the center!',
+                                                                    id: 'd4',
+                                                                    move: '5. d4',
+                                                                    player: 'white',
+                                                                    explanation: 'Strike the center! This is the critical moment.',
                                                                     children: [
                                                                         {
-                                                                            id: 'exd4', move: '5... exd4', player: 'black', label: 'Main',
+                                                                            id: 'exd4',
+                                                                            move: '5... exd4',
+                                                                            player: 'black',
+                                                                            label: 'Main',
                                                                             response: {
-                                                                                id: 'cxd4', move: '6. cxd4', player: 'white',
-                                                                                explanation: 'Ideal pawn center!',
+                                                                                id: 'cxd4',
+                                                                                move: '6. cxd4',
+                                                                                player: 'white',
+                                                                                explanation: 'Perfect e4+d4 center! Black usually checks.',
+                                                                                children: [
+                                                                                    {
+                                                                                        id: 'Bb4+',
+                                                                                        move: '6... Bb4+',
+                                                                                        player: 'black',
+                                                                                        label: 'Main',
+                                                                                        response: {
+                                                                                            id: 'choice_greco',
+                                                                                            move: 'Choose Your Path',
+                                                                                            player: 'white',
+                                                                                            explanation: 'Critical decision point!',
+                                                                                            isChoice: true,
+                                                                                            choices: [
+                                                                                                {
+                                                                                                    id: 'Nc3',
+                                                                                                    move: '7. Nc3',
+                                                                                                    name: 'Greco Attack',
+                                                                                                    style: 'Gambit e4 pawn for attack',
+                                                                                                    color: 'red',
+                                                                                                    explanation: 'Sacrifice e4 for rapid development!',
+                                                                                                    children: [
+                                                                                                        {
+                                                                                                            id: 'Nxe4_greco',
+                                                                                                            move: '7... Nxe4',
+                                                                                                            player: 'black',
+                                                                                                            label: 'Accept',
+                                                                                                            response: {
+                                                                                                                id: 'O-O_greco',
+                                                                                                                move: '8. O-O',
+                                                                                                                player: 'white',
+                                                                                                                explanation: 'Castle into the attack!',
+                                                                                                                children: [
+                                                                                                                    {
+                                                                                                                        id: 'Nxc3',
+                                                                                                                        move: '8... Nxc3',
+                                                                                                                        player: 'black',
+                                                                                                                        label: 'Takes',
+                                                                                                                        response: {
+                                                                                                                            id: 'bxc3',
+                                                                                                                            move: '9. bxc3',
+                                                                                                                            player: 'white',
+                                                                                                                            explanation: 'Open b-file! Threat is Ba3.',
+                                                                                                                            children: [
+                                                                                                                                {
+                                                                                                                                    id: 'Bxc3',
+                                                                                                                                    move: '9... Bxc3',
+                                                                                                                                    player: 'black',
+                                                                                                                                    label: 'Greedy',
+                                                                                                                                    response: {
+                                                                                                                                        id: 'Qb3',
+                                                                                                                                        move: '10. Qb3',
+                                                                                                                                        player: 'white',
+                                                                                                                                        explanation: 'Attack f7 and b7! Crushing.',
+                                                                                                                                        children: [
+                                                                                                                                            {
+                                                                                                                                                id: 'Bxa1',
+                                                                                                                                                move: '10... Bxa1',
+                                                                                                                                                player: 'black',
+                                                                                                                                                label: 'Takes Rook',
+                                                                                                                                                response: {
+                                                                                                                                                    id: 'Bxf7+',
+                                                                                                                                                    move: '11. Bxf7+ Kf8 12. Bg5',
+                                                                                                                                                    player: 'white',
+                                                                                                                                                    explanation: '🔥 Devastating attack! Black is lost.',
+                                                                                                                                                    children: []
+                                                                                                                                                }
+                                                                                                                                            }
+                                                                                                                                        ]
+                                                                                                                                    }
+                                                                                                                                },
+                                                                                                                                {
+                                                                                                                                    id: 'Be7',
+                                                                                                                                    move: '9... Be7',
+                                                                                                                                    player: 'black',
+                                                                                                                                    label: 'Safe',
+                                                                                                                                    response: {
+                                                                                                                                        id: 'Ba3',
+                                                                                                                                        move: '10. Ba3',
+                                                                                                                                        player: 'white',
+                                                                                                                                        explanation: 'Prevent castling!',
+                                                                                                                                        children: []
+                                                                                                                                    }
+                                                                                                                                }
+                                                                                                                            ]
+                                                                                                                        }
+                                                                                                                    },
+                                                                                                                    {
+                                                                                                                        id: 'Bxc3',
+                                                                                                                        move: '8... Bxc3',
+                                                                                                                        player: 'black',
+                                                                                                                        label: 'Takes',
+                                                                                                                        response: {
+                                                                                                                            id: 'd5',
+                                                                                                                            move: '9. d5!',
+                                                                                                                            player: 'white',
+                                                                                                                            explanation: 'Attack the knight!',
+                                                                                                                            children: [
+                                                                                                                                {
+                                                                                                                                    id: 'Bf6',
+                                                                                                                                    move: '9... Bf6',
+                                                                                                                                    player: 'black',
+                                                                                                                                    label: 'Retreat',
+                                                                                                                                    response: {
+                                                                                                                                        id: 'Re1',
+                                                                                                                                        move: '10. Re1',
+                                                                                                                                        player: 'white',
+                                                                                                                                        explanation: 'Pin! Massive pressure.',
+                                                                                                                                        children: []
+                                                                                                                                    }
+                                                                                                                                }
+                                                                                                                            ]
+                                                                                                                        }
+                                                                                                                    }
+                                                                                                                ]
+                                                                                                            }
+                                                                                                        }
+                                                                                                    ]
+                                                                                                },
+                                                                                                {
+                                                                                                    id: 'Bd2',
+                                                                                                    move: '7. Bd2',
+                                                                                                    name: 'Main Line',
+                                                                                                    style: 'Solid approach',
+                                                                                                    color: 'blue',
+                                                                                                    explanation: 'Block and trade. Quieter.',
+                                                                                                    children: [
+                                                                                                        {
+                                                                                                            id: 'Bxd2',
+                                                                                                            move: '7... Bxd2+',
+                                                                                                            player: 'black',
+                                                                                                            label: 'Trade',
+                                                                                                            response: {
+                                                                                                                id: 'Nbxd2',
+                                                                                                                move: '8. Nbxd2',
+                                                                                                                player: 'white',
+                                                                                                                explanation: 'Develop toward center.',
+                                                                                                                children: [
+                                                                                                                    {
+                                                                                                                        id: 'd5_main',
+                                                                                                                        move: '8... d5',
+                                                                                                                        player: 'black',
+                                                                                                                        label: 'Central',
+                                                                                                                        response: {
+                                                                                                                            id: 'exd5',
+                                                                                                                            move: '9. exd5 Nxd5 10. O-O',
+                                                                                                                            player: 'white',
+                                                                                                                            explanation: 'Balanced Italian middlegame.',
+                                                                                                                            children: []
+                                                                                                                        }
+                                                                                                                    }
+                                                                                                                ]
+                                                                                                            }
+                                                                                                        }
+                                                                                                    ]
+                                                                                                },
+                                                                                                {
+                                                                                                    id: 'Kf1',
+                                                                                                    move: '7. Kf1',
+                                                                                                    name: 'Møller Attack',
+                                                                                                    style: 'Give up castling',
+                                                                                                    color: 'purple',
+                                                                                                    explanation: 'Rare but tricky!',
+                                                                                                    children: []
+                                                                                                }
+                                                                                            ]
+                                                                                        }
+                                                                                    },
+                                                                                    {
+                                                                                        id: 'Bb6',
+                                                                                        move: '6... Bb6',
+                                                                                        player: 'black',
+                                                                                        label: 'Retreat',
+                                                                                        response: {
+                                                                                            id: 'e5',
+                                                                                            move: '7. e5',
+                                                                                            player: 'white',
+                                                                                            explanation: 'Push! Attack the knight.',
+                                                                                            children: []
+                                                                                        }
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            id: 'Bb6_5',
+                                                                            move: '5... Bb6',
+                                                                            player: 'black',
+                                                                            label: 'Retreat',
+                                                                            response: {
+                                                                                id: 'dxe5',
+                                                                                move: '6. dxe5',
+                                                                                player: 'white',
+                                                                                explanation: 'Win the pawn!',
                                                                                 children: []
                                                                             }
                                                                         }
@@ -989,36 +1190,171 @@
                                                         ]
                                                     }
                                                 },
+                                                // TWO KNIGHTS DEFENSE
                                                 {
-                                                    id: 'Nf6_tk', move: '3... Nf6', player: 'black', label: 'Two Knights',
+                                                    id: 'Nf6_tk',
+                                                    move: '3... Nf6',
+                                                    player: 'black',
+                                                    label: 'Two Knights',
                                                     response: {
-                                                        id: 'choice_tk', move: 'Choose', player: 'white',
-                                                        explanation: 'Pick your weapon!',
+                                                        id: 'choice_tk',
+                                                        move: 'Choose Your Style',
+                                                        player: 'white',
+                                                        explanation: 'Three main approaches:',
                                                         isChoice: true,
                                                         choices: [
                                                             {
-                                                                id: 'Ng5', move: '4. Ng5', name: 'Fried Liver', style: 'Aggressive', color: 'red',
-                                                                explanation: 'Attack f7!',
+                                                                id: 'Ng5',
+                                                                move: '4. Ng5',
+                                                                name: 'Fried Liver Attack',
+                                                                style: 'Aggressive - Attack f7',
+                                                                color: 'red',
+                                                                explanation: 'Attack f7 immediately!',
                                                                 children: [
                                                                     {
-                                                                        id: 'd5_fl', move: '4... d5', player: 'black', label: 'Main',
+                                                                        id: 'd5',
+                                                                        move: '4... d5',
+                                                                        player: 'black',
+                                                                        label: 'Main',
                                                                         response: {
-                                                                            id: 'exd5', move: '5. exd5', player: 'white',
-                                                                            explanation: 'Now Nxd5?? loses!',
+                                                                            id: 'exd5',
+                                                                            move: '5. exd5',
+                                                                            player: 'white',
+                                                                            explanation: 'Take! Critical decision for Black...',
                                                                             children: [
                                                                                 {
-                                                                                    id: 'Nxd5', move: '5... Nxd5??', player: 'black', label: 'BLUNDER',
+                                                                                    id: 'Nxd5',
+                                                                                    move: '5... Nxd5??',
+                                                                                    player: 'black',
+                                                                                    label: 'BLUNDER!',
                                                                                     response: {
-                                                                                        id: 'Nxf7', move: '6. Nxf7!', player: 'white',
-                                                                                        explanation: '🔥 FRIED LIVER!',
-                                                                                        children: []
+                                                                                        id: 'Nxf7',
+                                                                                        move: '6. Nxf7!',
+                                                                                        player: 'white',
+                                                                                        explanation: '🔥 THE FRIED LIVER!',
+                                                                                        children: [
+                                                                                            {
+                                                                                                id: 'Kxf7',
+                                                                                                move: '6... Kxf7',
+                                                                                                player: 'black',
+                                                                                                label: 'Forced',
+                                                                                                response: {
+                                                                                                    id: 'Qf3+',
+                                                                                                    move: '7. Qf3+',
+                                                                                                    player: 'white',
+                                                                                                    explanation: 'Fork King and Knight!',
+                                                                                                    children: [
+                                                                                                        {
+                                                                                                            id: 'Ke6',
+                                                                                                            move: '7... Ke6',
+                                                                                                            player: 'black',
+                                                                                                            label: 'Only',
+                                                                                                            response: {
+                                                                                                                id: 'Nc3_fl',
+                                                                                                                move: '8. Nc3',
+                                                                                                                player: 'white',
+                                                                                                                explanation: 'Attack the knight!',
+                                                                                                                children: [
+                                                                                                                    {
+                                                                                                                        id: 'Ncb4',
+                                                                                                                        move: '8... Ncb4',
+                                                                                                                        player: 'black',
+                                                                                                                        label: 'Escape Try',
+                                                                                                                        response: {
+                                                                                                                            id: 'Qe4+',
+                                                                                                                            move: '9. Qe4+',
+                                                                                                                            player: 'white',
+                                                                                                                            explanation: 'Keep checking!',
+                                                                                                                            children: [
+                                                                                                                                {
+                                                                                                                                    id: 'Kd6',
+                                                                                                                                    move: '9... Kd6',
+                                                                                                                                    player: 'black',
+                                                                                                                                    label: 'Run',
+                                                                                                                                    response: {
+                                                                                                                                        id: 'a3',
+                                                                                                                                        move: '10. a3',
+                                                                                                                                        player: 'white',
+                                                                                                                                        explanation: 'Win material!',
+                                                                                                                                        children: []
+                                                                                                                                    }
+                                                                                                                                }
+                                                                                                                            ]
+                                                                                                                        }
+                                                                                                                    }
+                                                                                                                ]
+                                                                                                            }
+                                                                                                        }
+                                                                                                    ]
+                                                                                                }
+                                                                                            }
+                                                                                        ]
                                                                                     }
                                                                                 },
                                                                                 {
-                                                                                    id: 'Na5', move: '5... Na5', player: 'black', label: 'Correct',
+                                                                                    id: 'Na5',
+                                                                                    move: '5... Na5',
+                                                                                    player: 'black',
+                                                                                    label: 'Correct',
                                                                                     response: {
-                                                                                        id: 'Bb5', move: '6. Bb5+', player: 'white',
-                                                                                        explanation: 'Main line theory.',
+                                                                                        id: 'Bb5+',
+                                                                                        move: '6. Bb5+',
+                                                                                        player: 'white',
+                                                                                        explanation: 'Check! Main theory.',
+                                                                                        children: [
+                                                                                            {
+                                                                                                id: 'c6',
+                                                                                                move: '6... c6',
+                                                                                                player: 'black',
+                                                                                                label: 'Block',
+                                                                                                response: {
+                                                                                                    id: 'dxc6',
+                                                                                                    move: '7. dxc6 bxc6 8. Be2',
+                                                                                                    player: 'white',
+                                                                                                    explanation: 'Complex middlegame.',
+                                                                                                    children: []
+                                                                                                }
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                },
+                                                                                {
+                                                                                    id: 'b5',
+                                                                                    move: '5... b5',
+                                                                                    player: 'black',
+                                                                                    label: 'Ulvestad',
+                                                                                    response: {
+                                                                                        id: 'Bf1',
+                                                                                        move: '6. Bf1',
+                                                                                        player: 'white',
+                                                                                        explanation: 'Sharp theory!',
+                                                                                        children: []
+                                                                                    }
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        id: 'Bc5_trax',
+                                                                        move: '4... Bc5',
+                                                                        player: 'black',
+                                                                        label: 'Traxler!',
+                                                                        response: {
+                                                                            id: 'Nxf7_trax',
+                                                                            move: '5. Nxf7',
+                                                                            player: 'white',
+                                                                            explanation: 'Take anyway! You\'re winning.',
+                                                                            children: [
+                                                                                {
+                                                                                    id: 'Bxf2',
+                                                                                    move: '5... Bxf2+',
+                                                                                    player: 'black',
+                                                                                    label: 'Counter',
+                                                                                    response: {
+                                                                                        id: 'Kf1_trax',
+                                                                                        move: '6. Kf1',
+                                                                                        player: 'white',
+                                                                                        explanation: 'Step aside! You\'re up material.',
                                                                                         children: []
                                                                                     }
                                                                                 }
@@ -1028,19 +1364,261 @@
                                                                 ]
                                                             },
                                                             {
-                                                                id: 'd3', move: '4. d3', name: 'Pianissimo', style: 'Solid', color: 'blue',
-                                                                explanation: 'Quiet buildup.',
-                                                                children: []
+                                                                id: 'd3',
+                                                                move: '4. d3',
+                                                                name: 'Giuoco Pianissimo',
+                                                                style: 'Solid - Slow buildup',
+                                                                color: 'blue',
+                                                                explanation: 'Very quiet game.',
+                                                                children: [
+                                                                    {
+                                                                        id: 'Bc5_p',
+                                                                        move: '4... Bc5',
+                                                                        player: 'black',
+                                                                        label: 'Natural',
+                                                                        response: {
+                                                                            id: 'c3_p',
+                                                                            move: '5. c3',
+                                                                            player: 'white',
+                                                                            explanation: 'Prepare d4 slowly.',
+                                                                            children: [
+                                                                                {
+                                                                                    id: 'O-O_p',
+                                                                                    move: '5... O-O',
+                                                                                    player: 'black',
+                                                                                    label: 'Castle',
+                                                                                    response: {
+                                                                                        id: 'O-O_pw',
+                                                                                        move: '6. O-O',
+                                                                                        player: 'white',
+                                                                                        explanation: 'Castle too. Nbd2 next.',
+                                                                                        children: [
+                                                                                            {
+                                                                                                id: 'd6_pp',
+                                                                                                move: '6... d6',
+                                                                                                player: 'black',
+                                                                                                label: 'Solid',
+                                                                                                response: {
+                                                                                                    id: 'Nbd2',
+                                                                                                    move: '7. Nbd2',
+                                                                                                    player: 'white',
+                                                                                                    explanation: 'Slow expansion plan.',
+                                                                                                    children: []
+                                                                                                }
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    }
+                                                                ]
                                                             },
                                                             {
-                                                                id: 'O-O', move: '4. O-O', name: 'Modern', style: 'Flexible', color: 'purple',
-                                                                explanation: 'Castle first.',
-                                                                children: []
+                                                                id: 'O-O',
+                                                                move: '4. O-O',
+                                                                name: 'Modern Italian',
+                                                                style: 'Flexible',
+                                                                color: 'purple',
+                                                                explanation: 'Castle first, decide later.',
+                                                                children: [
+                                                                    {
+                                                                        id: 'Bc5_m',
+                                                                        move: '4... Bc5',
+                                                                        player: 'black',
+                                                                        label: 'Natural',
+                                                                        response: {
+                                                                            id: 'c3_m',
+                                                                            move: '5. c3',
+                                                                            player: 'white',
+                                                                            explanation: 'Transpose to main lines.',
+                                                                            children: []
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        id: 'Nxe4_m',
+                                                                        move: '4... Nxe4',
+                                                                        player: 'black',
+                                                                        label: 'Grab Pawn',
+                                                                        response: {
+                                                                            id: 'd4_m',
+                                                                            move: '5. d4',
+                                                                            player: 'white',
+                                                                            explanation: 'Open up! Win it back.',
+                                                                            children: []
+                                                                        }
+                                                                    }
+                                                                ]
                                                             }
                                                         ]
                                                     }
+                                                },
+                                                // HUNGARIAN
+                                                {
+                                                    id: 'Be7',
+                                                    move: '3... Be7',
+                                                    player: 'black',
+                                                    label: 'Hungarian',
+                                                    response: {
+                                                        id: 'd4_h',
+                                                        move: '4. d4',
+                                                        player: 'white',
+                                                        explanation: 'Seize space immediately!',
+                                                        children: []
+                                                    }
                                                 }
                                             ]
+                                        }
+                                    },
+                                    // PETROFF
+                                    {
+                                        id: 'Nf6_pet',
+                                        move: '2... Nf6',
+                                        player: 'black',
+                                        label: 'Petroff',
+                                        response: {
+                                            id: 'Nxe5_pet',
+                                            move: '3. Nxe5',
+                                            player: 'white',
+                                            explanation: 'Grab the pawn safely!',
+                                            children: [
+                                                {
+                                                    id: 'd6_pet',
+                                                    move: '3... d6',
+                                                    player: 'black',
+                                                    label: 'Main',
+                                                    response: {
+                                                        id: 'Nf3_pet',
+                                                        move: '4. Nf3',
+                                                        player: 'white',
+                                                        explanation: 'Retreat. Now d4, Bd3.',
+                                                        children: []
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    // PHILIDOR
+                                    {
+                                        id: 'd6_phi',
+                                        move: '2... d6',
+                                        player: 'black',
+                                        label: 'Philidor',
+                                        response: {
+                                            id: 'd4_phi',
+                                            move: '3. d4',
+                                            player: 'white',
+                                            explanation: 'Open the center!',
+                                            children: []
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        // Other responses to 1.e4
+                        {
+                            id: 'c5',
+                            move: '1... c5',
+                            player: 'black',
+                            label: 'Sicilian',
+                            response: {
+                                id: 'Nf3_sic',
+                                move: '2. Nf3',
+                                player: 'white',
+                                explanation: 'Open Sicilian.',
+                                children: [
+                                    {
+                                        id: 'd6_sic',
+                                        move: '2... d6',
+                                        player: 'black',
+                                        label: 'Main',
+                                        response: {
+                                            id: 'd4_sic',
+                                            move: '3. d4 cxd4 4. Nxd4',
+                                            player: 'white',
+                                            explanation: 'Rich positions!',
+                                            children: []
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            id: 'e6',
+                            move: '1... e6',
+                            player: 'black',
+                            label: 'French',
+                            response: {
+                                id: 'd4_fr',
+                                move: '2. d4',
+                                player: 'white',
+                                explanation: 'Build center.',
+                                children: [
+                                    {
+                                        id: 'd5_fr',
+                                        move: '2... d5',
+                                        player: 'black',
+                                        label: 'Main',
+                                        response: {
+                                            id: 'exd5_fr',
+                                            move: '3. exd5 exd5',
+                                            player: 'white',
+                                            explanation: 'Exchange French.',
+                                            children: []
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            id: 'c6',
+                            move: '1... c6',
+                            player: 'black',
+                            label: 'Caro-Kann',
+                            response: {
+                                id: 'd4_ck',
+                                move: '2. d4',
+                                player: 'white',
+                                explanation: 'Strong center.',
+                                children: [
+                                    {
+                                        id: 'd5_ck',
+                                        move: '2... d5',
+                                        player: 'black',
+                                        label: 'Main',
+                                        response: {
+                                            id: 'exd5_ck',
+                                            move: '3. exd5 cxd5',
+                                            player: 'white',
+                                            explanation: 'Exchange Caro.',
+                                            children: []
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            id: 'd5_sc',
+                            move: '1... d5',
+                            player: 'black',
+                            label: 'Scandinavian',
+                            response: {
+                                id: 'exd5_sc',
+                                move: '2. exd5',
+                                player: 'white',
+                                explanation: 'Win time!',
+                                children: [
+                                    {
+                                        id: 'Qxd5',
+                                        move: '2... Qxd5',
+                                        player: 'black',
+                                        label: 'Queen',
+                                        response: {
+                                            id: 'Nc3_sc',
+                                            move: '3. Nc3',
+                                            player: 'white',
+                                            explanation: 'Attack the Queen!',
+                                            children: []
                                         }
                                     }
                                 ]
@@ -1052,31 +1630,74 @@
 
             london_system: {
                 name: "London System",
-                color: "white", 
+                color: "white",
                 description: "Solid d4 system with Bf4",
                 startingMoves: "1. d4 d5 2. Bf4",
-                isDefault: true,
                 tree: {
-                    id: 'start', move: '1. d4', player: 'white',
+                    id: 'start',
+                    move: '1. d4',
+                    player: 'white',
                     explanation: 'Queen\'s Pawn opening.',
                     children: [
                         {
-                            id: 'd5', move: '1... d5', player: 'black', label: 'Main',
+                            id: 'd5',
+                            move: '1... d5',
+                            player: 'black',
+                            label: 'Main',
                             response: {
-                                id: 'Bf4', move: '2. Bf4', player: 'white',
-                                explanation: 'The London! Develop before e3.',
+                                id: 'Bf4',
+                                move: '2. Bf4',
+                                player: 'white',
+                                explanation: 'The London! Bf4 before e3.',
                                 children: [
                                     {
-                                        id: 'Nf6', move: '2... Nf6', player: 'black', label: 'Natural',
+                                        id: 'Nf6',
+                                        move: '2... Nf6',
+                                        player: 'black',
+                                        label: 'Natural',
                                         response: {
-                                            id: 'e3', move: '3. e3', player: 'white',
+                                            id: 'e3',
+                                            move: '3. e3',
+                                            player: 'white',
                                             explanation: 'Solid pyramid.',
                                             children: [
                                                 {
-                                                    id: 'c5', move: '3... c5', player: 'black', label: 'Active',
+                                                    id: 'c5',
+                                                    move: '3... c5',
+                                                    player: 'black',
+                                                    label: 'Active',
                                                     response: {
-                                                        id: 'c3', move: '4. c3', player: 'white',
+                                                        id: 'c3',
+                                                        move: '4. c3',
+                                                        player: 'white',
                                                         explanation: 'Support d4.',
+                                                        children: [
+                                                            {
+                                                                id: 'Nc6',
+                                                                move: '4... Nc6',
+                                                                player: 'black',
+                                                                label: 'Develop',
+                                                                response: {
+                                                                    id: 'Nd2',
+                                                                    move: '5. Nd2',
+                                                                    player: 'white',
+                                                                    explanation: 'Flexible development.',
+                                                                    children: []
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    id: 'e6',
+                                                    move: '3... e6',
+                                                    player: 'black',
+                                                    label: 'Solid',
+                                                    response: {
+                                                        id: 'Bd3',
+                                                        move: '4. Bd3',
+                                                        player: 'white',
+                                                        explanation: 'Target h7.',
                                                         children: []
                                                     }
                                                 }
@@ -1084,6 +1705,19 @@
                                         }
                                     }
                                 ]
+                            }
+                        },
+                        {
+                            id: 'Nf6',
+                            move: '1... Nf6',
+                            player: 'black',
+                            label: 'Indian',
+                            response: {
+                                id: 'Bf4_2',
+                                move: '2. Bf4',
+                                player: 'white',
+                                explanation: 'London works vs anything!',
+                                children: []
                             }
                         }
                     ]
@@ -1094,49 +1728,109 @@
                 name: "Sicilian Najdorf",
                 color: "black",
                 description: "Fighting response to 1.e4",
-                startingMoves: "1. e4 c5",
-                isDefault: true,
+                startingMoves: "1. e4 c5 2. Nf3 d6 3. d4 cxd4 4. Nxd4 Nf6 5. Nc3 a6",
                 tree: {
-                    id: 'start', move: '1. e4', player: 'white',
+                    id: 'start',
+                    move: '1. e4',
+                    player: 'white',
                     explanation: 'White plays e4.',
                     children: [
                         {
-                            id: 'c5', move: '1... c5', player: 'black', label: 'Sicilian',
+                            id: 'c5',
+                            move: '1... c5',
+                            player: 'black',
+                            label: 'Sicilian!',
                             response: {
-                                id: 'Nf3', move: '2. Nf3', player: 'white',
+                                id: 'Nf3',
+                                move: '2. Nf3',
+                                player: 'white',
                                 explanation: 'Open Sicilian.',
                                 children: [
                                     {
-                                        id: 'd6', move: '2... d6', player: 'black', label: 'Main',
+                                        id: 'd6',
+                                        move: '2... d6',
+                                        player: 'black',
+                                        label: 'Main',
                                         response: {
-                                            id: 'd4', move: '3. d4', player: 'white',
-                                            explanation: 'Opening the center.',
+                                            id: 'd4',
+                                            move: '3. d4',
+                                            player: 'white',
+                                            explanation: 'Opening center.',
                                             children: [
                                                 {
-                                                    id: 'cxd4', move: '3... cxd4', player: 'black', label: 'Take',
+                                                    id: 'cxd4',
+                                                    move: '3... cxd4',
+                                                    player: 'black',
+                                                    label: 'Take',
                                                     response: {
-                                                        id: 'Nxd4', move: '4. Nxd4', player: 'white',
-                                                        explanation: 'Open Sicilian structure.',
+                                                        id: 'Nxd4',
+                                                        move: '4. Nxd4',
+                                                        player: 'white',
+                                                        explanation: 'Open Sicilian.',
                                                         children: [
                                                             {
-                                                                id: 'Nf6', move: '4... Nf6', player: 'black', label: 'Attack e4',
+                                                                id: 'Nf6',
+                                                                move: '4... Nf6',
+                                                                player: 'black',
+                                                                label: 'Attack e4',
                                                                 response: {
-                                                                    id: 'Nc3', move: '5. Nc3', player: 'white',
-                                                                    explanation: 'Defend e4.',
+                                                                    id: 'Nc3',
+                                                                    move: '5. Nc3',
+                                                                    player: 'white',
+                                                                    explanation: 'Defend.',
                                                                     children: [
                                                                         {
-                                                                            id: 'a6', move: '5... a6', player: 'black', label: 'Najdorf!',
+                                                                            id: 'a6',
+                                                                            move: '5... a6',
+                                                                            player: 'black',
+                                                                            label: 'Najdorf!',
                                                                             response: {
-                                                                                id: 'Be3', move: '6. Be3', player: 'white',
-                                                                                explanation: 'English Attack setup.',
-                                                                                children: [
+                                                                                id: 'choice_w',
+                                                                                move: 'White chooses',
+                                                                                player: 'white',
+                                                                                explanation: 'Critical crossroads.',
+                                                                                isChoice: true,
+                                                                                choices: [
                                                                                     {
-                                                                                        id: 'e5', move: '6... e5', player: 'black', label: 'Main',
-                                                                                        response: {
-                                                                                            id: 'Nb3', move: '7. Nb3', player: 'white',
-                                                                                            explanation: 'Retreat.',
-                                                                                            children: []
-                                                                                        }
+                                                                                        id: 'Be3',
+                                                                                        move: '6. Be3',
+                                                                                        name: 'English Attack',
+                                                                                        style: 'f3, Qd2, O-O-O',
+                                                                                        color: 'red',
+                                                                                        explanation: 'Aggressive setup.',
+                                                                                        children: [
+                                                                                            {
+                                                                                                id: 'e5',
+                                                                                                move: '6... e5',
+                                                                                                player: 'black',
+                                                                                                label: 'Kick',
+                                                                                                response: {
+                                                                                                    id: 'Nb3',
+                                                                                                    move: '7. Nb3',
+                                                                                                    player: 'white',
+                                                                                                    explanation: 'Retreat.',
+                                                                                                    children: []
+                                                                                                }
+                                                                                            }
+                                                                                        ]
+                                                                                    },
+                                                                                    {
+                                                                                        id: 'Bg5',
+                                                                                        move: '6. Bg5',
+                                                                                        name: 'Classical',
+                                                                                        style: 'Traditional',
+                                                                                        color: 'blue',
+                                                                                        explanation: 'Pin knight.',
+                                                                                        children: []
+                                                                                    },
+                                                                                    {
+                                                                                        id: 'f3',
+                                                                                        move: '6. f3',
+                                                                                        name: 'English Attack',
+                                                                                        style: 'Direct',
+                                                                                        color: 'purple',
+                                                                                        explanation: 'Prepare Be3.',
+                                                                                        children: []
                                                                                     }
                                                                                 ]
                                                                             }
@@ -1161,49 +1855,118 @@
                 name: "Caro-Kann Defense",
                 color: "black",
                 description: "Solid defense to 1.e4",
-                startingMoves: "1. e4 c6",
-                isDefault: true,
+                startingMoves: "1. e4 c6 2. d4 d5",
                 tree: {
-                    id: 'start', move: '1. e4', player: 'white',
+                    id: 'start',
+                    move: '1. e4',
+                    player: 'white',
                     explanation: 'White plays e4.',
                     children: [
                         {
-                            id: 'c6', move: '1... c6', player: 'black', label: 'Caro-Kann',
+                            id: 'c6',
+                            move: '1... c6',
+                            player: 'black',
+                            label: 'Caro-Kann!',
                             response: {
-                                id: 'd4', move: '2. d4', player: 'white',
+                                id: 'd4',
+                                move: '2. d4',
+                                player: 'white',
                                 explanation: 'Building center.',
                                 children: [
                                     {
-                                        id: 'd5', move: '2... d5', player: 'black', label: 'Challenge',
+                                        id: 'd5',
+                                        move: '2... d5',
+                                        player: 'black',
+                                        label: 'Challenge',
                                         response: {
-                                            id: 'Nc3', move: '3. Nc3', player: 'white',
-                                            explanation: 'Defends e4.',
-                                            children: [
+                                            id: 'choice_ck',
+                                            move: 'White chooses',
+                                            player: 'white',
+                                            explanation: 'Main options:',
+                                            isChoice: true,
+                                            choices: [
                                                 {
-                                                    id: 'dxe4', move: '3... dxe4', player: 'black', label: 'Main',
-                                                    response: {
-                                                        id: 'Nxe4', move: '4. Nxe4', player: 'white',
-                                                        explanation: 'Recapture.',
-                                                        children: [
-                                                            {
-                                                                id: 'Bf5', move: '4... Bf5', player: 'black', label: 'Classical',
-                                                                response: {
-                                                                    id: 'Ng3', move: '5. Ng3', player: 'white',
-                                                                    explanation: 'Attack bishop.',
-                                                                    children: [
-                                                                        {
-                                                                            id: 'Bg6', move: '5... Bg6', player: 'black', label: 'Retreat',
-                                                                            response: {
-                                                                                id: 'h4', move: '6. h4', player: 'white',
-                                                                                explanation: 'Typical attack.',
-                                                                                children: []
-                                                                            }
+                                                    id: 'Nc3',
+                                                    move: '3. Nc3',
+                                                    name: 'Classical',
+                                                    style: 'Main Line',
+                                                    color: 'blue',
+                                                    explanation: 'Defend e4.',
+                                                    children: [
+                                                        {
+                                                            id: 'dxe4',
+                                                            move: '3... dxe4',
+                                                            player: 'black',
+                                                            label: 'Take',
+                                                            response: {
+                                                                id: 'Nxe4',
+                                                                move: '4. Nxe4',
+                                                                player: 'white',
+                                                                explanation: 'Recapture.',
+                                                                children: [
+                                                                    {
+                                                                        id: 'Bf5',
+                                                                        move: '4... Bf5',
+                                                                        player: 'black',
+                                                                        label: 'Classical',
+                                                                        response: {
+                                                                            id: 'Ng3',
+                                                                            move: '5. Ng3',
+                                                                            player: 'white',
+                                                                            explanation: 'Attack bishop.',
+                                                                            children: [
+                                                                                {
+                                                                                    id: 'Bg6',
+                                                                                    move: '5... Bg6',
+                                                                                    player: 'black',
+                                                                                    label: 'Retreat',
+                                                                                    response: {
+                                                                                        id: 'h4',
+                                                                                        move: '6. h4',
+                                                                                        player: 'white',
+                                                                                        explanation: 'Typical attack.',
+                                                                                        children: []
+                                                                                    }
+                                                                                }
+                                                                            ]
                                                                         }
-                                                                    ]
-                                                                }
+                                                                    }
+                                                                ]
                                                             }
-                                                        ]
-                                                    }
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    id: 'e5',
+                                                    move: '3. e5',
+                                                    name: 'Advance',
+                                                    style: 'Space',
+                                                    color: 'red',
+                                                    explanation: 'Grab space.',
+                                                    children: [
+                                                        {
+                                                            id: 'Bf5',
+                                                            move: '3... Bf5',
+                                                            player: 'black',
+                                                            label: 'Develop',
+                                                            response: {
+                                                                id: 'Nf3_adv',
+                                                                move: '4. Nf3',
+                                                                player: 'white',
+                                                                explanation: 'Normal.',
+                                                                children: []
+                                                            }
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    id: 'exd5',
+                                                    move: '3. exd5',
+                                                    name: 'Exchange',
+                                                    style: 'Simplified',
+                                                    color: 'green',
+                                                    explanation: 'Trade off.',
+                                                    children: []
                                                 }
                                             ]
                                         }
@@ -1217,55 +1980,73 @@
         };
 
         let OPENINGS = {};
+        let editMode = false;
 
         // ============================================================
         // APP STATE
         // ============================================================
         
         let currentOpening = null;
+        let currentOpeningKey = null;
         let currentPath = [];
         let userColor = 'white';
 
         // Builder state
         let builderColor = 'white';
         let builderMoves = [];
-        let currentBranchPath = [];
+        let editingKey = null;
 
         // ============================================================
         // INITIALIZATION
         // ============================================================
 
         function init() {
-            // Load default openings
-            OPENINGS = { ...DEFAULT_OPENINGS };
-            
-            // Load custom openings from localStorage
-            try {
-                const saved = localStorage.getItem('chessOpenings');
-                if (saved) {
-                    const custom = JSON.parse(saved);
-                    Object.assign(OPENINGS, custom);
-                }
-            } catch (e) {
-                console.error('Error loading saved openings:', e);
-            }
-
+            loadOpenings();
             renderOpenings();
         }
 
-        function saveOpenings() {
-            const custom = {};
-            for (const [key, opening] of Object.entries(OPENINGS)) {
-                if (!opening.isDefault) {
-                    custom[key] = opening;
+        function loadOpenings() {
+            // Start with defaults
+            OPENINGS = JSON.parse(JSON.stringify(DEFAULT_OPENINGS));
+            
+            // Load saved
+            try {
+                const saved = localStorage.getItem('chessOpeningsV2');
+                if (saved) {
+                    OPENINGS = JSON.parse(saved);
                 }
+            } catch (e) {
+                console.error('Error loading:', e);
             }
-            localStorage.setItem('chessOpenings', JSON.stringify(custom));
+        }
+
+        function saveAllOpenings() {
+            localStorage.setItem('chessOpeningsV2', JSON.stringify(OPENINGS));
+        }
+
+        function resetToDefaults() {
+            localStorage.removeItem('chessOpeningsV2');
+            OPENINGS = JSON.parse(JSON.stringify(DEFAULT_OPENINGS));
+            hideResetBar();
+            renderOpenings();
+        }
+
+        function showResetBar() {
+            document.getElementById('resetBar').style.display = 'flex';
+        }
+
+        function hideResetBar() {
+            document.getElementById('resetBar').style.display = 'none';
         }
 
         // ============================================================
         // MENU SCREEN
         // ============================================================
+
+        function toggleEditMode() {
+            editMode = !editMode;
+            renderOpenings();
+        }
 
         function renderOpenings() {
             const container = document.getElementById('openingsContainer');
@@ -1275,45 +2056,65 @@
 
             let html = '';
 
-            if (whiteOpenings.length > 0) {
-                html += '<p class="section-title">Playing as White</p>';
-                whiteOpenings.forEach(([key, opening]) => {
-                    const customClass = opening.isDefault ? '' : 'custom';
-                    html += `
-                        <div class="opening-card ${customClass}" onclick="startTraining('${key}')">
-                            <h3>${opening.name}<span class="color-badge white">White</span></h3>
-                            <p>${opening.description}</p>
-                            <div class="moves">${opening.startingMoves}</div>
-                            ${!opening.isDefault ? `<button class="delete-btn" onclick="event.stopPropagation(); deleteOpening('${key}')">×</button>` : ''}
-                        </div>
-                    `;
-                });
-            }
+            // White openings
+            html += `<p class="section-title">
+                Playing as White
+                <button class="edit-mode-toggle ${editMode ? 'active' : ''}" onclick="toggleEditMode()">
+                    ${editMode ? '✓ Done' : '✏️ Edit'}
+                </button>
+            </p>`;
+            
+            whiteOpenings.forEach(([key, opening]) => {
+                html += renderOpeningCard(key, opening);
+            });
 
+            // Black openings
             if (blackOpenings.length > 0) {
                 html += '<p class="section-title">Playing as Black</p>';
                 blackOpenings.forEach(([key, opening]) => {
-                    const customClass = opening.isDefault ? '' : 'custom';
-                    html += `
-                        <div class="opening-card ${customClass}" onclick="startTraining('${key}')">
-                            <h3>${opening.name}<span class="color-badge black">Black</span></h3>
-                            <p>${opening.description}</p>
-                            <div class="moves">${opening.startingMoves}</div>
-                            ${!opening.isDefault ? `<button class="delete-btn" onclick="event.stopPropagation(); deleteOpening('${key}')">×</button>` : ''}
-                        </div>
-                    `;
+                    html += renderOpeningCard(key, opening);
                 });
+            }
+
+            if (editMode) {
+                html += `<p style="text-align: center; margin-top: 16px;">
+                    <button onclick="showResetBar()" style="background: none; border: none; color: #ef4444; cursor: pointer; font-size: 0.8rem;">
+                        Reset All to Defaults
+                    </button>
+                </p>`;
             }
 
             container.innerHTML = html;
         }
 
+        function renderOpeningCard(key, opening) {
+            return `
+                <div class="opening-card" onclick="${editMode ? '' : `startTraining('${key}')`}">
+                    <h3>${opening.name}<span class="color-badge ${opening.color}">${opening.color.charAt(0).toUpperCase() + opening.color.slice(1)}</span></h3>
+                    <p>${opening.description}</p>
+                    <div class="moves">${opening.startingMoves}</div>
+                    <div class="card-actions ${editMode ? 'visible' : ''}">
+                        <button class="card-action-btn" onclick="event.stopPropagation(); exportOpening('${key}')" title="Export">📤</button>
+                        <button class="card-action-btn delete" onclick="event.stopPropagation(); deleteOpening('${key}')" title="Delete">🗑️</button>
+                    </div>
+                </div>
+            `;
+        }
+
         function deleteOpening(key) {
-            if (confirm(`Delete "${OPENINGS[key].name}"?`)) {
+            const name = OPENINGS[key]?.name || key;
+            if (confirm(`Delete "${name}"?`)) {
                 delete OPENINGS[key];
-                saveOpenings();
+                saveAllOpenings();
                 renderOpenings();
             }
+        }
+
+        function exportOpening(key) {
+            const json = JSON.stringify(OPENINGS[key], null, 2);
+            navigator.clipboard.writeText(json).then(() => {
+                alert(`"${OPENINGS[key].name}" copied to clipboard!`);
+            });
         }
 
         function showScreen(screenId) {
@@ -1325,6 +2126,8 @@
             showScreen('menuScreen');
             currentOpening = null;
             currentPath = [];
+            editMode = false;
+            renderOpenings();
         }
 
         // ============================================================
@@ -1333,6 +2136,7 @@
 
         function startTraining(openingKey) {
             currentOpening = OPENINGS[openingKey];
+            currentOpeningKey = openingKey;
             userColor = currentOpening.color;
             currentPath = [];
 
@@ -1410,19 +2214,16 @@
             // Move history
             document.getElementById('moveHistory').innerHTML = history.map(m => {
                 const colorClass = m.player === 'white' ? 'white-move' : 'black-move';
-                const choiceClass = m.isChoice ? 'choice' : '';
-                return `<span class="move-tag ${colorClass} ${choiceClass}">${m.move}</span>`;
+                return `<span class="move-tag ${colorClass} ${m.isChoice ? 'choice' : ''}">${m.move}</span>`;
             }).join('');
 
             // Current move
             const isUserMove = node.player === userColor;
-            const moveLabel = isUserMove ? 'Your Move' : 'Opponent\'s Move';
-            const dotClass = isUserMove ? 'your-move' : 'opponent-move';
 
             let cardHtml = `
                 <div class="move-label">
-                    <div class="move-dot ${dotClass}"></div>
-                    <span class="${dotClass}">${moveLabel}</span>
+                    <div class="move-dot ${isUserMove ? 'your-move' : 'opponent-move'}"></div>
+                    <span class="${isUserMove ? 'your-move' : 'opponent-move'}">${isUserMove ? 'Your Move' : 'Opponent\'s Move'}</span>
                 </div>
                 <div class="current-move ${isUserMove ? '' : 'opponent'}">
                     <h2>${node.move}</h2>
@@ -1440,12 +2241,11 @@
                 options.options.forEach(opt => {
                     const labelClass = opt.label?.includes('BLUNDER') ? 'blunder' : 
                                       (opt.label === 'Main' || opt.label === 'Main Line') ? 'main' : '';
-                    cardHtml += `
-                        <button class="option-btn" onclick="selectOption('${opt.id}')">
-                            <span class="move-text">${opt.move}</span>
-                            ${opt.label ? `<span class="label ${labelClass}">${opt.label}</span>` : ''}
-                            <span class="arrow">→</span>
-                        </button>`;
+                    cardHtml += `<button class="option-btn" onclick="selectOption('${opt.id}')">
+                        <span class="move-text">${opt.move}</span>
+                        ${opt.label ? `<span class="label ${labelClass}">${opt.label}</span>` : ''}
+                        <span class="arrow">→</span>
+                    </button>`;
                 });
                 cardHtml += '</div>';
             } else if (options.type === 'choices') {
@@ -1455,13 +2255,12 @@
                         <span>Choose your approach:</span>
                     </div>
                     <div class="choices-grid">`;
-                options.options.forEach(choice => {
-                    cardHtml += `
-                        <button class="choice-card ${choice.color || 'blue'}" onclick="selectOption('${choice.id}')">
-                            <h4>${choice.move}</h4>
-                            <p class="name">${choice.name || ''}</p>
-                            <p class="style">${choice.style || ''}</p>
-                        </button>`;
+                options.options.forEach(c => {
+                    cardHtml += `<button class="choice-card ${c.color || 'blue'}" onclick="selectOption('${c.id}')">
+                        <h4>${c.move}</h4>
+                        <p class="name">${c.name || ''}</p>
+                        <p class="style">${c.style || ''}</p>
+                    </button>`;
                 });
                 cardHtml += '</div></div>';
             } else {
@@ -1473,47 +2272,32 @@
             }
 
             document.getElementById('currentMoveCard').innerHTML = cardHtml;
-
-            // Controls
             document.getElementById('controls').innerHTML = currentPath.length > 0 ? `
                 <button class="control-btn secondary" onclick="goBack()">← Back</button>
                 <button class="control-btn secondary" onclick="reset()">Start Over</button>
             ` : '';
-
-            // Progress
             document.getElementById('progressDots').innerHTML = Array.from({length: 12}, (_, i) => 
-                `<div class="progress-dot ${i < moveCount ? 'active' : ''}"></div>`
-            ).join('');
+                `<div class="progress-dot ${i < moveCount ? 'active' : ''}"></div>`).join('');
         }
 
-        function selectOption(id) {
-            currentPath.push(id);
-            renderTrainer();
-        }
-
-        function goBack() {
-            currentPath.pop();
-            renderTrainer();
-        }
-
-        function reset() {
-            currentPath = [];
-            renderTrainer();
-        }
+        function selectOption(id) { currentPath.push(id); renderTrainer(); }
+        function goBack() { currentPath.pop(); renderTrainer(); }
+        function reset() { currentPath = []; renderTrainer(); }
 
         // ============================================================
-        // BUILDER SCREEN
+        // BUILDER
         // ============================================================
 
         function showBuilder() {
             showScreen('builderScreen');
             resetBuilder();
+            document.getElementById('builderSubtitle').textContent = 'Create your own opening';
         }
 
         function resetBuilder() {
             builderColor = 'white';
             builderMoves = [];
-            currentBranchPath = [];
+            editingKey = null;
             document.getElementById('openingName').value = '';
             document.getElementById('openingDesc').value = '';
             updateColorToggle();
@@ -1525,16 +2309,12 @@
             document.getElementById('tabJson').classList.toggle('active', tab === 'json');
             document.getElementById('visualBuilder').style.display = tab === 'visual' ? 'block' : 'none';
             document.getElementById('jsonBuilder').style.display = tab === 'json' ? 'block' : 'none';
-            
-            if (tab === 'json') {
-                updateJsonPreview();
-            }
+            if (tab === 'json') updateJsonPreview();
         }
 
         function setBuilderColor(color) {
             builderColor = color;
             updateColorToggle();
-            renderBuilderMoves();
         }
 
         function updateColorToggle() {
@@ -1544,28 +2324,21 @@
         }
 
         function addBuilderMove() {
-            const moveInput = document.getElementById('newMove');
-            const explInput = document.getElementById('newExplanation');
-            
-            const move = moveInput.value.trim();
+            const move = document.getElementById('newMove').value.trim();
             if (!move) return;
 
             const moveNum = Math.floor(builderMoves.length / 2) + 1;
             const isWhite = builderMoves.length % 2 === 0;
-            const player = isWhite ? 'white' : 'black';
-            
-            const notation = isWhite ? `${moveNum}. ${move}` : `${moveNum}... ${move}`;
             
             builderMoves.push({
-                id: `move_${Date.now()}`,
-                move: notation,
-                player: player,
-                explanation: explInput.value.trim() || '',
-                label: ''
+                id: `m${Date.now()}`,
+                move: isWhite ? `${moveNum}. ${move}` : `${moveNum}... ${move}`,
+                player: isWhite ? 'white' : 'black',
+                explanation: document.getElementById('newExplanation').value.trim()
             });
 
-            moveInput.value = '';
-            explInput.value = '';
+            document.getElementById('newMove').value = '';
+            document.getElementById('newExplanation').value = '';
             renderBuilderMoves();
         }
 
@@ -1576,196 +2349,110 @@
 
         function renderBuilderMoves() {
             const container = document.getElementById('moveList');
-            
             if (builderMoves.length === 0) {
-                container.innerHTML = '<p style="color: #64748b; text-align: center; padding: 20px;">Add moves below to build your opening</p>';
-                document.getElementById('branchControls').style.display = 'none';
+                container.innerHTML = '<p style="color: #64748b; text-align: center; padding: 16px;">Add moves below</p>';
                 return;
             }
-
             container.innerHTML = builderMoves.map((m, i) => `
                 <div class="move-item">
-                    <span class="move-number">#${i + 1}</span>
+                    <span class="move-number">${i + 1}</span>
                     <span class="move-notation ${m.player}">${m.move}</span>
-                    <span class="move-explanation">${m.explanation || '-'}</span>
                     <button class="delete-move" onclick="deleteBuilderMove(${i})">×</button>
                 </div>
             `).join('');
-
-            document.getElementById('branchControls').style.display = 'none'; // Simplified - no branching in basic builder
         }
 
         function buildTree() {
             if (builderMoves.length === 0) return null;
 
-            // Determine first move based on color
-            let firstMove, firstPlayer;
-            if (builderColor === 'white') {
-                firstMove = builderMoves[0]?.move || '1. e4';
-                firstPlayer = 'white';
-            } else {
-                firstMove = '1. e4'; // Assume white plays e4
-                firstPlayer = 'white';
-            }
-
             const tree = {
                 id: 'start',
-                move: firstMove,
-                player: firstPlayer,
-                explanation: builderMoves[0]?.explanation || '',
+                move: builderMoves[0].move,
+                player: builderMoves[0].player,
+                explanation: builderMoves[0].explanation || '',
                 children: []
             };
 
-            if (builderMoves.length <= 1) return tree;
-
-            // Build the rest as a linear sequence
-            let currentNode = tree;
-            const startIndex = builderColor === 'white' ? 1 : 0;
-
-            for (let i = startIndex; i < builderMoves.length; i++) {
+            let current = tree;
+            for (let i = 1; i < builderMoves.length; i++) {
                 const m = builderMoves[i];
-                const isResponse = m.player === builderColor;
-
-                if (isResponse) {
-                    // This is our response
-                    currentNode.children = [{
-                        id: m.id,
-                        move: m.move,
-                        player: m.player === 'white' ? 'black' : 'white', // opponent's move that we're responding to
-                        label: '',
-                        response: {
-                            id: `resp_${m.id}`,
-                            move: m.move,
-                            player: m.player,
-                            explanation: m.explanation,
-                            children: []
-                        }
-                    }];
-                    currentNode = currentNode.children[0].response;
-                } else {
-                    // Opponent's move
-                    const child = {
-                        id: m.id,
-                        move: m.move,
-                        player: m.player,
-                        label: m.label || '',
-                        response: null
+                const child = {
+                    id: m.id,
+                    move: m.move,
+                    player: m.player,
+                    label: '',
+                    response: null
+                };
+                
+                current.children = [child];
+                
+                if (i + 1 < builderMoves.length) {
+                    child.response = {
+                        id: `r${m.id}`,
+                        move: builderMoves[i + 1].move,
+                        player: builderMoves[i + 1].player,
+                        explanation: builderMoves[i + 1].explanation || '',
+                        children: []
                     };
-                    currentNode.children = [child];
-                    
-                    // Look ahead for our response
-                    if (i + 1 < builderMoves.length && builderMoves[i + 1].player === builderColor) {
-                        const resp = builderMoves[i + 1];
-                        child.response = {
-                            id: `resp_${resp.id}`,
-                            move: resp.move,
-                            player: resp.player,
-                            explanation: resp.explanation,
-                            children: []
-                        };
-                        currentNode = child.response;
-                        i++; // Skip the response we just processed
-                    }
+                    current = child.response;
+                    i++;
                 }
             }
-
             return tree;
         }
 
         function buildOpeningObject() {
-            const name = document.getElementById('openingName').value.trim() || 'My Opening';
-            const desc = document.getElementById('openingDesc').value.trim() || 'Custom opening';
-            
-            const startingMoves = builderMoves.slice(0, 4).map(m => m.move).join(' ');
-
             return {
-                name: name,
+                name: document.getElementById('openingName').value.trim() || 'My Opening',
                 color: builderColor,
-                description: desc,
-                startingMoves: startingMoves || '1. e4',
-                isDefault: false,
-                tree: buildTree() || {
-                    id: 'start',
-                    move: '1. e4',
-                    player: 'white',
-                    explanation: 'Start',
-                    children: []
-                }
+                description: document.getElementById('openingDesc').value.trim() || 'Custom opening',
+                startingMoves: builderMoves.slice(0, 4).map(m => m.move).join(' ') || '...',
+                tree: buildTree() || { id: 'start', move: '...', player: 'white', explanation: '', children: [] }
             };
         }
 
         function previewOpening() {
-            const opening = buildOpeningObject();
-            const key = '_preview_';
-            OPENINGS[key] = opening;
-            startTraining(key);
+            const o = buildOpeningObject();
+            OPENINGS['_preview'] = o;
+            startTraining('_preview');
         }
 
         function saveOpening() {
             const name = document.getElementById('openingName').value.trim();
-            if (!name) {
-                alert('Please enter an opening name');
-                return;
-            }
+            if (!name) return alert('Enter a name');
+            if (builderMoves.length === 0) return alert('Add some moves');
 
-            if (builderMoves.length === 0) {
-                alert('Please add at least one move');
-                return;
-            }
-
-            const opening = buildOpeningObject();
             const key = name.toLowerCase().replace(/[^a-z0-9]/g, '_') + '_' + Date.now();
-            
-            OPENINGS[key] = opening;
-            saveOpenings();
-            
+            OPENINGS[key] = buildOpeningObject();
+            saveAllOpenings();
             alert(`"${name}" saved!`);
             goToMenu();
-            renderOpenings();
         }
 
         function updateJsonPreview() {
-            const opening = buildOpeningObject();
-            document.getElementById('jsonPreview').textContent = JSON.stringify(opening, null, 2);
+            document.getElementById('jsonPreview').textContent = JSON.stringify(buildOpeningObject(), null, 2);
         }
 
         function copyJson() {
-            const json = document.getElementById('jsonPreview').textContent;
-            navigator.clipboard.writeText(json).then(() => {
-                alert('Copied to clipboard!');
-            });
+            navigator.clipboard.writeText(document.getElementById('jsonPreview').textContent)
+                .then(() => alert('Copied!'));
         }
 
         function importJson() {
             try {
-                const json = document.getElementById('jsonInput').value;
-                const opening = JSON.parse(json);
-                
-                if (!opening.name || !opening.tree) {
-                    alert('Invalid format: needs "name" and "tree"');
-                    return;
-                }
-
-                const key = opening.name.toLowerCase().replace(/[^a-z0-9]/g, '_') + '_' + Date.now();
-                opening.isDefault = false;
-                OPENINGS[key] = opening;
-                saveOpenings();
-                
-                alert(`"${opening.name}" imported!`);
+                const o = JSON.parse(document.getElementById('jsonInput').value);
+                if (!o.name || !o.tree) return alert('Invalid format');
+                const key = o.name.toLowerCase().replace(/[^a-z0-9]/g, '_') + '_' + Date.now();
+                OPENINGS[key] = o;
+                saveAllOpenings();
+                alert(`"${o.name}" imported!`);
                 goToMenu();
-                renderOpenings();
-            } catch (e) {
-                alert('Invalid JSON: ' + e.message);
-            }
+            } catch (e) { alert('Invalid JSON: ' + e.message); }
         }
 
-        // Handle enter key in move input
         document.addEventListener('DOMContentLoaded', () => {
             init();
-            
-            document.getElementById('newMove').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') addBuilderMove();
-            });
+            document.getElementById('newMove').addEventListener('keypress', e => { if (e.key === 'Enter') addBuilderMove(); });
         });
     </script>
 </body>
