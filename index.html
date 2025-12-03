@@ -1102,6 +1102,23 @@
             </div>
             <div id="openingsContainer"></div>
             <button class="btn btn-primary" onclick="showBuilder()">+ Create New Opening</button>
+            <div class="btn-row" style="margin-top: 8px;">
+                <button class="btn btn-secondary" onclick="triggerFileUpload()">📁 Upload JSON</button>
+                <button class="btn btn-secondary" onclick="showUrlImport()">🔗 Import URL</button>
+            </div>
+            <div id="urlImportSection" style="display:none; margin-top: 12px;">
+                <div class="builder-section">
+                    <h3>Import from URL</h3>
+                    <div class="form-group">
+                        <input type="text" id="importUrl" placeholder="https://raw.githubusercontent.com/...">
+                    </div>
+                    <div class="btn-row">
+                        <button class="btn btn-secondary" onclick="hideUrlImport()">Cancel</button>
+                        <button class="btn btn-primary" onclick="importFromUrl()">Import</button>
+                    </div>
+                </div>
+            </div>
+            <input type="file" id="fileUploadInput" accept=".json" style="display:none" onchange="handleFileUpload(event)">
         </div>
 
         <!-- Trainer Screen -->
@@ -1159,6 +1176,7 @@
                     <button class="btn btn-secondary" onclick="previewOpening()">Preview</button>
                     <button class="btn btn-primary" id="saveBtn" onclick="saveOpening()">Save</button>
                 </div>
+                <button class="btn btn-secondary" id="downloadCurrentBtn" style="display:none; margin-top: 8px;" onclick="downloadCurrentOpening()">📥 Download JSON</button>
             </div>
 
             <div id="jsonTab" style="display:none">
@@ -1604,6 +1622,7 @@ function openingCard(k, o) {
         <p>${o.description}</p>
         <div class="moves">${o.startingMoves}</div>
         <div class="card-actions">
+            <button class="edit-btn" onclick="event.stopPropagation();downloadOpening('${k}')" title="Download JSON">📥</button>
             <button class="edit-btn" onclick="event.stopPropagation();editOpening('${k}')" title="Edit">✏️</button>
             <button class="delete-btn" onclick="event.stopPropagation();deleteOpening('${k}')" title="Delete">🗑</button>
         </div>
@@ -1799,6 +1818,7 @@ function showBuilder() {
     document.getElementById('openingDesc').value = '';
     document.getElementById('builderTitle').textContent = '🛠️ Create Opening';
     document.getElementById('saveBtn').textContent = 'Save';
+    document.getElementById('downloadCurrentBtn').style.display = 'none';
     updateColorToggle();
     switchTab('build');
     showScreen('builderScreen');
@@ -1819,6 +1839,7 @@ function editOpening(key) {
     document.getElementById('openingDesc').value = opening.description || '';
     document.getElementById('builderTitle').textContent = '✏️ Edit Opening';
     document.getElementById('saveBtn').textContent = 'Update';
+    document.getElementById('downloadCurrentBtn').style.display = 'block';
     updateColorToggle();
     switchTab('build');
     showScreen('builderScreen');
@@ -2815,6 +2836,112 @@ function importJson() {
         alert('"' + o.name + '" imported!');
         goToMenu();
     } catch(e) { alert('Invalid JSON: ' + e.message); }
+}
+
+// =====================================================
+// DOWNLOAD / UPLOAD / IMPORT FROM URL
+// =====================================================
+
+function downloadOpening(key) {
+    const opening = OPENINGS[key];
+    if (!opening) return;
+    
+    const json = JSON.stringify(opening, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = opening.name.toLowerCase().replace(/[^a-z0-9]/g, '-') + '.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+function downloadCurrentOpening() {
+    if (!builderTree) { alert('No opening to download'); return; }
+    
+    const opening = buildOpeningObj();
+    const json = JSON.stringify(opening, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = opening.name.toLowerCase().replace(/[^a-z0-9]/g, '-') + '.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+function triggerFileUpload() {
+    document.getElementById('fileUploadInput').click();
+}
+
+function handleFileUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const o = JSON.parse(e.target.result);
+            if (!o.name || !o.tree) { 
+                alert('Invalid JSON format: missing name or tree'); 
+                return; 
+            }
+            const key = o.name.toLowerCase().replace(/[^a-z0-9]/g, '_') + '_' + Date.now();
+            OPENINGS[key] = o;
+            saveStorage();
+            alert('"' + o.name + '" imported successfully!');
+            renderMenu();
+        } catch(err) {
+            alert('Error parsing JSON: ' + err.message);
+        }
+    };
+    reader.readAsText(file);
+    
+    // Reset input so same file can be uploaded again
+    event.target.value = '';
+}
+
+function showUrlImport() {
+    document.getElementById('urlImportSection').style.display = 'block';
+    document.getElementById('importUrl').value = '';
+    document.getElementById('importUrl').focus();
+}
+
+function hideUrlImport() {
+    document.getElementById('urlImportSection').style.display = 'none';
+}
+
+async function importFromUrl() {
+    const url = document.getElementById('importUrl').value.trim();
+    if (!url) { alert('Please enter a URL'); return; }
+    
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error('Failed to fetch: ' + response.status);
+        }
+        
+        const o = await response.json();
+        if (!o.name || !o.tree) { 
+            alert('Invalid JSON format: missing name or tree'); 
+            return; 
+        }
+        
+        const key = o.name.toLowerCase().replace(/[^a-z0-9]/g, '_') + '_' + Date.now();
+        OPENINGS[key] = o;
+        saveStorage();
+        alert('"' + o.name + '" imported successfully!');
+        hideUrlImport();
+        renderMenu();
+    } catch(err) {
+        alert('Error importing from URL: ' + err.message);
+    }
 }
 
 document.addEventListener('DOMContentLoaded', init);
