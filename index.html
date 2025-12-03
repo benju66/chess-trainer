@@ -105,10 +105,15 @@
             color: #e2e8f0;
         }
 
-        .delete-btn {
+        .card-actions {
             position: absolute;
             top: 16px;
             right: 16px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .edit-btn, .delete-btn {
             background: rgba(100, 116, 139, 0.3);
             border: none;
             color: #94a3b8;
@@ -117,6 +122,11 @@
             border-radius: 8px;
             cursor: pointer;
             font-size: 1.1rem;
+        }
+
+        .edit-btn:hover {
+            background: rgba(59, 130, 246, 0.3);
+            color: #60a5fa;
         }
 
         .delete-btn:hover {
@@ -1079,7 +1089,7 @@
         <div class="screen" id="builderScreen">
             <button class="nav-btn" onclick="confirmExitBuilder()">← Back</button>
             <div class="header">
-                <h1>🛠️ Create Opening</h1>
+                <h1 id="builderTitle">🛠️ Create Opening</h1>
             </div>
 
             <div class="tabs">
@@ -1114,7 +1124,7 @@
 
                 <div class="btn-row">
                     <button class="btn btn-secondary" onclick="previewOpening()">Preview</button>
-                    <button class="btn btn-primary" onclick="saveOpening()">Save</button>
+                    <button class="btn btn-primary" id="saveBtn" onclick="saveOpening()">Save</button>
                 </div>
             </div>
 
@@ -1262,6 +1272,7 @@ let isPreviewMode = false;
 let builderColor = 'white';
 let builderTree = null;
 let builderPath = [];  // Array of {type: 'child'|'response'|'choice', id: string}
+let editingKey = null; // Key of opening being edited, null if creating new
 
 // =====================================================
 // INIT
@@ -1324,7 +1335,10 @@ function openingCard(k, o) {
         <h3>${o.name}<span class="color-badge ${o.color}">${o.color[0].toUpperCase() + o.color.slice(1)}</span></h3>
         <p>${o.description}</p>
         <div class="moves">${o.startingMoves}</div>
-        <button class="delete-btn" onclick="event.stopPropagation();deleteOpening('${k}')">🗑</button>
+        <div class="card-actions">
+            <button class="edit-btn" onclick="event.stopPropagation();editOpening('${k}')" title="Edit">✏️</button>
+            <button class="delete-btn" onclick="event.stopPropagation();deleteOpening('${k}')" title="Delete">🗑</button>
+        </div>
     </div>`;
 }
 
@@ -1474,8 +1488,31 @@ function showBuilder() {
     builderColor = 'white';
     builderTree = null;
     builderPath = [];
+    editingKey = null;
     document.getElementById('openingName').value = '';
     document.getElementById('openingDesc').value = '';
+    document.getElementById('builderTitle').textContent = '🛠️ Create Opening';
+    document.getElementById('saveBtn').textContent = 'Save';
+    updateColorToggle();
+    switchTab('build');
+    showScreen('builderScreen');
+    renderBuilder();
+}
+
+function editOpening(key) {
+    const opening = OPENINGS[key];
+    if (!opening) return;
+    
+    // Load opening data into builder
+    builderColor = opening.color;
+    builderTree = JSON.parse(JSON.stringify(opening.tree)); // Deep copy
+    builderPath = [];
+    editingKey = key;
+    
+    document.getElementById('openingName').value = opening.name;
+    document.getElementById('openingDesc').value = opening.description || '';
+    document.getElementById('builderTitle').textContent = '✏️ Edit Opening';
+    document.getElementById('saveBtn').textContent = 'Update';
     updateColorToggle();
     switchTab('build');
     showScreen('builderScreen');
@@ -1484,6 +1521,7 @@ function showBuilder() {
 
 function confirmExitBuilder() {
     if (builderTree && !confirm('Exit without saving?')) return;
+    editingKey = null;
     goToMenu();
 }
 
@@ -1496,6 +1534,11 @@ function switchTab(t) {
 }
 
 function setColor(c) {
+    // Don't allow color change when editing (tree structure is color-dependent)
+    if (editingKey) {
+        alert('Cannot change color when editing an existing opening. The move tree is built for ' + builderColor + '.');
+        return;
+    }
     builderColor = c;
     updateColorToggle();
     builderTree = null;
@@ -2342,10 +2385,22 @@ function saveOpening() {
     if (!name) { alert('Enter an opening name'); return; }
     if (!builderTree) { alert('Add at least one move'); return; }
     
-    const key = name.toLowerCase().replace(/[^a-z0-9]/g, '_') + '_' + Date.now();
-    OPENINGS[key] = buildOpeningObj();
-    saveStorage();
-    alert('"' + name + '" saved!');
+    const openingData = buildOpeningObj();
+    
+    if (editingKey) {
+        // Editing existing opening
+        OPENINGS[editingKey] = openingData;
+        saveStorage();
+        alert('"' + name + '" updated!');
+    } else {
+        // Creating new opening
+        const key = name.toLowerCase().replace(/[^a-z0-9]/g, '_') + '_' + Date.now();
+        OPENINGS[key] = openingData;
+        saveStorage();
+        alert('"' + name + '" saved!');
+    }
+    
+    editingKey = null;
     goToMenu();
 }
 
