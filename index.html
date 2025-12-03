@@ -1213,17 +1213,68 @@ function updateColorToggle() {
         el.classList.toggle('selected', el.classList.contains(builderColor)));
 }
 
+// =====================================================
+// FIXED: getBuilderNode now properly navigates the tree
+// Returns: { node, isOpponentMove, parentNode, childIndex }
+// =====================================================
 function getBuilderNode() {
     if (!builderTree) return null;
+    
     let node = builderTree;
-    for (const id of builderPath) {
-        if (node.children) {
-            const child = node.children.find(c => c.id === id);
-            if (child?.response) node = child.response;
-            else return null;
-        } else return null;
+    
+    // If no path, we're at the root
+    if (builderPath.length === 0) {
+        return node;
     }
+    
+    // Navigate through the path
+    for (let i = 0; i < builderPath.length; i++) {
+        const id = builderPath[i];
+        
+        if (!node.children) {
+            return null;
+        }
+        
+        const child = node.children.find(c => c.id === id);
+        if (!child) {
+            return null;
+        }
+        
+        // If this is the last item in the path
+        if (i === builderPath.length - 1) {
+            // If child has a response and we want to be at our move, return response
+            if (child.response) {
+                return child.response;
+            }
+            // Otherwise return the child itself (opponent's move without response yet)
+            return child;
+        }
+        
+        // Not the last item - need to go deeper
+        if (child.response) {
+            node = child.response;
+        } else {
+            // Can't navigate deeper without a response
+            return child;
+        }
+    }
+    
     return node;
+}
+
+// Helper to find the opponent move child at current path
+function getCurrentChild() {
+    if (!builderTree || builderPath.length === 0) return null;
+    
+    let node = builderTree;
+    
+    for (let i = 0; i < builderPath.length - 1; i++) {
+        const child = node.children?.find(c => c.id === builderPath[i]);
+        if (!child?.response) return null;
+        node = child.response;
+    }
+    
+    return node.children?.find(c => c.id === builderPath[builderPath.length - 1]) || null;
 }
 
 function renderBuilder() {
@@ -1252,13 +1303,17 @@ function renderBuilder() {
     }
     
     const node = getBuilderNode();
+    if (!node) {
+        content.innerHTML = '<p>Error: Could not find node</p>';
+        return;
+    }
+    
     const isYourMove = node.player === builderColor;
     const opponent = builderColor === 'white' ? 'Black' : 'White';
     
     // Build path display
-    let pathText = '';
+    let pathText = builderTree.move;
     let tempNode = builderTree;
-    pathText = tempNode.move;
     for (const id of builderPath) {
         if (tempNode.children) {
             const child = tempNode.children.find(c => c.id === id);
@@ -1290,7 +1345,7 @@ function renderBuilder() {
     </div>`;
     
     if (isYourMove) {
-        // Show opponent responses
+        // At YOUR move - show existing opponent responses and form to add more
         if (node.children?.length) {
             html += `<p class="section-title">${opponent}'s Responses</p><div class="response-list">`;
             node.children.forEach(c => {
@@ -1315,48 +1370,22 @@ function renderBuilder() {
             <button class="btn btn-purple" onclick="addOpponentResponse()">+ Add Response</button>
         </div>`;
     } else {
-        // Opponent's move - show/add your response
-        // Find this node in parent's children to check for response
-        let parentNode = builderTree;
-        for (let i = 0; i < builderPath.length - 1; i++) {
-            const child = parentNode.children?.find(c => c.id === builderPath[i]);
-            if (child?.response) parentNode = child.response;
-        }
-        const currentChild = parentNode.children?.find(c => c.id === builderPath[builderPath.length - 1]);
+        // At OPPONENT's move - need to add your reply
+        html += `<div class="add-form">
+            <div class="add-form-title">Add Your Response</div>
+            <div class="form-group">
+                <input type="text" id="newMove" placeholder="Your move">
+            </div>
+            <div class="form-group">
+                <input type="text" id="newExpl" placeholder="Explanation (optional)">
+            </div>
+            <button class="btn btn-primary" onclick="addYourResponse()">Add Response</button>
+        </div>`;
         
-        if (currentChild?.response) {
-            // Has response - show continue button
-            html += `<div class="add-form">
-                <div class="add-form-title">Your Response</div>
-                <div class="response-item" onclick="builderContinue()">
-                    <span class="move" style="color:#fbbf24">${currentChild.response.move}</span>
-                    <span class="arrow">→</span>
-                </div>
-                <p style="color:#64748b;font-size:0.85rem;margin-top:12px">Tap to continue building this line</p>
-            </div>`;
-            
-            // Delete option
-            html += `<div class="detail-actions">
-                <button class="btn btn-danger" onclick="deleteCurrentBranch()">Delete This Branch</button>
-            </div>`;
-        } else {
-            // Need to add response
-            html += `<div class="add-form">
-                <div class="add-form-title">Add Your Response</div>
-                <div class="form-group">
-                    <input type="text" id="newMove" placeholder="Your move">
-                </div>
-                <div class="form-group">
-                    <input type="text" id="newExpl" placeholder="Explanation (optional)">
-                </div>
-                <button class="btn btn-primary" onclick="addYourResponse()">Add Response</button>
-            </div>`;
-            
-            // Delete option
-            html += `<div class="detail-actions">
-                <button class="btn btn-danger" onclick="deleteCurrentBranch()">Delete This Branch</button>
-            </div>`;
-        }
+        // Delete option for this branch
+        html += `<div class="detail-actions">
+            <button class="btn btn-danger" onclick="deleteCurrentBranch()">Delete This Branch</button>
+        </div>`;
     }
     
     content.innerHTML = html;
@@ -1383,19 +1412,26 @@ function addFirstMove() {
     if (!move) return;
     const expl = document.getElementById('newExpl')?.value.trim() || '';
     
-    builderTree = {
-        id: 'root',
-        move: '1. ' + move,
-        player: builderColor === 'white' ? 'white' : 'white', // First move always white notation
-        explanation: builderColor === 'white' ? expl : '',
-        children: []
-    };
-    
-    // If playing black, we need to immediately be ready to add our response
-    if (builderColor === 'black') {
-        // Add a placeholder for white's move so we can respond
-        // Actually, tree root is white's move, we need to add black's response
-        // Show the form to add black's responses
+    if (builderColor === 'white') {
+        // Playing as white - your first move
+        builderTree = {
+            id: 'root',
+            move: '1. ' + move,
+            player: 'white',
+            explanation: expl,
+            children: []
+        };
+    } else {
+        // Playing as black - white's first move (opponent)
+        builderTree = {
+            id: 'root',
+            move: '1. ' + move,
+            player: 'white',
+            explanation: '',
+            children: []
+        };
+        // Immediately need to add black's response, so show the root
+        // and let user add black responses from there
     }
     
     renderBuilder();
@@ -1409,15 +1445,25 @@ function addOpponentResponse() {
     const node = getBuilderNode();
     if (!node) return;
     
-    // Calculate move number
-    const moveNum = Math.ceil((builderPath.length + 2) / 2);
-    const isBlack = node.player === 'white';
-    const notation = isBlack ? `${moveNum}... ${move}` : `${moveNum}. ${move}`;
+    // Calculate move number based on depth
+    // Count how many full moves deep we are
+    let depth = 1; // Start at move 1
+    let tempNode = builderTree;
+    for (const id of builderPath) {
+        const child = tempNode.children?.find(c => c.id === id);
+        if (child?.response) {
+            depth++;
+            tempNode = child.response;
+        }
+    }
+    
+    const opponentColor = builderColor === 'white' ? 'black' : 'white';
+    const notation = opponentColor === 'black' ? `${depth}... ${move}` : `${depth}. ${move}`;
     
     const newChild = {
         id: 'n' + Date.now(),
         move: notation,
-        player: isBlack ? 'black' : 'white',
+        player: opponentColor,
         label: label,
         response: null
     };
@@ -1425,7 +1471,7 @@ function addOpponentResponse() {
     if (!node.children) node.children = [];
     node.children.push(newChild);
     
-    // Navigate into it
+    // Navigate into this new opponent response
     builderPath.push(newChild.id);
     renderBuilder();
 }
@@ -1435,19 +1481,23 @@ function addYourResponse() {
     if (!move) return;
     const expl = document.getElementById('newExpl')?.value.trim() || '';
     
-    // Find current child node
-    let parentNode = builderTree;
-    for (let i = 0; i < builderPath.length - 1; i++) {
-        const child = parentNode.children?.find(c => c.id === builderPath[i]);
-        if (child?.response) parentNode = child.response;
-    }
-    const currentChild = parentNode.children?.find(c => c.id === builderPath[builderPath.length - 1]);
+    // Find the current opponent move child
+    const currentChild = getCurrentChild();
     if (!currentChild) return;
     
     // Calculate move number
-    const moveNum = Math.ceil((builderPath.length + 2) / 2);
-    const isWhite = builderColor === 'white';
-    const notation = isWhite ? `${moveNum}. ${move}` : `${moveNum}... ${move}`;
+    let depth = 1;
+    let tempNode = builderTree;
+    for (const id of builderPath) {
+        const child = tempNode.children?.find(c => c.id === id);
+        if (child?.response) {
+            depth++;
+            tempNode = child.response;
+        }
+    }
+    // If we're responding to black (and we're white), it's still the same move number
+    // If we're responding to white (and we're black), we need to use ... notation
+    const notation = builderColor === 'white' ? `${depth}. ${move}` : `${depth}... ${move}`;
     
     currentChild.response = {
         id: 'r' + Date.now(),
@@ -1457,6 +1507,8 @@ function addYourResponse() {
         children: []
     };
     
+    // Stay at the same path - getBuilderNode will now return the response
+    // because currentChild.response exists
     renderBuilder();
 }
 
@@ -1467,12 +1519,6 @@ function builderSelect(id) {
 
 function builderBack() {
     builderPath.pop();
-    renderBuilder();
-}
-
-function builderContinue() {
-    // Already at opponent's move with response - the path navigation handles this
-    // We just need to re-render to show we're at the response
     renderBuilder();
 }
 
