@@ -1057,6 +1057,39 @@
             height: 28px;
             font-size: 1rem;
         }
+
+        /* Template info box */
+        .template-info {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 12px;
+            font-size: 0.8rem;
+            color: #93c5fd;
+        }
+
+        .template-info summary {
+            cursor: pointer;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .template-info ul {
+            margin: 8px 0 0 16px;
+            color: #94a3b8;
+        }
+
+        .template-info li {
+            margin-bottom: 4px;
+        }
+
+        .template-info code {
+            background: rgba(0,0,0,0.3);
+            padding: 1px 4px;
+            border-radius: 3px;
+            color: #fbbf24;
+        }
     </style>
 </head>
 <body>
@@ -1131,12 +1164,55 @@
             <div id="jsonTab" style="display:none">
                 <div class="builder-section">
                     <h3>Import from JSON</h3>
+                    <details class="template-info">
+                        <summary>📋 JSON Schema Reference</summary>
+                        <ul>
+                            <li><code>name</code> - Opening name (e.g., "Italian Game")</li>
+                            <li><code>color</code> - "white" or "black" (your color)</li>
+                            <li><code>description</code> - Brief description</li>
+                            <li><code>startingMoves</code> - Display string (e.g., "1. e4 e5 2. Nf3")</li>
+                            <li><code>tree</code> - Root node of move tree</li>
+                        </ul>
+                        <p style="margin-top:8px;font-weight:600;">Structure Pattern:</p>
+                        <ul>
+                            <li><strong>Your move nodes</strong> have <code>children</code> = opponent's possible responses</li>
+                            <li><strong>Opponent move nodes</strong> have <code>response</code> = your reply</li>
+                        </ul>
+                        <p style="margin-top:8px;font-weight:600;">Your Move Node Fields:</p>
+                        <ul>
+                            <li><code>id</code> - Unique identifier</li>
+                            <li><code>move</code> - Move notation (e.g., "1. e4" or "1... c5")</li>
+                            <li><code>player</code> - "white" or "black"</li>
+                            <li><code>explanation</code> - Why this move (optional)</li>
+                            <li><code>children</code> - Array of opponent's response options</li>
+                        </ul>
+                        <p style="margin-top:8px;font-weight:600;">Opponent Response Node (in children):</p>
+                        <ul>
+                            <li><code>id</code>, <code>move</code>, <code>player</code> - Same as above</li>
+                            <li><code>label</code> - "Main Line", "Sideline", "Aggressive", "Blunder!", etc.</li>
+                            <li><code>response</code> - Your reply node</li>
+                        </ul>
+                        <p style="margin-top:8px;font-weight:600;">Choice Point (for your moves):</p>
+                        <ul>
+                            <li><code>isChoice</code> - Set to <code>true</code></li>
+                            <li><code>choices</code> - Array of your options</li>
+                        </ul>
+                        <p style="margin-top:8px;font-weight:600;">Choice Option:</p>
+                        <ul>
+                            <li><code>id</code>, <code>move</code>, <code>explanation</code>, <code>children</code></li>
+                            <li><code>name</code> - Option name (e.g., "Fried Liver")</li>
+                            <li><code>style</code> - Style description (e.g., "Aggressive attack")</li>
+                            <li><code>color</code> - "red", "blue", "purple", or "green"</li>
+                        </ul>
+                        <p style="margin-top:8px;font-weight:600;color:#fbbf24;">Note:</p>
+                        <p style="color:#94a3b8;font-size:0.8rem;">Select White or Black in the Build tab first, then view this tab to see the appropriate template structure.</p>
+                    </details>
                     <textarea class="json-area" id="jsonIn" placeholder="Paste opening JSON here..."></textarea>
                     <button class="btn btn-primary" onclick="importJson()">Import</button>
                 </div>
                 <div class="builder-section">
-                    <h3>Export Current</h3>
-                    <textarea class="json-area" id="jsonOut" readonly></textarea>
+                    <h3>Export Current / Template</h3>
+                    <textarea class="json-area" id="jsonOut" readonly style="min-height:280px;"></textarea>
                     <button class="btn btn-secondary" onclick="copyJson()">Copy to Clipboard</button>
                 </div>
             </div>
@@ -1231,25 +1307,217 @@ const DEFAULT_OPENINGS = {
         description: "Fighting defense to 1.e4",
         startingMoves: "1. e4 c5 2. Nf3 d6",
         tree: {
-            id: 'root', move: '1. e4', player: 'white', explanation: 'White opens e4.',
+            id: 'root', move: '1. e4', player: 'white', explanation: 'White opens with the King\'s pawn.',
             children: [
                 {
                     id: 'c5', move: '1... c5', player: 'black', label: 'Sicilian!',
-                    response: {
-                        id: 'Nf3', move: '2. Nf3', player: 'white', explanation: 'Open Sicilian.',
-                        children: [
-                            {
-                                id: 'd6', move: '2... d6', player: 'black', label: 'Najdorf Setup',
-                                response: {
-                                    id: 'd4', move: '3. d4', player: 'white', explanation: 'White opens the position.',
-                                    children: []
-                                }
+                    explanation: 'The Sicilian Defense - fight for the center asymmetrically!',
+                    children: [
+                        {
+                            id: 'Nf3', move: '2. Nf3', player: 'white', label: 'Open Sicilian',
+                            response: {
+                                id: 'd6', move: '2... d6', player: 'black', 
+                                explanation: 'Preparing the Najdorf setup with ...a6 and ...e5.',
+                                children: [
+                                    {
+                                        id: 'd4', move: '3. d4', player: 'white', label: 'Main Line',
+                                        response: {
+                                            id: 'cxd4', move: '3... cxd4', player: 'black',
+                                            explanation: 'Capture to open the c-file.',
+                                            children: [
+                                                {
+                                                    id: 'Nxd4', move: '4. Nxd4', player: 'white', label: 'Natural',
+                                                    response: {
+                                                        id: 'Nf6', move: '4... Nf6', player: 'black',
+                                                        explanation: 'Develop and attack e4.',
+                                                        children: [
+                                                            {
+                                                                id: 'Nc3', move: '5. Nc3', player: 'white', label: 'Main',
+                                                                response: {
+                                                                    id: 'a6', move: '5... a6', player: 'black',
+                                                                    explanation: 'The Najdorf! Flexible and sharp.',
+                                                                    children: []
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
                             }
-                        ]
-                    }
+                        },
+                        {
+                            id: 'Nc3', move: '2. Nc3', player: 'white', label: 'Closed Sicilian',
+                            response: {
+                                id: 'Nc6', move: '2... Nc6', player: 'black',
+                                explanation: 'Develop naturally against the Closed.',
+                                children: []
+                            }
+                        },
+                        {
+                            id: 'c3', move: '2. c3', player: 'white', label: 'Alapin',
+                            response: {
+                                id: 'Nf6_alp', move: '2... Nf6', player: 'black',
+                                explanation: 'Counterattack e4 immediately.',
+                                children: []
+                            }
+                        }
+                    ]
                 }
             ]
         }
+    }
+};
+
+// Comprehensive JSON template for export/AI generation
+const JSON_TEMPLATE_WHITE = {
+    "_comment": "TEMPLATE FOR WHITE OPENINGS - You play as White",
+    "name": "Example White Opening",
+    "color": "white",
+    "description": "Brief description of the opening strategy",
+    "startingMoves": "1. e4 e5 2. Nf3 Nc6",
+    "tree": {
+        "id": "root",
+        "move": "1. e4",
+        "player": "white",
+        "explanation": "Your first move explanation",
+        "children": [
+            {
+                "id": "child1",
+                "move": "1... e5",
+                "player": "black",
+                "label": "Main Line",
+                "response": {
+                    "id": "resp1",
+                    "move": "2. Nf3",
+                    "player": "white",
+                    "explanation": "Your response explanation",
+                    "children": [
+                        {
+                            "id": "child2",
+                            "move": "2... Nc6",
+                            "player": "black",
+                            "label": "Natural",
+                            "response": {
+                                "id": "choice1",
+                                "move": "Choose Style",
+                                "player": "white",
+                                "explanation": "Pick your preferred approach",
+                                "isChoice": true,
+                                "choices": [
+                                    {
+                                        "id": "opt1",
+                                        "move": "3. Bb5",
+                                        "name": "Ruy Lopez",
+                                        "style": "Classical pressure",
+                                        "color": "blue",
+                                        "explanation": "The Spanish Game",
+                                        "children": []
+                                    },
+                                    {
+                                        "id": "opt2",
+                                        "move": "3. Bc4",
+                                        "name": "Italian Game",
+                                        "style": "Targets f7",
+                                        "color": "red",
+                                        "explanation": "Aggressive approach",
+                                        "children": []
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "id": "sideline1",
+                "move": "1... c5",
+                "player": "black",
+                "label": "Sicilian",
+                "response": {
+                    "id": "resp_sic",
+                    "move": "2. Nf3",
+                    "player": "white",
+                    "explanation": "Entering the Open Sicilian",
+                    "children": []
+                }
+            }
+        ]
+    }
+};
+
+const JSON_TEMPLATE_BLACK = {
+    "_comment": "TEMPLATE FOR BLACK OPENINGS - You play as Black",
+    "name": "Example Black Opening",
+    "color": "black",
+    "description": "Brief description of the defense strategy",
+    "startingMoves": "1. e4 c5 2. Nf3 d6",
+    "tree": {
+        "id": "root",
+        "move": "1. e4",
+        "player": "white",
+        "explanation": "Opponent's opening move",
+        "children": [
+            {
+                "id": "c5",
+                "move": "1... c5",
+                "player": "black",
+                "label": "Sicilian",
+                "explanation": "Your response - the Sicilian Defense!",
+                "children": [
+                    {
+                        "id": "Nf3",
+                        "move": "2. Nf3",
+                        "player": "white",
+                        "label": "Open Sicilian",
+                        "response": {
+                            "id": "d6",
+                            "move": "2... d6",
+                            "player": "black",
+                            "explanation": "Your next move explanation",
+                            "children": [
+                                {
+                                    "id": "d4",
+                                    "move": "3. d4",
+                                    "player": "white",
+                                    "label": "Main Line",
+                                    "response": {
+                                        "id": "cxd4",
+                                        "move": "3... cxd4",
+                                        "player": "black",
+                                        "explanation": "Capture and open the position",
+                                        "children": []
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "id": "Nc3",
+                        "move": "2. Nc3",
+                        "player": "white",
+                        "label": "Closed Sicilian",
+                        "response": {
+                            "id": "Nc6",
+                            "move": "2... Nc6",
+                            "player": "black",
+                            "explanation": "Develop naturally",
+                            "children": []
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "e5",
+                "move": "1... e5",
+                "player": "black",
+                "label": "Classical",
+                "explanation": "Alternative - mirror White's center control",
+                "children": []
+            }
+        ]
     }
 };
 
@@ -1388,7 +1656,16 @@ function getTrainerNode() {
             if (c) n = c;
         } else if (n.children) {
             const c = n.children.find(x => x.id === id);
-            if (c) n = c.response || c;
+            if (c) {
+                // Check if this child is our move or opponent's move
+                if (c.player === userColor) {
+                    // It's our move - stay at this node to display it
+                    n = c;
+                } else {
+                    // It's opponent's move - go to our response
+                    n = c.response || c;
+                }
+            }
         }
     }
     return n;
@@ -1397,6 +1674,11 @@ function getTrainerNode() {
 function getTrainerOpts(n) {
     if (n.isChoice && n.choices) return { type: 'choices', opts: n.choices };
     if (n.children?.length) return { type: 'moves', opts: n.children };
+    // For backward compatibility: if this is your move with a single response (old Black structure)
+    // Present the response as an option to continue
+    if (n.player === userColor && n.response) {
+        return { type: 'moves', opts: [n.response] };
+    }
     return { type: 'end', opts: [] };
 }
 
@@ -1414,9 +1696,15 @@ function getTrainerHistory() {
             const c = n.children.find(x => x.id === id);
             if (c) {
                 h.push({ m: c.move, p: c.player });
-                if (c.response) {
-                    h.push({ m: c.response.move, p: c.response.player, isChoice: c.response.isChoice });
-                    n = c.response;
+                if (c.player === userColor) {
+                    // This is our move - we stay here, don't add response yet
+                    n = c;
+                } else {
+                    // This is opponent's move - add our response if exists
+                    if (c.response) {
+                        h.push({ m: c.response.move, p: c.response.player, isChoice: c.response.isChoice });
+                        n = c.response;
+                    }
                 }
             }
         }
@@ -1453,17 +1741,35 @@ function renderTrainer() {
         });
         html += '</div></div>';
     } else if (o.type === 'moves') {
-        const opp = userColor === 'white' ? 'Black' : 'White';
-        html += `<div class="options-section">
-            <div class="options-label"><div class="move-dot opponent-move"></div><span>${opp} might play...</span></div>`;
-        o.opts.forEach(x => {
-            const lbl = x.label?.includes('Blunder') ? 'blunder' : (x.label === 'Main Line' || x.label === 'Main') ? 'main' : '';
-            html += `<button class="option-btn" onclick="trainerSelect('${x.id}')">
-                <div><span class="move-text">${x.move}</span>${x.label ? `<span class="label ${lbl}">${x.label}</span>` : ''}</div>
-                <span class="arrow">→</span>
-            </button>`;
-        });
-        html += '</div>';
+        // FIX: Check if the children are YOUR moves or OPPONENT moves based on player color
+        const childrenAreYourMoves = o.opts.length > 0 && o.opts[0].player === userColor;
+        
+        if (childrenAreYourMoves) {
+            // These are YOUR response options
+            html += `<div class="options-section">
+                <div class="options-label"><div class="move-dot your-move"></div><span>Your response...</span></div>`;
+            o.opts.forEach(x => {
+                const lbl = x.label?.includes('Blunder') ? 'blunder' : (x.label === 'Main Line' || x.label === 'Main') ? 'main' : '';
+                html += `<button class="option-btn" onclick="trainerSelect('${x.id}')">
+                    <div><span class="move-text">${x.move}</span>${x.label ? `<span class="label ${lbl}">${x.label}</span>` : ''}</div>
+                    <span class="arrow">→</span>
+                </button>`;
+            });
+            html += '</div>';
+        } else {
+            // These are OPPONENT response options
+            const opp = userColor === 'white' ? 'Black' : 'White';
+            html += `<div class="options-section">
+                <div class="options-label"><div class="move-dot opponent-move"></div><span>${opp} might play...</span></div>`;
+            o.opts.forEach(x => {
+                const lbl = x.label?.includes('Blunder') ? 'blunder' : (x.label === 'Main Line' || x.label === 'Main') ? 'main' : '';
+                html += `<button class="option-btn" onclick="trainerSelect('${x.id}')">
+                    <div><span class="move-text">${x.move}</span>${x.label ? `<span class="label ${lbl}">${x.label}</span>` : ''}</div>
+                    <span class="arrow">→</span>
+                </button>`;
+            });
+            html += '</div>';
+        }
     } else {
         html += `<div class="end-card"><div class="icon">🎯</div><h3>End of Line</h3><p>Move ${mc} reached</p></div>`;
     }
@@ -1530,7 +1836,16 @@ function switchTab(t) {
     document.getElementById('tabJson').classList.toggle('active', t === 'json');
     document.getElementById('buildTab').style.display = t === 'build' ? 'block' : 'none';
     document.getElementById('jsonTab').style.display = t === 'json' ? 'block' : 'none';
-    if (t === 'json') document.getElementById('jsonOut').value = JSON.stringify(buildOpeningObj(), null, 2);
+    if (t === 'json') {
+        // Show comprehensive template if no tree built, otherwise show current opening
+        if (builderTree) {
+            document.getElementById('jsonOut').value = JSON.stringify(buildOpeningObj(), null, 2);
+        } else {
+            // Show template based on selected color
+            const template = builderColor === 'white' ? JSON_TEMPLATE_WHITE : JSON_TEMPLATE_BLACK;
+            document.getElementById('jsonOut').value = JSON.stringify(template, null, 2);
+        }
+    }
 }
 
 function setColor(c) {
@@ -1841,6 +2156,48 @@ function renderOpponentMoveView(node, you, isRoot) {
         ${node.label ? `<div class="position-expl">Label: ${node.label}</div>` : ''}
     </div>`;
     
+    // For root of Black openings, children are YOUR responses
+    if (isRoot) {
+        // Show existing responses (your moves)
+        if (node.children?.length) {
+            html += `<p class="section-title">Your Responses</p><div class="response-list">`;
+            node.children.forEach(c => {
+                html += `<div class="response-item">
+                    <div onclick="navigateToChild('${c.id}')" style="flex:1;display:flex;align-items:center;cursor:pointer;">
+                        <span class="move">${c.move}</span>
+                        ${c.label ? `<span class="tag">${c.label}</span>` : ''}
+                    </div>
+                    <button class="delete-item-btn" onclick="event.stopPropagation();deleteChildFromRoot('${c.id}')" title="Delete">×</button>
+                    <span class="arrow" onclick="navigateToChild('${c.id}')" style="cursor:pointer;">→</span>
+                </div>`;
+            });
+            html += '</div>';
+        }
+        
+        // Add form for your response at root
+        html += `<div class="add-form">
+            <div class="add-form-title">Add Your (${you}) Response</div>
+            <div class="form-group">
+                <input type="text" id="newMove" placeholder="Your move (e.g., c5 or e5)">
+            </div>
+            <div class="form-group">
+                <label>Label</label>
+                <select id="newLabel">
+                    ${LABEL_OPTIONS.map(l => `<option value="${l}">${l || '(No label)'}</option>`).join('')}
+                </select>
+            </div>
+            <div class="form-group" id="customLabelGroup" style="display:none">
+                <input type="text" id="customLabel" placeholder="Custom label">
+            </div>
+            <div class="form-group">
+                <input type="text" id="newExpl" placeholder="Explanation (optional)">
+            </div>
+            <button class="btn btn-primary" onclick="addYourResponseAtRoot()">Add Response</button>
+        </div>`;
+        
+        return html;
+    }
+    
     // Get the child reference to check for response
     const childRef = getCurrentChildRef();
     
@@ -1899,11 +2256,9 @@ function renderOpponentMoveView(node, you, isRoot) {
         }
         
         // Delete branch option
-        if (!isRoot) {
-            html += `<div class="detail-actions">
-                <button class="btn btn-danger" onclick="deleteCurrentBranch()">Delete This Branch</button>
-            </div>`;
-        }
+        html += `<div class="detail-actions">
+            <button class="btn btn-danger" onclick="deleteCurrentBranch()">Delete This Branch</button>
+        </div>`;
     } else {
         // No response yet - show form to add
         html += `<div class="add-form">
@@ -1952,11 +2307,9 @@ function renderOpponentMoveView(node, you, isRoot) {
         </div>`;
         
         // Delete branch option
-        if (!isRoot) {
-            html += `<div class="detail-actions">
-                <button class="btn btn-danger" onclick="deleteCurrentBranch()">Delete This Branch</button>
-            </div>`;
-        }
+        html += `<div class="detail-actions">
+            <button class="btn btn-danger" onclick="deleteCurrentBranch()">Delete This Branch</button>
+        </div>`;
     }
     
     return html;
@@ -2274,6 +2627,49 @@ function deleteChildFromList(id) {
         pos.node.children.splice(idx, 1);
         renderBuilder();
     }
+}
+
+function deleteChildFromRoot(id) {
+    if (!confirm('Delete this response and all its continuations?')) return;
+    
+    if (!builderTree?.children) return;
+    
+    const idx = builderTree.children.findIndex(c => c.id === id);
+    if (idx > -1) {
+        builderTree.children.splice(idx, 1);
+        renderBuilder();
+    }
+}
+
+function addYourResponseAtRoot() {
+    const move = document.getElementById('newMove').value.trim();
+    if (!move) return;
+    
+    let label = document.getElementById('newLabel')?.value || '';
+    if (label === 'Custom') {
+        label = document.getElementById('customLabel')?.value.trim() || '';
+    }
+    const expl = document.getElementById('newExpl')?.value.trim() || '';
+    
+    if (!builderTree) return;
+    
+    const notation = `1... ${move}`;
+    
+    const newChild = {
+        id: 'c' + Date.now(),
+        move: notation,
+        player: builderColor,
+        label: label,
+        explanation: expl,
+        children: []  // For Black openings, your move has children (opponent responses)
+    };
+    
+    if (!builderTree.children) builderTree.children = [];
+    builderTree.children.push(newChild);
+    
+    // Navigate into this child
+    builderPath.push({ type: 'child', id: newChild.id });
+    renderBuilder();
 }
 
 function deleteChoice(id) {
