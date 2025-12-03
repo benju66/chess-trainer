@@ -1,0 +1,104 @@
+{
+  "name": "Sicilian Najdorf",
+  "color": "black",
+  "description": "Fighting defense to 1.e4",
+  "startingMoves": "1. e4 c5 2. Nf3 d6",
+  "tree": {
+    "id": "root",
+    "move": "1. e4",
+    "player": "white",
+    "explanation": "White opens with the King's pawn.",
+    "children": [
+      {
+        "id": "c5",
+        "move": "1... c5",
+        "player": "black",
+        "label": "Sicilian!",
+        "explanation": "The Sicilian Defense - fight for the center asymmetrically!",
+        "children": [
+          {
+            "id": "Nf3",
+            "move": "2. Nf3",
+            "player": "white",
+            "label": "Open Sicilian",
+            "response": {
+              "id": "d6",
+              "move": "2... d6",
+              "player": "black",
+              "explanation": "Preparing the Najdorf setup with ...a6 and ...e5.",
+              "children": [
+                {
+                  "id": "d4",
+                  "move": "3. d4",
+                  "player": "white",
+                  "label": "Main Line",
+                  "response": {
+                    "id": "cxd4",
+                    "move": "3... cxd4",
+                    "player": "black",
+                    "explanation": "Capture to open the c-file.",
+                    "children": [
+                      {
+                        "id": "Nxd4",
+                        "move": "4. Nxd4",
+                        "player": "white",
+                        "label": "Natural",
+                        "response": {
+                          "id": "Nf6",
+                          "move": "4... Nf6",
+                          "player": "black",
+                          "explanation": "Develop and attack e4.",
+                          "children": [
+                            {
+                              "id": "Nc3",
+                              "move": "5. Nc3",
+                              "player": "white",
+                              "label": "Main",
+                              "response": {
+                                "id": "a6",
+                                "move": "5... a6",
+                                "player": "black",
+                                "explanation": "The Najdorf! Flexible and sharp.",
+                                "children": []
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "Nc3",
+            "move": "2. Nc3",
+            "player": "white",
+            "label": "Closed Sicilian",
+            "response": {
+              "id": "Nc6",
+              "move": "2... Nc6",
+              "player": "black",
+              "explanation": "Develop naturally against the Closed.",
+              "children": []
+            }
+          },
+          {
+            "id": "c3",
+            "move": "2. c3",
+            "player": "white",
+            "label": "Alapin",
+            "response": {
+              "id": "Nf6_alp",
+              "move": "2... Nf6",
+              "player": "black",
+              "explanation": "Counterattack e4 immediately.",
+              "children": []
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
