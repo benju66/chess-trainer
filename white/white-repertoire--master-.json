@@ -1,0 +1,255 @@
+{
+  "name": "White Repertoire (Master)",
+  "color": "white",
+  "description": "The complete package. Deep Italian Game logic + simple systems for everything else.",
+  "startingMoves": "1. e4",
+  "tree": {
+    "id": "root",
+    "move": "1. e4",
+    "player": "white",
+    "explanation": "We claim the center. We are ready for anything.",
+    "children": [
+      {
+        "id": "1_e5",
+        "move": "1... e5",
+        "player": "black",
+        "label": "Open Game",
+        "response": {
+          "id": "2_Nf3",
+          "move": "2. Nf3",
+          "player": "white",
+          "explanation": "Develop with a threat! Attack e5.",
+          "children": [
+            {
+              "id": "2_Nc6",
+              "move": "2... Nc6",
+              "player": "black",
+              "label": "Main Line",
+              "response": {
+                "id": "3_Bc4",
+                "move": "3. Bc4",
+                "player": "white",
+                "explanation": "The Italian Game. Focusing on the weak f7 square.",
+                "children": [
+                  {
+                    "id": "3_Bc5",
+                    "move": "3... Bc5",
+                    "player": "black",
+                    "label": "Giuoco Piano",
+                    "response": {
+                      "id": "choice_bc5",
+                      "move": "Choose Strategy",
+                      "player": "white",
+                      "explanation": "Do you want to build slowly or attack now?",
+                      "isChoice": true,
+                      "choices": [
+                        {
+                          "id": "opt_c3",
+                          "move": "4. c3",
+                          "name": "Main Line",
+                          "style": "Positional",
+                          "color": "blue",
+                          "explanation": "Building a massive center (d4 is next).",
+                          "children": []
+                        },
+                        {
+                          "id": "opt_evans",
+                          "move": "4. b4",
+                          "name": "Evans Gambit",
+                          "style": "Aggressive",
+                          "color": "red",
+                          "explanation": "Sacrifice a pawn to distract the bishop and speed up development.",
+                          "children": []
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "id": "3_Nf6",
+                    "move": "3... Nf6",
+                    "player": "black",
+                    "label": "Two Knights",
+                    "response": {
+                      "id": "choice_nf6",
+                      "move": "Choose Strategy",
+                      "player": "white",
+                      "explanation": "They attack e4. How do we respond?",
+                      "isChoice": true,
+                      "choices": [
+                        {
+                          "id": "opt_ng5",
+                          "move": "4. Ng5",
+                          "name": "Fried Liver Attack",
+                          "style": "Tactical",
+                          "color": "purple",
+                          "explanation": "Ignore the threat to e4. Attack f7 with everything!",
+                          "children": [
+                            {
+                              "id": "4_d5",
+                              "move": "4... d5",
+                              "player": "black",
+                              "label": "Correct Defense",
+                              "response": {
+                                "id": "5_exd5",
+                                "move": "5. exd5",
+                                "player": "white",
+                                "explanation": "Open lines.",
+                                "children": [
+                                  {
+                                    "id": "5_na5",
+                                    "move": "5... Na5",
+                                    "player": "black",
+                                    "label": "Polerio (Best)",
+                                    "response": {
+                                      "id": "6_bb5",
+                                      "move": "6. Bb5+",
+                                      "player": "white",
+                                      "explanation": "Check! Force them to block.",
+                                      "children": []
+                                    }
+                                  },
+                                  {
+                                    "id": "5_nxd5",
+                                    "move": "5... Nxd5?",
+                                    "player": "black",
+                                    "label": "BLUNDER (Fried Liver)",
+                                    "response": {
+                                      "id": "6_nxf7",
+                                      "move": "6. Nxf7!",
+                                      "player": "white",
+                                      "explanation": "PUNISHMENT! Forking Queen and Rook. Their King must walk into the center to save the piece.",
+                                      "children": []
+                                    }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "id": "4_h6_blunder",
+                              "move": "4... h6?",
+                              "player": "black",
+                              "label": "BLUNDER (Slow)",
+                              "response": {
+                                "id": "5_nxf7_h6",
+                                "move": "5. Nxf7!",
+                                "player": "white",
+                                "explanation": "They thought h6 kicked the knight. It's too late. The fork lands immediately.",
+                                "children": []
+                              }
+                            },
+                            {
+                              "id": "4_traxler",
+                              "move": "4... Bc5",
+                              "player": "black",
+                              "label": "Traxler Counter",
+                              "response": {
+                                "id": "5_bxf7",
+                                "move": "5. Bxf7+",
+                                "player": "white",
+                                "explanation": "Take with check, but BEWARE: Do not take the Rook next move or you get mated.",
+                                "children": []
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "id": "opt_d3",
+                          "move": "4. d3",
+                          "name": "Quiet Game",
+                          "style": "Solid",
+                          "color": "green",
+                          "explanation": "Simply defend e4.",
+                          "children": []
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "id": "3_nd4",
+                    "move": "3... Nd4?",
+                    "player": "black",
+                    "label": "Blackburne Trap",
+                    "response": {
+                      "id": "4_c3",
+                      "move": "4. c3",
+                      "player": "white",
+                      "explanation": "Kick the knight. DO NOT take the e5 pawn (Nxe5?) or you lose to Qg5.",
+                      "children": []
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "1_c5",
+        "move": "1... c5",
+        "player": "black",
+        "label": "Sicilian",
+        "response": {
+          "id": "2_c3_alapin",
+          "move": "2. c3",
+          "player": "white",
+          "explanation": "The Alapin. We skip standard theory and build a center with d4 next.",
+          "children": []
+        }
+      },
+      {
+        "id": "1_e6",
+        "move": "1... e6",
+        "player": "black",
+        "label": "French",
+        "response": {
+          "id": "2_d4",
+          "move": "2. d4",
+          "player": "white",
+          "explanation": "Take the center.",
+          "children": [
+            {
+              "id": "2_d5_fr",
+              "move": "2... d5",
+              "player": "black",
+              "label": "Main Line",
+              "response": {
+                "id": "3_exd5",
+                "move": "3. exd5",
+                "player": "white",
+                "explanation": "The Exchange Variation. We simplify the game to avoid complications.",
+                "children": []
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "1_c6",
+        "move": "1... c6",
+        "player": "black",
+        "label": "Caro-Kann",
+        "response": {
+          "id": "2_d4_ck",
+          "move": "2. d4",
+          "player": "white",
+          "explanation": "Take the center.",
+          "children": [
+            {
+              "id": "2_d5_ck",
+              "move": "2... d5",
+              "player": "black",
+              "label": "Main Line",
+              "response": {
+                "id": "3_exd5_ck",
+                "move": "3. exd5",
+                "player": "white",
+                "explanation": "The Exchange Variation. Simple, open, and easy to play.",
+                "children": []
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
