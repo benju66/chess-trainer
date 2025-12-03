@@ -1,0 +1,170 @@
+{
+  "name": "Queen's Gambit Declined",
+  "color": "black",
+  "description": "The immovable object. A solid, classical defense (1... d5 2... e6) where Black holds the center at all costs.",
+  "startingMoves": "1. d4 d5 2. c4 e6",
+  "tree": {
+    "id": "qgd_root",
+    "move": "1. d4",
+    "player": "white",
+    "explanation": "White claims the center.",
+    "children": [
+      {
+        "id": "qgd_1_d5",
+        "move": "1... d5",
+        "player": "black",
+        "label": "Classical",
+        "response": {
+          "id": "qgd_2_c4",
+          "move": "2. c4",
+          "player": "white",
+          "label": "Queen's Gambit",
+          "response": {
+            "id": "qgd_2_e6",
+            "move": "2... e6",
+            "player": "black",
+            "label": "QGD",
+            "explanation": "The Declined. We shore up the d5 pawn. Note: This blocks our c8 bishop (the 'Bad Bishop'), which we must free later.",
+            "children": [
+              {
+                "id": "qgd_3_nc3",
+                "move": "3. Nc3",
+                "player": "white",
+                "label": "Pressure on d5",
+                "response": {
+                  "id": "qgd_choice_style",
+                  "move": "Choose Approach",
+                  "player": "black",
+                  "isChoice": true,
+                  "explanation": "White pressures the center. Do we stay solid or counter-attack?",
+                  "choices": [
+                    {
+                      "id": "qgd_opt_nf6",
+                      "move": "3... Nf6",
+                      "name": "Main Line",
+                      "style": "Solid / Classic",
+                      "color": "blue",
+                      "explanation": "The standard move. We control e4 and d5. We wait for White to show their hand.",
+                      "children": [
+                        {
+                          "id": "qgd_4_bg5",
+                          "move": "4. Bg5",
+                          "player": "white",
+                          "label": "The Pin",
+                          "response": {
+                            "id": "qgd_4_be7",
+                            "move": "4... Be7",
+                            "player": "black",
+                            "explanation": "Unpin immediately. We are ready to castle.",
+                            "children": [
+                              {
+                                "id": "qgd_5_nf3",
+                                "move": "5. Nf3",
+                                "player": "white",
+                                "label": "Development",
+                                "response": {
+                                  "id": "qgd_5_h6",
+                                  "move": "5... h6",
+                                  "player": "black",
+                                  "explanation": "Put the question to the bishop. Make them decide.",
+                                  "children": [
+                                    {
+                                      "id": "qgd_6_bh4",
+                                      "move": "6. Bh4",
+                                      "player": "white",
+                                      "label": "Retreat",
+                                      "response": {
+                                        "id": "qgd_choice_mid",
+                                        "move": "Choose Plan",
+                                        "player": "black",
+                                        "isChoice": true,
+                                        "explanation": "The critical moment. How do we solve the 'Bad Bishop' (c8)?",
+                                        "choices": [
+                                          {
+                                            "id": "qgd_opt_ortho",
+                                            "move": "6... O-O",
+                                            "name": "Orthodox Defense",
+                                            "style": "Super Solid",
+                                            "color": "green",
+                                            "explanation": "We castle first. We will try to free the bishop later with ...b6 or ...c5 breaks. Very hard to crack.",
+                                            "children": []
+                                          },
+                                          {
+                                            "id": "qgd_opt_tartakower",
+                                            "move": "6... b6",
+                                            "name": "Tartakower",
+                                            "style": "Active / Famous",
+                                            "color": "red",
+                                            "explanation": "We solve the problem immediately! We will fianchetto the bishop to b7 where it attacks the center.",
+                                            "children": []
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "id": "qgd_4_cxd5",
+                          "move": "4. cxd5",
+                          "player": "white",
+                          "label": "Exchange Var",
+                          "response": {
+                            "id": "qgd_4_exd5",
+                            "move": "4... exd5",
+                            "player": "black",
+                            "explanation": "We recapture with the pawn. This opens the diagonal for our 'Bad Bishop' on c8! The game becomes about structure.",
+                            "children": []
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "id": "qgd_opt_c5",
+                      "move": "3... c5",
+                      "name": "Tarrasch Defense",
+                      "style": "Aggressive / IQP",
+                      "color": "purple",
+                      "explanation": "We strike back immediately! We accept an 'Isolated Queen Pawn' (weakness) in exchange for free piece play and open lines.",
+                      "children": [
+                        {
+                          "id": "qgd_4_cxd5",
+                          "move": "4. cxd5",
+                          "player": "white",
+                          "label": "Exchange",
+                          "response": {
+                            "id": "qgd_4_exd5_tar",
+                            "move": "4... exd5",
+                            "player": "black",
+                            "explanation": "We accept the isolated d5 pawn. Our plan is to attack before White can exploit the weakness.",
+                            "children": []
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "qgd_3_nf3",
+                "move": "3. Nf3",
+                "player": "white",
+                "label": "Quiet",
+                "response": {
+                  "id": "qgd_3_nf6",
+                  "move": "3... Nf6",
+                  "player": "black",
+                  "explanation": "Standard development. Transposes to main lines usually.",
+                  "children": []
+                }
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

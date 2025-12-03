@@ -1,0 +1,228 @@
+{
+  "name": "Caro-Kann Defense",
+  "color": "black",
+  "description": "The 'Bank of Chess'. A rock-solid defense (1. e4 c6) where Black builds a fortress before fighting back.",
+  "startingMoves": "1. e4 c6",
+  "tree": {
+    "id": "ck_root",
+    "move": "1. e4",
+    "player": "white",
+    "explanation": "White claims the center.",
+    "children": [
+      {
+        "id": "ck_1_c6",
+        "move": "1... c6",
+        "player": "black",
+        "label": "Caro-Kann",
+        "explanation": "We support the d5 push. Unlike the French Defense (1... e6), we keep the light-squared bishop diagonal open.",
+        "children": [
+          {
+            "id": "ck_2_d4",
+            "move": "2. d4",
+            "player": "white",
+            "label": "Main Line",
+            "response": {
+              "id": "ck_2_d5",
+              "move": "2... d5",
+              "player": "black",
+              "explanation": "We strike immediately. White must now decide how to handle the tension.",
+              "children": [
+                {
+                  "id": "ck_3_e5",
+                  "move": "3. e5",
+                  "player": "white",
+                  "label": "Advance Variation",
+                  "response": {
+                    "id": "ck_3_bf5",
+                    "move": "3... Bf5",
+                    "player": "black",
+                    "explanation": "CRITICAL MOVE. The center is closed. We must develop this bishop *outside* the pawn chain before we play e6. If you play e6 first, the bishop is trapped forever.",
+                    "children": [
+                      {
+                        "id": "ck_4_nf3",
+                        "move": "4. Nf3",
+                        "player": "white",
+                        "label": "Short",
+                        "response": {
+                          "id": "ck_4_e6",
+                          "move": "4... e6",
+                          "player": "black",
+                          "explanation": "Now that the bishop is safe on f5, we close the door. We have a solid structure.",
+                          "children": []
+                        }
+                      },
+                      {
+                        "id": "ck_4_h4",
+                        "move": "4. h4",
+                        "player": "white",
+                        "label": "Tal Variation",
+                        "response": {
+                          "id": "ck_4_h5",
+                          "move": "4... h5",
+                          "player": "black",
+                          "explanation": "Aggressive! White threatens g4 to trap our bishop. We must stop g4 by playing h5 immediately.",
+                          "children": []
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "ck_3_nc3",
+                  "move": "3. Nc3",
+                  "player": "white",
+                  "label": "Classical",
+                  "response": {
+                    "id": "ck_3_dxe4",
+                    "move": "3... dxe4",
+                    "player": "black",
+                    "explanation": "We take. We temporarily give up the center to eliminate White's e4 pawn.",
+                    "children": [
+                      {
+                        "id": "ck_4_nxe4",
+                        "move": "4. Nxe4",
+                        "player": "white",
+                        "label": "Recapture",
+                        "response": {
+                          "id": "ck_choice_main",
+                          "move": "Choose Style",
+                          "player": "black",
+                          "isChoice": true,
+                          "explanation": "White has a centralized Knight. How do we challenge it?",
+                          "choices": [
+                            {
+                              "id": "ck_opt_bf5",
+                              "move": "4... Bf5",
+                              "name": "Classical Line",
+                              "style": "Solid / Active",
+                              "color": "blue",
+                              "explanation": "The most principled move. We challenge the knight immediately with a developing move.",
+                              "children": [
+                                {
+                                  "id": "ck_5_ng3",
+                                  "move": "5. Ng3",
+                                  "player": "white",
+                                  "label": "Knight Retreats",
+                                  "response": {
+                                    "id": "ck_5_bg6",
+                                    "move": "5... Bg6",
+                                    "player": "black",
+                                    "explanation": "We keep the bishop active on the diagonal.",
+                                    "children": []
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "id": "ck_opt_nd7",
+                              "move": "4... Nd7",
+                              "name": "Karpov / Smyslov",
+                              "style": "Positional / Flexible",
+                              "color": "green",
+                              "explanation": "We prepare to play Ngf6 next. If White exchanges knights, we recapture with the Knight (Nxf6) maintaining our pawn structure.",
+                              "children": []
+                            },
+                            {
+                              "id": "ck_opt_nf6",
+                              "move": "4... Nf6",
+                              "name": "Tartakower",
+                              "style": "Sharp / Doubled Pawns",
+                              "color": "red",
+                              "explanation": "We challenge the knight immediately. If White takes (Nxf6), we recapture with the g-pawn (gxf6), opening the g-file for an attack but weakening our king.",
+                              "children": []
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "ck_3_exd5",
+                  "move": "3. exd5",
+                  "player": "white",
+                  "label": "Exchange Var",
+                  "response": {
+                    "id": "ck_3_cxd5",
+                    "move": "3... cxd5",
+                    "player": "black",
+                    "explanation": "Symmetric structure. However, we have the open c-file and White has the open e-file. Easy to play.",
+                    "children": [
+                      {
+                        "id": "ck_4_bd3",
+                        "move": "4. Bd3",
+                        "player": "white",
+                        "label": "Standard",
+                        "response": {
+                          "id": "ck_4_nc6",
+                          "move": "4... Nc6",
+                          "player": "black",
+                          "explanation": "Develop and attack d4.",
+                          "children": []
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "ck_3_f3",
+                  "move": "3. f3",
+                  "player": "white",
+                  "label": "Fantasy Var",
+                  "response": {
+                    "id": "ck_3_dxe4",
+                    "move": "3... dxe4",
+                    "player": "black",
+                    "explanation": "The simplest solution. We accept the trade. White is weakening their King position.",
+                    "children": [
+                      {
+                        "id": "ck_4_fxe4",
+                        "move": "4. fxe4",
+                        "player": "white",
+                        "label": "Recapture",
+                        "response": {
+                          "id": "ck_4_e5",
+                          "move": "4... e5!",
+                          "player": "black",
+                          "explanation": "Strike back! If White takes (dxe5), we trade Queens (Qxd1+) and White loses castling rights.",
+                          "children": []
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "ck_2_nf3",
+            "move": "2. Nf3",
+            "player": "white",
+            "label": "Two Knights",
+            "response": {
+              "id": "ck_2_d5_tk",
+              "move": "2... d5",
+              "player": "black",
+              "explanation": "Standard response.",
+              "children": [
+                {
+                  "id": "ck_3_nc3",
+                  "move": "3. Nc3",
+                  "player": "white",
+                  "label": "Development",
+                  "response": {
+                    "id": "ck_3_bg4",
+                    "move": "3... Bg4",
+                    "player": "black",
+                    "explanation": "Active play. We pin the knight. Avoid playing 3... dxe4 here as it allows White quick development.",
+                    "children": []
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
