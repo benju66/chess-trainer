@@ -20,10 +20,10 @@
         }
 
         .container {
-            max-width: 600px;
+            max-width: 500px;
             margin: 0 auto;
             padding: 16px;
-            padding-bottom: 100px;
+            padding-bottom: 120px;
         }
 
         .header {
@@ -47,51 +47,52 @@
             text-transform: uppercase;
             letter-spacing: 0.1em;
             color: #64748b;
-            margin-top: 16px;
-            margin-bottom: 8px;
-        }
-
-        .opening-card {
-            background: rgba(51, 65, 85, 0.5);
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 16px;
-            padding-right: 50px;
-            cursor: pointer;
-            transition: all 0.2s;
-            position: relative;
+            margin-top: 20px;
             margin-bottom: 12px;
         }
 
-        .opening-card:hover {
+        /* Cards */
+        .card {
+            background: rgba(51, 65, 85, 0.5);
+            border: 1px solid #334155;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .card:hover, .card:active {
             background: rgba(71, 85, 105, 0.5);
             border-color: #475569;
         }
 
-        .opening-card h3 {
+        .card h3 {
             font-size: 1.125rem;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
         }
 
-        .opening-card p {
+        .card p {
             color: #94a3b8;
             font-size: 0.875rem;
         }
 
-        .opening-card .moves {
+        .card .moves {
             font-family: monospace;
             color: #fbbf24;
-            font-size: 0.8rem;
-            margin-top: 8px;
+            font-size: 0.85rem;
+            margin-top: 10px;
         }
 
         .color-badge {
             display: inline-block;
-            padding: 2px 8px;
-            border-radius: 4px;
+            padding: 3px 10px;
+            border-radius: 6px;
             font-size: 0.7rem;
             font-weight: 600;
             margin-left: 8px;
+            vertical-align: middle;
         }
 
         .color-badge.white {
@@ -106,17 +107,16 @@
 
         .delete-btn {
             position: absolute;
-            top: 50%;
-            right: 12px;
-            transform: translateY(-50%);
+            top: 16px;
+            right: 16px;
             background: rgba(100, 116, 139, 0.3);
             border: none;
             color: #94a3b8;
-            width: 32px;
-            height: 32px;
-            border-radius: 6px;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 1.1rem;
         }
 
         .delete-btn:hover {
@@ -124,43 +124,49 @@
             color: #f87171;
         }
 
+        /* Screens */
         .screen { display: none; }
         .screen.active { display: block; }
 
-        .back-btn {
-            display: flex;
+        /* Navigation */
+        .nav-btn {
+            display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: none;
-            border: none;
-            color: #94a3b8;
-            font-size: 0.875rem;
+            background: rgba(71, 85, 105, 0.5);
+            border: 1px solid #475569;
+            border-radius: 12px;
+            color: #e2e8f0;
+            font-size: 1rem;
+            font-weight: 500;
             cursor: pointer;
-            padding: 8px 0;
+            padding: 14px 20px;
             margin-bottom: 16px;
+            min-height: 50px;
         }
 
-        .back-btn:hover { color: #e2e8f0; }
+        .nav-btn:hover { background: rgba(71, 85, 105, 0.7); }
 
+        /* Move History */
         .move-history {
             background: rgba(30, 41, 59, 0.5);
             border: 1px solid #334155;
             border-radius: 12px;
-            padding: 12px;
+            padding: 14px;
             margin-bottom: 16px;
             overflow-x: auto;
         }
 
         .move-history-inner {
             display: flex;
-            gap: 6px;
+            gap: 8px;
             flex-wrap: wrap;
         }
 
         .move-tag {
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 0.8rem;
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-size: 0.85rem;
             font-family: monospace;
             white-space: nowrap;
         }
@@ -175,27 +181,24 @@
             color: #cbd5e1;
         }
 
-        .move-tag.choice {
-            border: 1px solid #fbbf24;
-        }
-
+        /* Current Move Display */
         .current-move-card {
             background: #334155;
-            border-radius: 16px;
-            padding: 20px;
+            border-radius: 20px;
+            padding: 24px;
             margin-bottom: 16px;
         }
 
         .move-label {
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin-bottom: 12px;
+            gap: 10px;
+            margin-bottom: 14px;
         }
 
         .move-dot {
-            width: 12px;
-            height: 12px;
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
         }
 
@@ -210,7 +213,7 @@
 
         .move-label span {
             font-weight: 600;
-            font-size: 0.875rem;
+            font-size: 0.9rem;
         }
 
         .move-label span.your-move { color: #fbbf24; }
@@ -218,8 +221,8 @@
 
         .current-move {
             background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            border-radius: 12px;
-            padding: 16px;
+            border-radius: 14px;
+            padding: 20px;
             margin-bottom: 16px;
         }
 
@@ -229,7 +232,7 @@
 
         .current-move h2 {
             font-family: monospace;
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             color: #1e293b;
         }
 
@@ -238,18 +241,19 @@
         .explanation {
             color: #cbd5e1;
             font-size: 1rem;
-            line-height: 1.5;
+            line-height: 1.6;
         }
 
-        .options-section { margin-top: 20px; }
+        /* Options */
+        .options-section { margin-top: 24px; }
 
         .options-label {
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin-bottom: 12px;
+            gap: 10px;
+            margin-bottom: 14px;
             color: #94a3b8;
-            font-size: 0.875rem;
+            font-size: 0.9rem;
             font-weight: 600;
         }
 
@@ -257,32 +261,36 @@
             width: 100%;
             background: rgba(51, 65, 85, 0.5);
             border: 1px solid #475569;
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 10px;
+            border-radius: 14px;
+            padding: 18px 20px;
+            margin-bottom: 12px;
             cursor: pointer;
             transition: all 0.2s;
             text-align: left;
             color: #e2e8f0;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
-        .option-btn:hover {
+        .option-btn:hover, .option-btn:active {
             background: rgba(71, 85, 105, 0.6);
             border-color: #64748b;
         }
 
         .option-btn .move-text {
             font-family: monospace;
-            font-size: 1.25rem;
+            font-size: 1.2rem;
             font-weight: 600;
         }
 
         .option-btn .label {
             display: inline-block;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            margin-left: 8px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            margin-left: 10px;
             background: #475569;
         }
 
@@ -297,78 +305,36 @@
         }
 
         .option-btn .arrow {
-            float: right;
             color: #64748b;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
         }
 
-        .choices-grid {
-            display: grid;
-            gap: 12px;
-        }
-
-        @media (min-width: 500px) {
-            .choices-grid { grid-template-columns: repeat(3, 1fr); }
-        }
-
-        .choice-card {
-            background: rgba(51, 65, 85, 0.3);
-            border: 2px solid;
-            border-radius: 12px;
-            padding: 16px;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: left;
-        }
-
-        .choice-card:hover { transform: scale(1.02); }
-
-        .choice-card.red { border-color: rgba(239, 68, 68, 0.5); }
-        .choice-card.red:hover { border-color: #ef4444; background: rgba(239, 68, 68, 0.1); }
-        .choice-card.blue { border-color: rgba(59, 130, 246, 0.5); }
-        .choice-card.blue:hover { border-color: #3b82f6; background: rgba(59, 130, 246, 0.1); }
-        .choice-card.purple { border-color: rgba(168, 85, 247, 0.5); }
-        .choice-card.purple:hover { border-color: #a855f7; background: rgba(168, 85, 247, 0.1); }
-        .choice-card.green { border-color: rgba(34, 197, 94, 0.5); }
-        .choice-card.green:hover { border-color: #22c55e; background: rgba(34, 197, 94, 0.1); }
-
-        .choice-card h4 { font-family: monospace; font-size: 1rem; margin-bottom: 4px; }
-        .choice-card.red h4 { color: #f87171; }
-        .choice-card.blue h4 { color: #60a5fa; }
-        .choice-card.purple h4 { color: #c084fc; }
-        .choice-card.green h4 { color: #4ade80; }
-
-        .choice-card .name { font-weight: 600; font-size: 0.8rem; margin-bottom: 2px; }
-        .choice-card.red .name { color: #fca5a5; }
-        .choice-card.blue .name { color: #93c5fd; }
-        .choice-card.purple .name { color: #d8b4fe; }
-        .choice-card.green .name { color: #86efac; }
-
-        .choice-card .style { font-size: 0.7rem; color: #94a3b8; }
-
+        /* End State */
         .end-card {
             text-align: center;
-            padding: 32px 16px;
+            padding: 40px 20px;
         }
 
-        .end-card .icon { font-size: 3rem; margin-bottom: 16px; }
-        .end-card h3 { font-size: 1.25rem; margin-bottom: 8px; }
+        .end-card .icon { font-size: 3.5rem; margin-bottom: 16px; }
+        .end-card h3 { font-size: 1.3rem; margin-bottom: 8px; }
         .end-card p { color: #94a3b8; }
 
+        /* Controls */
         .controls {
             display: flex;
             gap: 12px;
-            margin-top: 20px;
+            margin-top: 24px;
         }
 
         .control-btn {
             flex: 1;
-            padding: 14px;
+            padding: 16px;
             border: none;
-            border-radius: 10px;
-            font-size: 0.875rem;
+            border-radius: 12px;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
+            min-height: 54px;
         }
 
         .control-btn.secondary {
@@ -378,48 +344,47 @@
 
         .control-btn.secondary:hover { background: #64748b; }
 
+        /* Progress */
         .progress-dots {
             display: flex;
             justify-content: center;
-            gap: 4px;
-            margin-top: 20px;
+            gap: 6px;
+            margin-top: 24px;
         }
 
         .progress-dot {
-            width: 8px;
-            height: 8px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
             background: #334155;
         }
 
         .progress-dot.active { background: #fbbf24; }
 
+        /* Tip */
         .tip-box {
             background: rgba(30, 41, 59, 0.5);
             border: 1px solid #334155;
-            border-radius: 10px;
-            padding: 12px;
-            margin-top: 20px;
-            font-size: 0.8rem;
+            border-radius: 12px;
+            padding: 14px;
+            margin-top: 24px;
+            font-size: 0.85rem;
             color: #94a3b8;
             text-align: center;
         }
 
-        .btn-row {
-            display: flex;
-            gap: 12px;
-            margin-top: 16px;
-        }
-
+        /* Buttons */
         .btn {
-            flex: 1;
-            padding: 16px;
-            border-radius: 12px;
-            font-size: 0.875rem;
+            width: 100%;
+            padding: 18px 24px;
+            border-radius: 14px;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             text-align: center;
             border: none;
+            min-height: 58px;
+            margin-bottom: 12px;
         }
 
         .btn-primary {
@@ -427,7 +392,7 @@
             color: white;
         }
 
-        .btn-primary:hover { transform: scale(1.02); }
+        .btn-primary:hover { opacity: 0.9; }
 
         .btn-secondary {
             background: rgba(71, 85, 105, 0.5);
@@ -435,38 +400,55 @@
             color: #e2e8f0;
         }
 
-        /* Builder Styles */
+        .btn-purple {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-row .btn {
+            flex: 1;
+        }
+
+        /* ===== BUILDER STYLES ===== */
+
         .builder-section {
             background: rgba(30, 41, 59, 0.5);
             border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 16px;
+            border-radius: 16px;
+            padding: 20px;
             margin-bottom: 16px;
         }
 
         .builder-section h3 {
-            font-size: 0.875rem;
+            font-size: 0.9rem;
             color: #94a3b8;
-            margin-bottom: 12px;
+            margin-bottom: 16px;
         }
 
-        .form-group { margin-bottom: 16px; }
+        .form-group { margin-bottom: 20px; }
+
+        .form-group:last-child { margin-bottom: 0; }
 
         .form-group label {
             display: block;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             color: #94a3b8;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
 
         .form-group input, .form-group textarea {
             width: 100%;
-            padding: 12px;
+            padding: 16px;
             background: #1e293b;
             border: 1px solid #334155;
-            border-radius: 8px;
+            border-radius: 12px;
             color: #e2e8f0;
-            font-size: 1rem;
+            font-size: 1.1rem;
         }
 
         .form-group input:focus, .form-group textarea:focus {
@@ -474,15 +456,28 @@
             border-color: #fbbf24;
         }
 
-        .color-toggle { display: flex; gap: 12px; }
+        .form-group input::placeholder {
+            color: #64748b;
+        }
+
+        .color-toggle {
+            display: flex;
+            gap: 12px;
+        }
 
         .color-option {
             flex: 1;
-            padding: 12px;
-            border-radius: 8px;
+            padding: 16px;
+            border-radius: 12px;
             text-align: center;
             cursor: pointer;
             font-weight: 600;
+            font-size: 1rem;
+            min-height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
         .color-option.white {
@@ -507,330 +502,203 @@
             border-color: #94a3b8;
         }
 
-        /* Breadcrumb / Path Display */
-        .path-display {
-            background: #1e293b;
-            border-radius: 8px;
-            padding: 10px 12px;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            flex-wrap: wrap;
-            font-size: 0.8rem;
-        }
-
-        .path-crumb {
-            color: #64748b;
-        }
-
-        .path-crumb.current {
-            color: #fbbf24;
-            font-weight: 600;
-        }
-
-        .path-sep {
-            color: #475569;
-        }
-
-        /* Move Tree Display */
-        .move-tree {
-            background: #1e293b;
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 12px;
-            min-height: 100px;
-            max-height: 300px;
-            overflow-y: auto;
-        }
-
-        .tree-node {
-            margin-bottom: 4px;
-        }
-
-        .tree-move {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 10px;
-            background: rgba(51, 65, 85, 0.5);
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.15s;
-        }
-
-        .tree-move:hover {
-            background: rgba(71, 85, 105, 0.6);
-        }
-
-        .tree-move.selected {
-            background: rgba(251, 191, 36, 0.2);
-            border: 1px solid rgba(251, 191, 36, 0.4);
-        }
-
-        .tree-move .notation {
-            font-family: monospace;
-            font-weight: 600;
-            min-width: 70px;
-        }
-
-        .tree-move .notation.white { color: #fbbf24; }
-        .tree-move .notation.black { color: #cbd5e1; }
-
-        .tree-move .expl {
-            font-size: 0.75rem;
-            color: #64748b;
-            flex: 1;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .tree-move .branch-count {
-            background: rgba(168, 85, 247, 0.2);
-            color: #c084fc;
-            font-size: 0.65rem;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: 600;
-        }
-
-        .tree-move .del {
-            background: none;
-            border: none;
-            color: #64748b;
-            cursor: pointer;
-            padding: 2px 6px;
-            font-size: 1rem;
-            opacity: 0.5;
-        }
-
-        .tree-move .del:hover {
-            color: #f87171;
-            opacity: 1;
-        }
-
-        .tree-children {
-            margin-left: 20px;
-            border-left: 2px solid #334155;
-            padding-left: 10px;
-            margin-top: 4px;
-        }
-
-        .tree-branches {
-            margin-left: 20px;
-            margin-top: 4px;
-        }
-
-        .branch-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 10px;
-            background: rgba(71, 85, 105, 0.3);
-            border-radius: 6px;
-            margin-bottom: 4px;
-            cursor: pointer;
-            border-left: 3px solid #64748b;
-        }
-
-        .branch-item:hover {
-            background: rgba(71, 85, 105, 0.5);
-        }
-
-        .branch-item.active {
-            border-left-color: #a855f7;
-            background: rgba(168, 85, 247, 0.1);
-        }
-
-        .branch-item .notation {
-            font-family: monospace;
-            font-weight: 600;
-            color: #cbd5e1;
-        }
-
-        .branch-item .label-text {
-            font-size: 0.7rem;
-            color: #94a3b8;
-        }
-
-        /* Add Move Section */
-        .add-section {
-            background: rgba(34, 197, 94, 0.05);
-            border: 1px dashed rgba(34, 197, 94, 0.3);
-            border-radius: 8px;
-            padding: 12px;
-            margin-top: 12px;
-        }
-
-        .add-section-title {
-            font-size: 0.75rem;
-            color: #4ade80;
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
-
-        .add-row {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 8px;
-        }
-
-        .add-row input {
-            flex: 1;
-            padding: 10px;
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 6px;
-            color: #e2e8f0;
-            font-family: monospace;
-        }
-
-        .add-row input.label-input {
-            flex: 0.7;
-            font-family: inherit;
-        }
-
-        .add-row input.expl-input {
-            flex: 1.5;
-            font-family: inherit;
-        }
-
-        .add-row button {
-            padding: 10px 16px;
-            background: #22c55e;
-            border: none;
-            border-radius: 6px;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-
-        .add-row button:hover {
-            background: #16a34a;
-        }
-
-        .add-row button.branch-btn {
-            background: #8b5cf6;
-        }
-
-        .add-row button.branch-btn:hover {
-            background: #7c3aed;
-        }
-
-        .help { font-size: 0.75rem; color: #64748b; margin-top: 8px; }
-
-        .current-position {
+        /* Builder Position Display */
+        .position-card {
             background: rgba(251, 191, 36, 0.1);
             border: 1px solid rgba(251, 191, 36, 0.3);
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 12px;
+            border-radius: 14px;
+            padding: 18px;
+            margin-bottom: 16px;
         }
 
-        .current-position-label {
-            font-size: 0.7rem;
-            color: #fbbf24;
+        .position-card.opponent {
+            background: rgba(100, 116, 139, 0.1);
+            border-color: rgba(100, 116, 139, 0.3);
+        }
+
+        .position-label {
+            font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            margin-bottom: 6px;
+            color: #fbbf24;
+            margin-bottom: 8px;
         }
 
-        .current-position-move {
+        .position-card.opponent .position-label {
+            color: #94a3b8;
+        }
+
+        .position-move {
             font-family: monospace;
-            font-size: 1.1rem;
-            font-weight: 600;
+            font-size: 1.4rem;
+            font-weight: 700;
             color: #e2e8f0;
         }
 
-        .current-position-expl {
-            font-size: 0.8rem;
+        .position-expl {
+            font-size: 0.9rem;
             color: #94a3b8;
-            margin-top: 4px;
+            margin-top: 6px;
         }
 
-        .opponent-responses {
-            margin-top: 12px;
+        /* Path Display */
+        .path-display {
+            background: #1e293b;
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-bottom: 16px;
+            font-size: 0.85rem;
+            color: #64748b;
+            overflow-x: auto;
+            white-space: nowrap;
         }
 
-        .opponent-responses-title {
-            font-size: 0.75rem;
+        .path-display span {
             color: #94a3b8;
-            margin-bottom: 8px;
+        }
+
+        .path-display .current {
+            color: #fbbf24;
+            font-weight: 600;
+        }
+
+        /* Response List */
+        .response-list {
+            margin-bottom: 16px;
         }
 
         .response-item {
+            background: rgba(51, 65, 85, 0.5);
+            border: 1px solid #475569;
+            border-radius: 14px;
+            padding: 18px 20px;
+            margin-bottom: 10px;
+            cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 10px 12px;
-            background: rgba(51, 65, 85, 0.5);
-            border-radius: 8px;
-            margin-bottom: 8px;
-            cursor: pointer;
-            transition: all 0.15s;
+            min-height: 64px;
         }
 
-        .response-item:hover {
+        .response-item:hover, .response-item:active {
             background: rgba(71, 85, 105, 0.6);
         }
 
-        .response-item .notation {
+        .response-item .move {
             font-family: monospace;
+            font-size: 1.15rem;
             font-weight: 600;
             color: #cbd5e1;
-            min-width: 80px;
+            flex: 1;
         }
 
-        .response-item .label-tag {
+        .response-item .tag {
             background: #475569;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 0.7rem;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
             color: #cbd5e1;
+            margin-right: 12px;
         }
 
         .response-item .arrow {
-            margin-left: auto;
             color: #64748b;
+            font-size: 1.3rem;
         }
 
-        .response-item .del {
-            background: none;
-            border: none;
-            color: #64748b;
-            cursor: pointer;
-            padding: 4px 8px;
-        }
-
-        .response-item .del:hover {
-            color: #f87171;
-        }
-
+        /* Empty State */
         .empty-state {
             text-align: center;
-            padding: 30px 20px;
+            padding: 40px 20px;
             color: #64748b;
         }
 
         .empty-state .icon {
-            font-size: 2rem;
-            margin-bottom: 10px;
+            font-size: 3rem;
+            margin-bottom: 12px;
         }
 
-        .tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+        .empty-state p {
+            font-size: 1rem;
+        }
+
+        /* Add Form */
+        .add-form {
+            background: rgba(34, 197, 94, 0.05);
+            border: 2px dashed rgba(34, 197, 94, 0.3);
+            border-radius: 14px;
+            padding: 20px;
+        }
+
+        .add-form-title {
+            font-size: 0.85rem;
+            color: #4ade80;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .add-form .form-group {
+            margin-bottom: 14px;
+        }
+
+        .add-form input {
+            width: 100%;
+            padding: 16px;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            color: #e2e8f0;
+            font-size: 1.1rem;
+        }
+
+        .add-form input:focus {
+            outline: none;
+            border-color: #4ade80;
+        }
+
+        .add-form .btn {
+            margin-top: 8px;
+            margin-bottom: 0;
+        }
+
+        /* Detail View for Editing */
+        .detail-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #334155;
+        }
+
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #f87171;
+        }
+
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.3);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
 
         .tab {
             flex: 1;
-            padding: 12px;
+            padding: 14px;
             background: rgba(51, 65, 85, 0.3);
             border: 1px solid #334155;
-            border-radius: 8px;
+            border-radius: 12px;
             color: #94a3b8;
             font-weight: 600;
             cursor: pointer;
             text-align: center;
+            font-size: 0.95rem;
+            min-height: 50px;
         }
 
         .tab.active {
@@ -841,25 +709,15 @@
 
         .json-area {
             width: 100%;
-            min-height: 150px;
+            min-height: 180px;
             background: #0f172a;
             border: 1px solid #334155;
-            border-radius: 8px;
-            padding: 12px;
+            border-radius: 12px;
+            padding: 14px;
             color: #e2e8f0;
             font-family: monospace;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             resize: vertical;
-        }
-
-        .copy-btn {
-            margin-top: 8px;
-            padding: 8px 16px;
-            background: #475569;
-            border: none;
-            border-radius: 6px;
-            color: white;
-            cursor: pointer;
         }
     </style>
 </head>
@@ -872,14 +730,12 @@
                 <p>Master your chess openings move by move</p>
             </div>
             <div id="openingsContainer"></div>
-            <div class="btn-row">
-                <button class="btn btn-primary" onclick="showBuilder()">+ Create New Opening</button>
-            </div>
+            <button class="btn btn-primary" onclick="showBuilder()">+ Create New Opening</button>
         </div>
 
         <!-- Trainer Screen -->
         <div class="screen" id="trainerScreen">
-            <button class="back-btn" onclick="goToMenu()">← Back</button>
+            <button class="nav-btn" onclick="goToMenu()">← Back to Openings</button>
             <div class="header">
                 <h1 id="openingTitle"></h1>
                 <p id="openingSubtitle"></p>
@@ -888,32 +744,31 @@
             <div class="current-move-card" id="currentMoveCard"></div>
             <div class="controls" id="controls"></div>
             <div class="progress-dots" id="progressDots"></div>
-            <div class="tip-box">💡 <span id="tipText">Click moves to explore</span></div>
+            <div class="tip-box">💡 <span id="tipText">Tap a move to continue</span></div>
         </div>
 
         <!-- Builder Screen -->
         <div class="screen" id="builderScreen">
-            <button class="back-btn" onclick="goToMenu()">← Back</button>
+            <button class="nav-btn" onclick="confirmExitBuilder()">← Back</button>
             <div class="header">
-                <h1>🛠️ Opening Builder</h1>
-                <p>Create your own opening repertoire</p>
+                <h1>🛠️ Create Opening</h1>
             </div>
 
             <div class="tabs">
-                <button class="tab active" onclick="switchTab('visual')" id="tabVisual">Visual Builder</button>
-                <button class="tab" onclick="switchTab('json')" id="tabJson">JSON</button>
+                <button class="tab active" onclick="switchTab('build')" id="tabBuild">Build</button>
+                <button class="tab" onclick="switchTab('json')" id="tabJson">Import/Export</button>
             </div>
 
-            <div id="visualBuilder">
+            <div id="buildTab">
                 <div class="builder-section">
-                    <h3>Opening Info</h3>
+                    <h3>Opening Details</h3>
                     <div class="form-group">
                         <label>Name</label>
-                        <input type="text" id="openingName" placeholder="e.g., Ruy Lopez">
+                        <input type="text" id="openingName" placeholder="e.g., Italian Game">
                     </div>
                     <div class="form-group">
                         <label>Description</label>
-                        <input type="text" id="openingDesc" placeholder="e.g., Classical Spanish">
+                        <input type="text" id="openingDesc" placeholder="e.g., Targets f7 weakness">
                     </div>
                     <div class="form-group">
                         <label>You Play As</label>
@@ -925,34 +780,26 @@
                 </div>
 
                 <div class="builder-section">
-                    <h3>Build Your Lines</h3>
-                    
-                    <!-- Current Position Display -->
-                    <div id="currentPositionDisplay"></div>
-                    
-                    <!-- Opponent's Responses -->
-                    <div id="opponentResponses"></div>
-                    
-                    <!-- Add Move Section -->
-                    <div id="addMoveSection"></div>
+                    <h3>Moves</h3>
+                    <div id="builderContent"></div>
                 </div>
 
                 <div class="btn-row">
-                    <button class="btn btn-secondary" onclick="preview()">👁️ Preview</button>
-                    <button class="btn btn-primary" onclick="save()">💾 Save</button>
+                    <button class="btn btn-secondary" onclick="previewOpening()">Preview</button>
+                    <button class="btn btn-primary" onclick="saveOpening()">Save</button>
                 </div>
             </div>
 
-            <div id="jsonBuilder" style="display:none">
+            <div id="jsonTab" style="display:none">
                 <div class="builder-section">
-                    <h3>Import JSON</h3>
-                    <textarea class="json-area" id="jsonIn" placeholder="Paste JSON..."></textarea>
-                    <div class="btn-row"><button class="btn btn-primary" onclick="importJ()">Import</button></div>
+                    <h3>Import from JSON</h3>
+                    <textarea class="json-area" id="jsonIn" placeholder="Paste opening JSON here..."></textarea>
+                    <button class="btn btn-primary" onclick="importJson()">Import</button>
                 </div>
                 <div class="builder-section">
-                    <h3>Export</h3>
+                    <h3>Export Current</h3>
                     <textarea class="json-area" id="jsonOut" readonly></textarea>
-                    <button class="copy-btn" onclick="copyJ()">📋 Copy</button>
+                    <button class="btn btn-secondary" onclick="copyJson()">Copy to Clipboard</button>
                 </div>
             </div>
         </div>
@@ -960,7 +807,7 @@
 
 <script>
 // =====================================================
-// DEFAULT OPENINGS DATA
+// DEFAULT OPENINGS
 // =====================================================
 const DEFAULT_OPENINGS = {
     italian_game: {
@@ -969,44 +816,28 @@ const DEFAULT_OPENINGS = {
         description: "Classic 1.e4 opening targeting f7",
         startingMoves: "1. e4 e5 2. Nf3 Nc6 3. Bc4",
         tree: {
-            id: 'root', move: '1. e4', player: 'white', explanation: 'King\'s Pawn opening.',
+            id: 'root', move: '1. e4', player: 'white', explanation: 'King\'s Pawn - control the center.',
             children: [
                 {
                     id: 'e5', move: '1... e5', player: 'black', label: 'Classical',
                     response: {
-                        id: 'Nf3', move: '2. Nf3', player: 'white', explanation: 'Attack e5!',
+                        id: 'Nf3', move: '2. Nf3', player: 'white', explanation: 'Attack e5, develop knight!',
                         children: [
                             {
                                 id: 'Nc6', move: '2... Nc6', player: 'black', label: 'Main Line',
                                 response: {
-                                    id: 'Bc4', move: '3. Bc4', player: 'white', explanation: 'Italian Game! Target f7.',
+                                    id: 'Bc4', move: '3. Bc4', player: 'white', explanation: 'Italian Game! Bishop targets f7.',
                                     children: [
                                         {
                                             id: 'Bc5', move: '3... Bc5', player: 'black', label: 'Giuoco Piano',
                                             response: {
-                                                id: 'c3', move: '4. c3', player: 'white', explanation: 'Prepare d4!',
+                                                id: 'c3', move: '4. c3', player: 'white', explanation: 'Prepare d4 pawn push!',
                                                 children: [
                                                     {
                                                         id: 'Nf6_gp', move: '4... Nf6', player: 'black', label: 'Main',
                                                         response: {
-                                                            id: 'd4', move: '5. d4', player: 'white', explanation: 'Strike center!',
-                                                            children: [
-                                                                {
-                                                                    id: 'exd4', move: '5... exd4', player: 'black', label: 'Main',
-                                                                    response: {
-                                                                        id: 'cxd4', move: '6. cxd4', player: 'white', explanation: 'Ideal center!',
-                                                                        children: [
-                                                                            {
-                                                                                id: 'Bb4+', move: '6... Bb4+', player: 'black', label: 'Check',
-                                                                                response: {
-                                                                                    id: 'Nc3', move: '7. Nc3', player: 'white', explanation: 'Greco Attack - gambit e4!',
-                                                                                    children: []
-                                                                                }
-                                                                            }
-                                                                        ]
-                                                                    }
-                                                                }
-                                                            ]
+                                                            id: 'd4', move: '5. d4', player: 'white', explanation: 'Strike the center!',
+                                                            children: []
                                                         }
                                                     }
                                                 ]
@@ -1015,24 +846,24 @@ const DEFAULT_OPENINGS = {
                                         {
                                             id: 'Nf6_tk', move: '3... Nf6', player: 'black', label: 'Two Knights',
                                             response: {
-                                                id: 'Ng5', move: '4. Ng5', player: 'white', explanation: 'Fried Liver Attack!',
+                                                id: 'Ng5', move: '4. Ng5', player: 'white', explanation: 'Fried Liver Attack! Threaten f7.',
                                                 children: [
                                                     {
                                                         id: 'd5', move: '4... d5', player: 'black', label: 'Main',
                                                         response: {
-                                                            id: 'exd5', move: '5. exd5', player: 'white', explanation: 'Critical moment...',
+                                                            id: 'exd5', move: '5. exd5', player: 'white', explanation: 'Now Nxd5?? loses to Nxf7!',
                                                             children: [
                                                                 {
                                                                     id: 'Nxd5', move: '5... Nxd5??', player: 'black', label: 'BLUNDER!',
                                                                     response: {
-                                                                        id: 'Nxf7', move: '6. Nxf7!', player: 'white', explanation: '🔥 FRIED LIVER!',
+                                                                        id: 'Nxf7', move: '6. Nxf7!', player: 'white', explanation: '🔥 THE FRIED LIVER! Fork king and queen.',
                                                                         children: []
                                                                     }
                                                                 },
                                                                 {
                                                                     id: 'Na5', move: '5... Na5', player: 'black', label: 'Correct',
                                                                     response: {
-                                                                        id: 'Bb5+', move: '6. Bb5+', player: 'white', explanation: 'Check! Theory continues.',
+                                                                        id: 'Bb5', move: '6. Bb5+', player: 'white', explanation: 'Check! Theory continues.',
                                                                         children: []
                                                                     }
                                                                 }
@@ -1044,17 +875,24 @@ const DEFAULT_OPENINGS = {
                                         }
                                     ]
                                 }
+                            },
+                            {
+                                id: 'Nf6_pet', move: '2... Nf6', player: 'black', label: 'Petroff',
+                                response: {
+                                    id: 'Nxe5', move: '3. Nxe5', player: 'white', explanation: 'Take the pawn! Safe option.',
+                                    children: []
+                                }
                             }
                         ]
                     }
                 },
                 {
                     id: 'c5', move: '1... c5', player: 'black', label: 'Sicilian',
-                    response: { id: 'Nf3_sic', move: '2. Nf3', player: 'white', explanation: 'Open Sicilian.', children: [] }
+                    response: { id: 'Nf3_sic', move: '2. Nf3', player: 'white', explanation: 'Open Sicilian begins.', children: [] }
                 },
                 {
                     id: 'e6', move: '1... e6', player: 'black', label: 'French',
-                    response: { id: 'd4_fr', move: '2. d4', player: 'white', explanation: 'Build center.', children: [] }
+                    response: { id: 'd4_fr', move: '2. d4', player: 'white', explanation: 'Build a strong center.', children: [] }
                 }
             ]
         }
@@ -1062,20 +900,20 @@ const DEFAULT_OPENINGS = {
     london_system: {
         name: "London System",
         color: "white",
-        description: "Solid d4 opening with Bf4",
+        description: "Solid d4 setup with early Bf4",
         startingMoves: "1. d4 d5 2. Bf4",
         tree: {
-            id: 'root', move: '1. d4', player: 'white', explanation: 'Queen\'s Pawn.',
+            id: 'root', move: '1. d4', player: 'white', explanation: 'Queen\'s Pawn opening.',
             children: [
                 {
                     id: 'd5', move: '1... d5', player: 'black', label: 'Main',
                     response: {
-                        id: 'Bf4', move: '2. Bf4', player: 'white', explanation: 'The London!',
+                        id: 'Bf4', move: '2. Bf4', player: 'white', explanation: 'The London! Develop bishop before e3.',
                         children: [
                             {
                                 id: 'Nf6', move: '2... Nf6', player: 'black', label: 'Natural',
                                 response: {
-                                    id: 'e3', move: '3. e3', player: 'white', explanation: 'Solid pyramid.',
+                                    id: 'e3', move: '3. e3', player: 'white', explanation: 'Solid pyramid structure.',
                                     children: []
                                 }
                             }
@@ -1089,9 +927,9 @@ const DEFAULT_OPENINGS = {
         name: "Sicilian Najdorf",
         color: "black",
         description: "Fighting defense to 1.e4",
-        startingMoves: "1. e4 c5",
+        startingMoves: "1. e4 c5 2. Nf3 d6",
         tree: {
-            id: 'root', move: '1. e4', player: 'white', explanation: 'White plays e4.',
+            id: 'root', move: '1. e4', player: 'white', explanation: 'White opens e4.',
             children: [
                 {
                     id: 'c5', move: '1... c5', player: 'black', label: 'Sicilian!',
@@ -1099,20 +937,28 @@ const DEFAULT_OPENINGS = {
                         id: 'Nf3', move: '2. Nf3', player: 'white', explanation: 'Open Sicilian.',
                         children: [
                             {
-                                id: 'd6', move: '2... d6', player: 'black', label: 'Main',
+                                id: 'd6', move: '2... d6', player: 'black', label: 'Najdorf Setup',
                                 response: {
-                                    id: 'd4', move: '3. d4 cxd4 4. Nxd4', player: 'white', explanation: 'Open Sicilian.',
+                                    id: 'd4', move: '3. d4', player: 'white', explanation: 'White opens the position.',
                                     children: [
                                         {
-                                            id: 'Nf6', move: '4... Nf6', player: 'black', label: 'Attack e4',
+                                            id: 'cxd4', move: '3... cxd4', player: 'black', label: 'Take',
                                             response: {
-                                                id: 'Nc3', move: '5. Nc3', player: 'white', explanation: 'Defend.',
+                                                id: 'Nxd4', move: '4. Nxd4', player: 'white', explanation: 'Recapture.',
                                                 children: [
                                                     {
-                                                        id: 'a6', move: '5... a6', player: 'black', label: 'Najdorf!',
+                                                        id: 'Nf6', move: '4... Nf6', player: 'black', label: 'Attack e4',
                                                         response: {
-                                                            id: 'Be3', move: '6. Be3', player: 'white', explanation: 'English Attack.',
-                                                            children: []
+                                                            id: 'Nc3', move: '5. Nc3', player: 'white', explanation: 'Defend e4.',
+                                                            children: [
+                                                                {
+                                                                    id: 'a6', move: '5... a6', player: 'black', label: 'Najdorf!',
+                                                                    response: {
+                                                                        id: 'Be3', move: '6. Be3', player: 'white', explanation: 'English Attack setup.',
+                                                                        children: []
+                                                                    }
+                                                                }
+                                                            ]
                                                         }
                                                     }
                                                 ]
@@ -1130,17 +976,17 @@ const DEFAULT_OPENINGS = {
 };
 
 // =====================================================
-// APP STATE
+// STATE
 // =====================================================
 let OPENINGS = {};
 let currentOpening = null;
 let currentPath = [];
 let userColor = 'white';
 
-// Builder state
+// Builder
 let builderColor = 'white';
 let builderTree = null;
-let builderPath = []; // Path to current position in builder
+let builderPath = [];
 
 // =====================================================
 // INIT
@@ -1148,9 +994,9 @@ let builderPath = []; // Path to current position in builder
 function init() {
     OPENINGS = JSON.parse(JSON.stringify(DEFAULT_OPENINGS));
     try {
-        const del = JSON.parse(localStorage.getItem('deletedOp') || '[]');
+        const del = JSON.parse(localStorage.getItem('deletedOp3') || '[]');
         del.forEach(k => delete OPENINGS[k]);
-        const custom = JSON.parse(localStorage.getItem('customOp2') || '{}');
+        const custom = JSON.parse(localStorage.getItem('customOp3') || '{}');
         Object.assign(OPENINGS, custom);
     } catch(e) {}
     renderMenu();
@@ -1161,7 +1007,7 @@ function saveStorage() {
     for (const [k, v] of Object.entries(OPENINGS)) {
         if (!DEFAULT_OPENINGS[k]) custom[k] = v;
     }
-    localStorage.setItem('customOp2', JSON.stringify(custom));
+    localStorage.setItem('customOp3', JSON.stringify(custom));
 }
 
 // =====================================================
@@ -1185,33 +1031,34 @@ function renderMenu() {
     const w = Object.entries(OPENINGS).filter(([_, o]) => o.color === 'white');
     const b = Object.entries(OPENINGS).filter(([_, o]) => o.color === 'black');
     let h = '';
+    
     if (w.length) {
-        h += '<p class="section-title">Playing as White</p>';
-        w.forEach(([k, o]) => { h += card(k, o); });
+        h += '<p class="section-title">White Openings</p>';
+        w.forEach(([k, o]) => h += openingCard(k, o));
     }
     if (b.length) {
-        h += '<p class="section-title">Playing as Black</p>';
-        b.forEach(([k, o]) => { h += card(k, o); });
+        h += '<p class="section-title">Black Openings</p>';
+        b.forEach(([k, o]) => h += openingCard(k, o));
     }
     c.innerHTML = h;
 }
 
-function card(k, o) {
-    return `<div class="opening-card" onclick="startTraining('${k}')">
+function openingCard(k, o) {
+    return `<div class="card" onclick="startTraining('${k}')">
         <h3>${o.name}<span class="color-badge ${o.color}">${o.color[0].toUpperCase() + o.color.slice(1)}</span></h3>
         <p>${o.description}</p>
         <div class="moves">${o.startingMoves}</div>
-        <button class="delete-btn" onclick="event.stopPropagation();delOp('${k}')" title="Delete">🗑</button>
+        <button class="delete-btn" onclick="event.stopPropagation();deleteOpening('${k}')">🗑</button>
     </div>`;
 }
 
-function delOp(k) {
+function deleteOpening(k) {
     if (!confirm('Delete "' + (OPENINGS[k]?.name || k) + '"?')) return;
     delete OPENINGS[k];
     if (DEFAULT_OPENINGS[k]) {
-        let del = JSON.parse(localStorage.getItem('deletedOp') || '[]');
+        let del = JSON.parse(localStorage.getItem('deletedOp3') || '[]');
         del.push(k);
-        localStorage.setItem('deletedOp', JSON.stringify(del));
+        localStorage.setItem('deletedOp3', JSON.stringify(del));
     }
     saveStorage();
     renderMenu();
@@ -1236,9 +1083,6 @@ function getNode() {
         if (n.children) {
             const c = n.children.find(x => x.id === id);
             if (c) n = c.response || c;
-        } else if (n.choices) {
-            const c = n.choices.find(x => x.id === id);
-            if (c) n = c;
         } else if (n.response?.children) {
             const c = n.response.children.find(x => x.id === id);
             if (c) n = c.response || c;
@@ -1248,7 +1092,6 @@ function getNode() {
 }
 
 function getOpts(n) {
-    if (n.isChoice && n.choices) return { type: 'choices', opts: n.choices };
     if (n.children?.length) return { type: 'moves', opts: n.children };
     if (n.response?.children?.length) return { type: 'moves', opts: n.response.children };
     return { type: 'end', opts: [] };
@@ -1263,18 +1106,9 @@ function getHistory() {
             if (c) {
                 h.push({ m: c.move, p: c.player });
                 if (c.response) {
-                    h.push({ m: c.response.move, p: c.response.player, ch: c.response.isChoice });
+                    h.push({ m: c.response.move, p: c.response.player });
                     n = c.response;
                 }
-            }
-        } else if (n.choices) {
-            const c = n.choices.find(x => x.id === id);
-            if (c) { h.push({ m: c.move, p: userColor, ch: true }); n = c; }
-        } else if (n.response?.children) {
-            const c = n.response.children.find(x => x.id === id);
-            if (c) {
-                h.push({ m: c.move, p: c.player });
-                if (c.response) { h.push({ m: c.response.move, p: c.response.player }); n = c.response; }
             }
         }
     }
@@ -1283,77 +1117,92 @@ function getHistory() {
 
 function renderTrainer() {
     const n = getNode(), o = getOpts(n), h = getHistory(), mc = Math.ceil(h.length / 2);
+    
     document.getElementById('moveHistory').innerHTML = h.map(x => 
-        `<span class="move-tag ${x.p === 'white' ? 'white-move' : 'black-move'} ${x.ch ? 'choice' : ''}">${x.m}</span>`
+        `<span class="move-tag ${x.p === 'white' ? 'white-move' : 'black-move'}">${x.m}</span>`
     ).join('');
     
     const isU = n.player === userColor;
-    let html = `<div class="move-label"><div class="move-dot ${isU ? 'your-move' : 'opponent-move'}"></div>
-        <span class="${isU ? 'your-move' : 'opponent-move'}">${isU ? 'Your Move' : 'Opponent'}</span></div>
-        <div class="current-move ${isU ? '' : 'opponent'}"><h2>${n.move}</h2></div>
+    let html = `
+        <div class="move-label">
+            <div class="move-dot ${isU ? 'your-move' : 'opponent-move'}"></div>
+            <span class="${isU ? 'your-move' : 'opponent-move'}">${isU ? 'Your Move' : 'Opponent\'s Move'}</span>
+        </div>
+        <div class="current-move ${isU ? '' : 'opponent'}">
+            <h2>${n.move}</h2>
+        </div>
         <p class="explanation">${n.explanation || ''}</p>`;
     
-    if (o.type === 'moves') {
-        html += `<div class="options-section"><div class="options-label"><div class="move-dot opponent-move"></div>
-            <span>${userColor === 'white' ? 'Black' : 'White'} might play...</span></div>`;
+    if (o.type === 'moves' && o.opts.length) {
+        const opp = userColor === 'white' ? 'Black' : 'White';
+        html += `<div class="options-section">
+            <div class="options-label">
+                <div class="move-dot opponent-move"></div>
+                <span>${opp} might play...</span>
+            </div>`;
         o.opts.forEach(x => {
-            const lbl = x.label?.includes('BLUNDER') ? 'blunder' : (x.label === 'Main' || x.label === 'Main Line') ? 'main' : '';
-            html += `<button class="option-btn" onclick="sel('${x.id}')">
-                <span class="move-text">${x.move}</span>
-                ${x.label ? `<span class="label ${lbl}">${x.label}</span>` : ''}
-                <span class="arrow">→</span></button>`;
+            const lbl = x.label?.includes('BLUNDER') ? 'blunder' : 
+                       (x.label === 'Main' || x.label === 'Main Line') ? 'main' : '';
+            html += `<button class="option-btn" onclick="trainerSelect('${x.id}')">
+                <div>
+                    <span class="move-text">${x.move}</span>
+                    ${x.label ? `<span class="label ${lbl}">${x.label}</span>` : ''}
+                </div>
+                <span class="arrow">→</span>
+            </button>`;
         });
         html += '</div>';
-    } else if (o.type === 'choices') {
-        html += `<div class="options-section"><div class="options-label"><div class="move-dot your-move"></div><span>Choose:</span></div><div class="choices-grid">`;
-        o.opts.forEach(c => {
-            html += `<button class="choice-card ${c.color || 'blue'}" onclick="sel('${c.id}')">
-                <h4>${c.move}</h4><p class="name">${c.name || ''}</p><p class="style">${c.style || ''}</p></button>`;
-        });
-        html += '</div></div>';
-    } else {
-        html += `<div class="end-card"><div class="icon">🎯</div><h3>End of Line</h3><p>Move ${mc}</p></div>`;
+    } else if (o.type === 'end') {
+        html += `<div class="end-card">
+            <div class="icon">🎯</div>
+            <h3>End of Line</h3>
+            <p>Move ${mc} reached</p>
+        </div>`;
     }
     
     document.getElementById('currentMoveCard').innerHTML = html;
     document.getElementById('controls').innerHTML = currentPath.length ? 
-        `<button class="control-btn secondary" onclick="back()">← Back</button>
-         <button class="control-btn secondary" onclick="reset()">Start Over</button>` : '';
+        `<button class="control-btn secondary" onclick="trainerBack()">← Back</button>
+         <button class="control-btn secondary" onclick="trainerReset()">Start Over</button>` : '';
     document.getElementById('progressDots').innerHTML = Array.from({length: 12}, (_, i) => 
         `<div class="progress-dot ${i < mc ? 'active' : ''}"></div>`).join('');
 }
 
-function sel(id) { currentPath.push(id); renderTrainer(); }
-function back() { currentPath.pop(); renderTrainer(); }
-function reset() { currentPath = []; renderTrainer(); }
+function trainerSelect(id) { currentPath.push(id); renderTrainer(); }
+function trainerBack() { currentPath.pop(); renderTrainer(); }
+function trainerReset() { currentPath = []; renderTrainer(); }
 
 // =====================================================
 // BUILDER
 // =====================================================
 function showBuilder() {
     builderColor = 'white';
-    builderPath = [];
     builderTree = null;
+    builderPath = [];
     document.getElementById('openingName').value = '';
     document.getElementById('openingDesc').value = '';
     updateColorToggle();
-    renderBuilder();
-    switchTab('visual');
+    switchTab('build');
     showScreen('builderScreen');
+    renderBuilder();
+}
+
+function confirmExitBuilder() {
+    if (builderTree && !confirm('Exit without saving?')) return;
+    goToMenu();
 }
 
 function switchTab(t) {
-    document.getElementById('tabVisual').classList.toggle('active', t === 'visual');
+    document.getElementById('tabBuild').classList.toggle('active', t === 'build');
     document.getElementById('tabJson').classList.toggle('active', t === 'json');
-    document.getElementById('visualBuilder').style.display = t === 'visual' ? 'block' : 'none';
-    document.getElementById('jsonBuilder').style.display = t === 'json' ? 'block' : 'none';
+    document.getElementById('buildTab').style.display = t === 'build' ? 'block' : 'none';
+    document.getElementById('jsonTab').style.display = t === 'json' ? 'block' : 'none';
     if (t === 'json') document.getElementById('jsonOut').value = JSON.stringify(buildOpeningObj(), null, 2);
 }
 
 function setColor(c) {
     builderColor = c;
     updateColorToggle();
-    // Reset tree when color changes
     builderTree = null;
     builderPath = [];
     renderBuilder();
@@ -1364,206 +1213,167 @@ function updateColorToggle() {
         el.classList.toggle('selected', el.classList.contains(builderColor)));
 }
 
-// Get current node in builder tree based on path
 function getBuilderNode() {
     if (!builderTree) return null;
     let node = builderTree;
-    for (let i = 0; i < builderPath.length; i++) {
-        const id = builderPath[i];
+    for (const id of builderPath) {
         if (node.children) {
             const child = node.children.find(c => c.id === id);
-            if (child && child.response) {
-                node = child.response;
-            } else if (child) {
-                node = child;
-            } else {
-                return null;
-            }
-        } else {
-            return null;
-        }
+            if (child?.response) node = child.response;
+            else return null;
+        } else return null;
     }
     return node;
 }
 
-// Navigate to a position
-function builderNavigate(pathIndex) {
-    builderPath = builderPath.slice(0, pathIndex);
-    renderBuilder();
-}
-
-// Navigate into a child
-function builderGoTo(childId) {
-    builderPath.push(childId);
-    renderBuilder();
-}
-
-// Get the breadcrumb path for display
-function getBuilderBreadcrumbs() {
-    if (!builderTree) return [];
-    let crumbs = [{ move: builderTree.move, index: -1 }];
-    let node = builderTree;
-    for (let i = 0; i < builderPath.length; i++) {
-        const id = builderPath[i];
-        if (node.children) {
-            const child = node.children.find(c => c.id === id);
+function renderBuilder() {
+    const content = document.getElementById('builderContent');
+    
+    // No tree yet
+    if (!builderTree) {
+        const isWhite = builderColor === 'white';
+        content.innerHTML = `
+            <div class="empty-state">
+                <div class="icon">♟️</div>
+                <p>Start by adding ${isWhite ? 'your first move' : 'White\'s opening move'}</p>
+            </div>
+            <div class="add-form">
+                <div class="add-form-title">${isWhite ? 'Your First Move' : 'White\'s First Move'}</div>
+                <div class="form-group">
+                    <input type="text" id="newMove" placeholder="e.g., e4 or d4">
+                </div>
+                ${isWhite ? `<div class="form-group">
+                    <input type="text" id="newExpl" placeholder="Explanation (optional)">
+                </div>` : ''}
+                <button class="btn btn-primary" onclick="addFirstMove()">Add Move</button>
+            </div>`;
+        setupEnter();
+        return;
+    }
+    
+    const node = getBuilderNode();
+    const isYourMove = node.player === builderColor;
+    const opponent = builderColor === 'white' ? 'Black' : 'White';
+    
+    // Build path display
+    let pathText = '';
+    let tempNode = builderTree;
+    pathText = tempNode.move;
+    for (const id of builderPath) {
+        if (tempNode.children) {
+            const child = tempNode.children.find(c => c.id === id);
             if (child) {
-                crumbs.push({ move: child.move, index: i });
+                pathText += ' → ' + child.move;
                 if (child.response) {
-                    crumbs.push({ move: child.response.move, index: i });
-                    node = child.response;
+                    pathText += ' → ' + child.response.move;
+                    tempNode = child.response;
                 }
             }
         }
     }
-    return crumbs;
-}
-
-function renderBuilder() {
-    const posDisplay = document.getElementById('currentPositionDisplay');
-    const respDisplay = document.getElementById('opponentResponses');
-    const addSection = document.getElementById('addMoveSection');
     
-    // No tree yet - show initial state
-    if (!builderTree) {
-        const firstPlayer = builderColor;
-        const moveNum = '1.';
-        const placeholder = firstPlayer === 'white' ? 'e.g., e4 or d4' : 'Waiting for White...';
-        
-        posDisplay.innerHTML = `
-            <div class="empty-state">
-                <div class="icon">♟️</div>
-                <p>Start building your opening</p>
-            </div>`;
-        
-        respDisplay.innerHTML = '';
-        
-        if (builderColor === 'white') {
-            addSection.innerHTML = `
-                <div class="add-section">
-                    <div class="add-section-title">Your First Move (White)</div>
-                    <div class="add-row">
-                        <input type="text" id="newMove" placeholder="e.g., e4">
-                        <input type="text" id="newExpl" class="expl-input" placeholder="Explanation">
-                        <button onclick="addFirstMove()">Add</button>
-                    </div>
-                </div>`;
-        } else {
-            addSection.innerHTML = `
-                <div class="add-section">
-                    <div class="add-section-title">White's First Move (Opponent)</div>
-                    <div class="add-row">
-                        <input type="text" id="newMove" placeholder="e.g., e4">
-                        <button onclick="addFirstMoveBlack()">Add</button>
-                    </div>
-                </div>`;
-        }
-        
-        setupEnterKey();
-        return;
+    let html = '';
+    
+    // Back button if not at root
+    if (builderPath.length > 0) {
+        html += `<button class="btn btn-secondary" onclick="builderBack()" style="margin-bottom:16px">← Back to Previous</button>`;
     }
     
-    const currentNode = getBuilderNode();
-    const crumbs = getBuilderBreadcrumbs();
-    const isYourMove = currentNode.player === builderColor;
-    const opponentColor = builderColor === 'white' ? 'Black' : 'White';
+    // Path
+    html += `<div class="path-display"><span class="current">${pathText}</span></div>`;
     
-    // Current position display with breadcrumbs
-    let pathHtml = '<div class="path-display">';
-    crumbs.forEach((c, i) => {
-        const isLast = i === crumbs.length - 1;
-        const clickable = !isLast && c.index >= -1;
-        if (clickable) {
-            pathHtml += `<span class="path-crumb" onclick="builderNavigate(${c.index + 1})" style="cursor:pointer">${c.move}</span>`;
-        } else {
-            pathHtml += `<span class="path-crumb current">${c.move}</span>`;
-        }
-        if (!isLast) pathHtml += '<span class="path-sep">→</span>';
-    });
-    pathHtml += '</div>';
+    // Current position
+    html += `<div class="position-card ${isYourMove ? '' : 'opponent'}">
+        <div class="position-label">${isYourMove ? 'Your Move' : 'Opponent\'s Move'}</div>
+        <div class="position-move">${node.move}</div>
+        ${node.explanation ? `<div class="position-expl">${node.explanation}</div>` : ''}
+    </div>`;
     
-    posDisplay.innerHTML = pathHtml + `
-        <div class="current-position">
-            <div class="current-position-label">${isYourMove ? 'Your Move' : 'Opponent\'s Move'}</div>
-            <div class="current-position-move">${currentNode.move}</div>
-            ${currentNode.explanation ? `<div class="current-position-expl">${currentNode.explanation}</div>` : ''}
-        </div>`;
-    
-    // Show opponent's responses (children) if this is your move
-    if (isYourMove && currentNode.children && currentNode.children.length > 0) {
-        let respHtml = `<div class="opponent-responses">
-            <div class="opponent-responses-title">${opponentColor}'s possible responses:</div>`;
-        currentNode.children.forEach(child => {
-            const hasDepth = child.response && child.response.children && child.response.children.length > 0;
-            respHtml += `
-                <div class="response-item" onclick="builderGoTo('${child.id}')">
-                    <span class="notation">${child.move}</span>
-                    ${child.label ? `<span class="label-tag">${child.label}</span>` : ''}
-                    ${hasDepth ? '<span class="branch-count">has lines</span>' : ''}
-                    <span class="arrow">→</span>
-                    <button class="del" onclick="event.stopPropagation();deleteChild('${child.id}')" title="Delete">×</button>
-                </div>`;
-        });
-        respHtml += '</div>';
-        respDisplay.innerHTML = respHtml;
-    } else {
-        respDisplay.innerHTML = '';
-    }
-    
-    // Add move section
     if (isYourMove) {
-        // Can add opponent responses
-        addSection.innerHTML = `
-            <div class="add-section">
-                <div class="add-section-title">Add ${opponentColor}'s Response</div>
-                <div class="add-row">
-                    <input type="text" id="newMove" placeholder="e.g., e5">
-                    <input type="text" id="newLabel" class="label-input" placeholder="Label">
-                    <button onclick="addOpponentMove()">Add</button>
-                </div>
-                <p class="help">Add different moves ${opponentColor} might play</p>
-            </div>`;
+        // Show opponent responses
+        if (node.children?.length) {
+            html += `<p class="section-title">${opponent}'s Responses</p><div class="response-list">`;
+            node.children.forEach(c => {
+                html += `<div class="response-item" onclick="builderSelect('${c.id}')">
+                    <span class="move">${c.move}</span>
+                    ${c.label ? `<span class="tag">${c.label}</span>` : ''}
+                    <span class="arrow">→</span>
+                </div>`;
+            });
+            html += '</div>';
+        }
+        
+        // Add opponent response form
+        html += `<div class="add-form">
+            <div class="add-form-title">Add ${opponent}'s Response</div>
+            <div class="form-group">
+                <input type="text" id="newMove" placeholder="e.g., e5 or Nf6">
+            </div>
+            <div class="form-group">
+                <input type="text" id="newLabel" placeholder="Label (e.g., Main Line)">
+            </div>
+            <button class="btn btn-purple" onclick="addOpponentResponse()">+ Add Response</button>
+        </div>`;
     } else {
-        // Need to add your response, then can continue
-        if (!currentNode.response) {
-            addSection.innerHTML = `
-                <div class="add-section">
-                    <div class="add-section-title">Your Response</div>
-                    <div class="add-row">
-                        <input type="text" id="newMove" placeholder="Your move">
-                        <input type="text" id="newExpl" class="expl-input" placeholder="Explanation">
-                        <button onclick="addYourResponse()">Add</button>
-                    </div>
-                </div>`;
+        // Opponent's move - show/add your response
+        // Find this node in parent's children to check for response
+        let parentNode = builderTree;
+        for (let i = 0; i < builderPath.length - 1; i++) {
+            const child = parentNode.children?.find(c => c.id === builderPath[i]);
+            if (child?.response) parentNode = child.response;
+        }
+        const currentChild = parentNode.children?.find(c => c.id === builderPath[builderPath.length - 1]);
+        
+        if (currentChild?.response) {
+            // Has response - show continue button
+            html += `<div class="add-form">
+                <div class="add-form-title">Your Response</div>
+                <div class="response-item" onclick="builderContinue()">
+                    <span class="move" style="color:#fbbf24">${currentChild.response.move}</span>
+                    <span class="arrow">→</span>
+                </div>
+                <p style="color:#64748b;font-size:0.85rem;margin-top:12px">Tap to continue building this line</p>
+            </div>`;
+            
+            // Delete option
+            html += `<div class="detail-actions">
+                <button class="btn btn-danger" onclick="deleteCurrentBranch()">Delete This Branch</button>
+            </div>`;
         } else {
-            // Already has response, show it and navigate there
-            addSection.innerHTML = `
-                <div class="add-section">
-                    <div class="add-section-title">Your Response</div>
-                    <div class="response-item" onclick="goToResponse()">
-                        <span class="notation" style="color:#fbbf24">${currentNode.response.move}</span>
-                        <span class="arrow">→</span>
-                    </div>
-                    <p class="help">Click to continue building from your response</p>
-                </div>`;
+            // Need to add response
+            html += `<div class="add-form">
+                <div class="add-form-title">Add Your Response</div>
+                <div class="form-group">
+                    <input type="text" id="newMove" placeholder="Your move">
+                </div>
+                <div class="form-group">
+                    <input type="text" id="newExpl" placeholder="Explanation (optional)">
+                </div>
+                <button class="btn btn-primary" onclick="addYourResponse()">Add Response</button>
+            </div>`;
+            
+            // Delete option
+            html += `<div class="detail-actions">
+                <button class="btn btn-danger" onclick="deleteCurrentBranch()">Delete This Branch</button>
+            </div>`;
         }
     }
     
-    setupEnterKey();
+    content.innerHTML = html;
+    setupEnter();
 }
 
-function setupEnterKey() {
+function setupEnter() {
     setTimeout(() => {
         const input = document.getElementById('newMove');
         if (input) {
+            input.focus();
             input.addEventListener('keypress', e => {
                 if (e.key === 'Enter') {
-                    // Find and click the add button
-                    const btn = input.parentElement.querySelector('button');
-                    if (btn) btn.click();
+                    const btns = document.querySelectorAll('.add-form .btn');
+                    if (btns.length) btns[btns.length - 1].click();
                 }
             });
-            input.focus();
         }
     }, 50);
 }
@@ -1576,55 +1386,46 @@ function addFirstMove() {
     builderTree = {
         id: 'root',
         move: '1. ' + move,
-        player: 'white',
-        explanation: expl,
+        player: builderColor === 'white' ? 'white' : 'white', // First move always white notation
+        explanation: builderColor === 'white' ? expl : '',
         children: []
     };
+    
+    // If playing black, we need to immediately be ready to add our response
+    if (builderColor === 'black') {
+        // Add a placeholder for white's move so we can respond
+        // Actually, tree root is white's move, we need to add black's response
+        // Show the form to add black's responses
+    }
     
     renderBuilder();
 }
 
-function addFirstMoveBlack() {
-    const move = document.getElementById('newMove').value.trim();
-    if (!move) return;
-    
-    builderTree = {
-        id: 'root',
-        move: '1. ' + move,
-        player: 'white',
-        explanation: 'Opponent\'s move.',
-        children: []
-    };
-    
-    renderBuilder();
-}
-
-function addOpponentMove() {
+function addOpponentResponse() {
     const move = document.getElementById('newMove').value.trim();
     if (!move) return;
     const label = document.getElementById('newLabel')?.value.trim() || '';
     
-    const currentNode = getBuilderNode();
-    if (!currentNode) return;
+    const node = getBuilderNode();
+    if (!node) return;
     
     // Calculate move number
-    const crumbs = getBuilderBreadcrumbs();
-    const moveCount = Math.ceil(crumbs.length / 2);
-    const isBlackMove = currentNode.player === 'white';
-    const notation = isBlackMove ? `${moveCount}... ${move}` : `${moveCount + 1}. ${move}`;
+    const moveNum = Math.ceil((builderPath.length + 2) / 2);
+    const isBlack = node.player === 'white';
+    const notation = isBlack ? `${moveNum}... ${move}` : `${moveNum}. ${move}`;
     
     const newChild = {
-        id: 'n' + Date.now() + Math.random().toString(36).substr(2, 5),
+        id: 'n' + Date.now(),
         move: notation,
-        player: isBlackMove ? 'black' : 'white',
+        player: isBlack ? 'black' : 'white',
         label: label,
         response: null
     };
     
-    if (!currentNode.children) currentNode.children = [];
-    currentNode.children.push(newChild);
+    if (!node.children) node.children = [];
+    node.children.push(newChild);
     
-    // Navigate to this new child
+    // Navigate into it
     builderPath.push(newChild.id);
     renderBuilder();
 }
@@ -1634,45 +1435,21 @@ function addYourResponse() {
     if (!move) return;
     const expl = document.getElementById('newExpl')?.value.trim() || '';
     
-    const currentNode = getBuilderNode();
-    if (!currentNode) return;
-    
-    // Find the child node we're responding to
-    // We're at the opponent's move, need to find it in parent's children
+    // Find current child node
     let parentNode = builderTree;
-    let childNode = null;
-    
-    if (builderPath.length === 0) {
-        // We're at root, which shouldn't happen for addYourResponse
-        return;
-    }
-    
-    // Navigate to parent
     for (let i = 0; i < builderPath.length - 1; i++) {
-        const id = builderPath[i];
-        if (parentNode.children) {
-            const child = parentNode.children.find(c => c.id === id);
-            if (child && child.response) {
-                parentNode = child.response;
-            }
-        }
+        const child = parentNode.children?.find(c => c.id === builderPath[i]);
+        if (child?.response) parentNode = child.response;
     }
-    
-    // Find current child
-    const currentId = builderPath[builderPath.length - 1];
-    if (parentNode.children) {
-        childNode = parentNode.children.find(c => c.id === currentId);
-    }
-    
-    if (!childNode) return;
+    const currentChild = parentNode.children?.find(c => c.id === builderPath[builderPath.length - 1]);
+    if (!currentChild) return;
     
     // Calculate move number
-    const crumbs = getBuilderBreadcrumbs();
-    const moveCount = Math.ceil((crumbs.length + 1) / 2);
-    const isWhiteMove = builderColor === 'white';
-    const notation = isWhiteMove ? `${moveCount}. ${move}` : `${moveCount}... ${move}`;
+    const moveNum = Math.ceil((builderPath.length + 2) / 2);
+    const isWhite = builderColor === 'white';
+    const notation = isWhite ? `${moveNum}. ${move}` : `${moveNum}... ${move}`;
     
-    childNode.response = {
+    currentChild.response = {
         id: 'r' + Date.now(),
         move: notation,
         player: builderColor,
@@ -1683,67 +1460,75 @@ function addYourResponse() {
     renderBuilder();
 }
 
-function goToResponse() {
-    // The current path already points to opponent's move
-    // We just need to re-render to show we're now at our response
+function builderSelect(id) {
+    builderPath.push(id);
     renderBuilder();
 }
 
-function deleteChild(childId) {
-    const currentNode = getBuilderNode();
-    if (!currentNode || !currentNode.children) return;
+function builderBack() {
+    builderPath.pop();
+    renderBuilder();
+}
+
+function builderContinue() {
+    // Already at opponent's move with response - the path navigation handles this
+    // We just need to re-render to show we're at the response
+    renderBuilder();
+}
+
+function deleteCurrentBranch() {
+    if (!confirm('Delete this branch?')) return;
     
-    const idx = currentNode.children.findIndex(c => c.id === childId);
-    if (idx > -1) {
-        currentNode.children.splice(idx, 1);
-        renderBuilder();
+    if (builderPath.length === 0) {
+        builderTree = null;
+    } else {
+        // Find parent and remove this child
+        let parentNode = builderTree;
+        for (let i = 0; i < builderPath.length - 1; i++) {
+            const child = parentNode.children?.find(c => c.id === builderPath[i]);
+            if (child?.response) parentNode = child.response;
+        }
+        const idx = parentNode.children?.findIndex(c => c.id === builderPath[builderPath.length - 1]);
+        if (idx > -1) parentNode.children.splice(idx, 1);
+        builderPath.pop();
     }
+    renderBuilder();
 }
 
 function buildOpeningObj() {
-    const name = document.getElementById('openingName').value.trim() || 'My Opening';
-    const desc = document.getElementById('openingDesc').value.trim() || '';
-    
-    // Generate starting moves from tree
-    let startingMoves = '';
-    if (builderTree) {
-        let node = builderTree;
-        let moves = [node.move];
-        while (node.children && node.children.length > 0) {
-            const child = node.children[0];
-            moves.push(child.move);
-            if (child.response) {
-                moves.push(child.response.move);
-                node = child.response;
-            } else {
-                break;
-            }
-            if (moves.length >= 6) break;
-        }
-        startingMoves = moves.join(' ');
-    }
-    
     return {
-        name: name,
+        name: document.getElementById('openingName').value.trim() || 'My Opening',
         color: builderColor,
-        description: desc,
-        startingMoves: startingMoves || '1. e4',
+        description: document.getElementById('openingDesc').value.trim() || '',
+        startingMoves: getStartingMoves(),
         tree: builderTree || { id: 'root', move: '1. e4', player: 'white', explanation: '', children: [] }
     };
 }
 
-function preview() {
-    if (!builderTree) {
-        alert('Add at least one move first');
-        return;
+function getStartingMoves() {
+    if (!builderTree) return '1. e4';
+    let moves = [builderTree.move];
+    let node = builderTree;
+    while (node.children?.length && moves.length < 6) {
+        const c = node.children[0];
+        moves.push(c.move);
+        if (c.response) {
+            moves.push(c.response.move);
+            node = c.response;
+        } else break;
     }
+    return moves.join(' ');
+}
+
+function previewOpening() {
+    if (!builderTree) { alert('Add at least one move'); return; }
     OPENINGS['_preview'] = buildOpeningObj();
     startTraining('_preview');
 }
 
-function save() {
+function saveOpening() {
     const name = document.getElementById('openingName').value.trim();
-    if (!name) { alert('Enter a name'); return; }
+    if (!name) { alert('Enter an opening name'); return; }
     if (!builderTree) { alert('Add at least one move'); return; }
     
     const key = name.toLowerCase().replace(/[^a-z0-9]/g, '_') + '_' + Date.now();
@@ -1753,15 +1538,15 @@ function save() {
     goToMenu();
 }
 
-function copyJ() {
+function copyJson() {
     navigator.clipboard.writeText(document.getElementById('jsonOut').value);
     alert('Copied!');
 }
 
-function importJ() {
+function importJson() {
     try {
         const o = JSON.parse(document.getElementById('jsonIn').value);
-        if (!o.name || !o.tree) { alert('Invalid JSON'); return; }
+        if (!o.name || !o.tree) { alert('Invalid JSON format'); return; }
         const key = o.name.toLowerCase().replace(/[^a-z0-9]/g, '_') + '_' + Date.now();
         OPENINGS[key] = o;
         saveStorage();
