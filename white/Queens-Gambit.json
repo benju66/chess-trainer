@@ -1,0 +1,170 @@
+{
+  "name": "Queen's Gambit",
+  "color": "white",
+  "description": "The gold standard of 1. d4 openings. We fight for the center immediately by attacking d5 from the flank (c4).",
+  "startingMoves": "1. d4 d5 2. c4",
+  "tree": {
+    "id": "qg_root",
+    "move": "1. d4",
+    "player": "white",
+    "explanation": "We control the center safely. Our bishop is open, and the pawn is protected by the Queen.",
+    "children": [
+      {
+        "id": "qg_1_d5",
+        "move": "1... d5",
+        "player": "black",
+        "label": "Classical",
+        "response": {
+          "id": "qg_2_c4",
+          "move": "2. c4",
+          "player": "white",
+          "explanation": "The Queen's Gambit! We offer a flank pawn (c4) to distract their central pawn (d5). If they take it, we dominate the center with e4.",
+          "children": [
+            {
+              "id": "qg_2_e6",
+              "move": "2... e6",
+              "player": "black",
+              "label": "QGD (Declined)",
+              "response": {
+                "id": "qg_3_nc3",
+                "move": "3. Nc3",
+                "player": "white",
+                "explanation": "We increase the pressure on d5. Now we threaten to take twice.",
+                "children": [
+                  {
+                    "id": "qg_3_nf6",
+                    "move": "3... Nf6",
+                    "player": "black",
+                    "label": "Main Line",
+                    "response": {
+                      "id": "qg_choice_strategy",
+                      "move": "Choose Strategy",
+                      "player": "white",
+                      "isChoice": true,
+                      "explanation": "Black defends solidly. You have a major structural choice here.",
+                      "choices": [
+                        {
+                          "id": "qg_opt_exchange",
+                          "move": "4. cxd5",
+                          "name": "Exchange Variation",
+                          "style": "Positional / Clear Plan",
+                          "color": "blue",
+                          "explanation": "We clarify the center immediately. This leads to the 'Carlsbad Structure' where our plan is simple: launch a 'Minority Attack' on the queenside (b4-b5).",
+                          "children": [
+                            {
+                              "id": "qg_4_exd5",
+                              "move": "4... exd5",
+                              "player": "black",
+                              "label": "Recapture",
+                              "response": {
+                                "id": "qg_5_bg5",
+                                "move": "5. Bg5",
+                                "player": "white",
+                                "explanation": "Pinning the knight. We actively develop before playing e3.",
+                                "children": []
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "id": "qg_opt_main",
+                          "move": "4. Bg5",
+                          "name": "Classical Main Line",
+                          "style": "Active / Complex",
+                          "color": "purple",
+                          "explanation": "We maintain the tension in the center. We pin the knight and put maximum pressure on Black's setup.",
+                          "children": [
+                            {
+                              "id": "qg_4_be7",
+                              "move": "4... Be7",
+                              "player": "black",
+                              "label": "Unpinning",
+                              "response": {
+                                "id": "qg_5_e3",
+                                "move": "5. e3",
+                                "player": "white",
+                                "explanation": "Solidifying our center. The bishop is already out, so now we can close the pawn chain.",
+                                "children": []
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "id": "qg_2_dxc4",
+              "move": "2... dxc4",
+              "player": "black",
+              "label": "QGA (Accepted)",
+              "response": {
+                "id": "qg_3_e4",
+                "move": "3. e4",
+                "player": "white",
+                "explanation": "Aggressive center control! We grab the center immediately. We will recapture the c4 pawn with our bishop next.",
+                "children": [
+                  {
+                    "id": "qg_3_b5",
+                    "move": "3... b5?",
+                    "player": "black",
+                    "label": "Greedy Blunder",
+                    "response": {
+                      "id": "qg_4_a4",
+                      "move": "4. a4",
+                      "player": "white",
+                      "explanation": "Undermining their pawn chain immediately. If they push c6, we take and they are in trouble.",
+                      "children": []
+                    }
+                  },
+                  {
+                    "id": "qg_3_e5",
+                    "move": "3... e5",
+                    "player": "black",
+                    "label": "Counter-Strike",
+                    "response": {
+                      "id": "qg_4_nf3",
+                      "move": "4. Nf3",
+                      "player": "white",
+                      "explanation": "Developing and attacking e5. Don't worry about the c4 pawn yet; it isn't going anywhere.",
+                      "children": []
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "id": "qg_2_c6",
+              "move": "2... c6",
+              "player": "black",
+              "label": "Slav Defense",
+              "response": {
+                "id": "qg_3_nf3",
+                "move": "3. Nf3",
+                "player": "white",
+                "explanation": "Standard development. We prevent e5 breaks from Black.",
+                "children": [
+                  {
+                    "id": "qg_3_nf6",
+                    "move": "3... Nf6",
+                    "player": "black",
+                    "label": "Main Line",
+                    "response": {
+                      "id": "qg_4_nc3",
+                      "move": "4. Nc3",
+                      "player": "white",
+                      "explanation": "Developing the knight to its best square. We are pressuring e4 and d5.",
+                      "children": []
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

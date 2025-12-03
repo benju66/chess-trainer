@@ -1,0 +1,203 @@
+{
+  "name": "Italian Game",
+  "color": "white",
+  "description": "A comprehensive guide to the Italian Game (1. e4 e5 2. Nf3 Nc6 3. Bc4). Includes the Fried Liver Attack, Evans Gambit, and how to avoid the Blackburne Trap.",
+  "startingMoves": "1. e4 e5 2. Nf3 Nc6 3. Bc4",
+  "tree": {
+    "id": "it_root",
+    "move": "1. e4",
+    "player": "white",
+    "explanation": "We stake a claim in the center and open lines for our Queen and Bishop.",
+    "children": [
+      {
+        "id": "it_1_e5",
+        "move": "1... e5",
+        "player": "black",
+        "label": "Open Game",
+        "response": {
+          "id": "it_2_nf3",
+          "move": "2. Nf3",
+          "player": "white",
+          "explanation": "Develop with tempo! We bring the knight out to a natural square and immediately attack the e5 pawn.",
+          "children": [
+            {
+              "id": "it_2_nc6",
+              "move": "2... Nc6",
+              "player": "black",
+              "label": "Main Line",
+              "response": {
+                "id": "it_3_bc4",
+                "move": "3. Bc4",
+                "player": "white",
+                "explanation": "The Italian Game. The Bishop is perfectly placed to control the center and eye the weak f7 pawn (the only pawn protected solely by the King).",
+                "children": [
+                  {
+                    "id": "it_3_bc5",
+                    "move": "3... Bc5",
+                    "player": "black",
+                    "label": "Giuoco Piano",
+                    "response": {
+                      "id": "it_choice_bc5",
+                      "move": "Choose Strategy",
+                      "player": "white",
+                      "isChoice": true,
+                      "explanation": "Black develops sensibly. You have a major choice: play a slow, building game or sacrifice a pawn for an immediate attack?",
+                      "choices": [
+                        {
+                          "id": "it_opt_c3",
+                          "move": "4. c3",
+                          "name": "Giuoco Pianissimo",
+                          "style": "Positional / Solid",
+                          "color": "blue",
+                          "explanation": "The 'Very Quiet Game'. We prepare to push d4 later to build a massive center, but for now, we keep it solid.",
+                          "children": [
+                            {
+                              "id": "it_4_nf6_main",
+                              "move": "4... Nf6",
+                              "player": "black",
+                              "label": "Main Line",
+                              "response": {
+                                "id": "it_5_d3",
+                                "move": "5. d3",
+                                "player": "white",
+                                "explanation": "Solidifying the center. Now we can route our Queen's knight to f5 via d2-f1-g3.",
+                                "children": []
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "id": "it_opt_b4",
+                          "move": "4. b4",
+                          "name": "Evans Gambit",
+                          "style": "Aggressive / Gambit",
+                          "color": "red",
+                          "explanation": "We sacrifice the b-pawn! If they take it, we gain time to push c3 and d4, dominating the center while their bishop runs away.",
+                          "children": [
+                            {
+                              "id": "it_4_bxb4",
+                              "move": "4... Bxb4",
+                              "player": "black",
+                              "label": "Accepted",
+                              "response": {
+                                "id": "it_5_c3",
+                                "move": "5. c3",
+                                "player": "white",
+                                "explanation": "We kick the bishop and prepare d4. We are down a pawn, but our activity is superior.",
+                                "children": []
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "id": "it_3_nf6",
+                    "move": "3... Nf6",
+                    "player": "black",
+                    "label": "Two Knights Defense",
+                    "response": {
+                      "id": "it_choice_nf6",
+                      "move": "Choose Strategy",
+                      "player": "white",
+                      "isChoice": true,
+                      "explanation": "Black attacks our e4 pawn immediately. We can defend calmly or launch a counter-attack.",
+                      "choices": [
+                        {
+                          "id": "it_opt_ng5",
+                          "move": "4. Ng5",
+                          "name": "Knight Attack",
+                          "style": "Tactical / Sharp",
+                          "color": "purple",
+                          "explanation": "We ignore the threat to e4 and attack f7 with both Bishop and Knight. This forces Black to react perfectly or lose.",
+                          "children": [
+                            {
+                              "id": "it_4_d5",
+                              "move": "4... d5",
+                              "player": "black",
+                              "label": "Correct Defense",
+                              "response": {
+                                "id": "it_5_exd5",
+                                "move": "5. exd5",
+                                "player": "white",
+                                "explanation": "We must take. We are now threatening checks.",
+                                "children": [
+                                  {
+                                    "id": "it_5_na5",
+                                    "move": "5... Na5",
+                                    "player": "black",
+                                    "label": "Polerio (Best)",
+                                    "response": {
+                                      "id": "it_6_bb5",
+                                      "move": "6. Bb5+",
+                                      "player": "white",
+                                      "explanation": "An annoying check. They must block with c6 or Bd7.",
+                                      "children": []
+                                    }
+                                  },
+                                  {
+                                    "id": "it_5_nxd5",
+                                    "move": "5... Nxd5?",
+                                    "player": "black",
+                                    "label": "BLUNDER (Fried Liver)",
+                                    "response": {
+                                      "id": "it_6_nxf7",
+                                      "move": "6. Nxf7!",
+                                      "player": "white",
+                                      "explanation": "THE FRIED LIVER ATTACK! We sacrifice the knight. The King must take it, then we play Qf3+ driving the King into the center of the board.",
+                                      "children": []
+                                    }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "id": "it_4_bc5",
+                              "move": "4... Bc5",
+                              "player": "black",
+                              "label": "Traxler Counter",
+                              "response": {
+                                "id": "it_5_bxf7",
+                                "move": "5. Bxf7+",
+                                "player": "white",
+                                "explanation": "The safest refutation. We take the pawn with check. If we took with the Knight (Nxf7), we walk into forced draw/mate lines.",
+                                "children": []
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "id": "it_opt_d3",
+                          "move": "4. d3",
+                          "name": "Modern / Quiet",
+                          "style": "Solid",
+                          "color": "green",
+                          "explanation": "We simply defend the e4 pawn. If they want to trade pieces, we are happy. A very safe way to play.",
+                          "children": []
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "id": "it_3_nd4",
+                    "move": "3... Nd4?",
+                    "player": "black",
+                    "label": "Blackburne Trap",
+                    "response": {
+                      "id": "it_4_c3",
+                      "move": "4. c3!",
+                      "player": "white",
+                      "explanation": "WARNING: Do not take the e5 pawn (Nxe5?). If you do, Qg5 wins for Black. Instead, simply kick the knight away.",
+                      "children": []
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,199 @@
+{
+  "name": "King's Indian Attack (System)",
+  "color": "white",
+  "description": "A universal system for White. We build a fortress with g3/Bg2 and then launch a kingside attack. Playable against almost anything.",
+  "startingMoves": "1. Nf3 d5 2. g3",
+  "tree": {
+    "id": "kia_root",
+    "move": "1. Nf3",
+    "player": "white",
+    "explanation": "The Reti Opening start. We control the center flexibly without committing pawns yet.",
+    "children": [
+      {
+        "id": "kia_1_d5",
+        "move": "1... d5",
+        "player": "black",
+        "label": "Classical",
+        "response": {
+          "id": "kia_2_g3",
+          "move": "2. g3",
+          "player": "white",
+          "explanation": "The signature move. We prepare to fianchetto the bishop to g2, where it will be the strongest piece on the board.",
+          "children": [
+            {
+              "id": "kia_2_nf6",
+              "move": "2... Nf6",
+              "player": "black",
+              "label": "Main Line",
+              "response": {
+                "id": "kia_3_bg2",
+                "move": "3. Bg2",
+                "player": "white",
+                "explanation": "The Sniper. This bishop controls the long diagonal from h1 to a8.",
+                "children": [
+                  {
+                    "id": "kia_3_e6",
+                    "move": "3... e6",
+                    "player": "black",
+                    "label": "Solid Setup",
+                    "response": {
+                      "id": "kia_4_o_o",
+                      "move": "4. O-O",
+                      "player": "white",
+                      "explanation": "King safety first. Now we are ready to strike in the center.",
+                      "children": [
+                        {
+                          "id": "kia_4_be7",
+                          "move": "4... Be7",
+                          "player": "black",
+                          "label": "Developing",
+                          "response": {
+                            "id": "kia_5_d3",
+                            "move": "5. d3",
+                            "player": "white",
+                            "explanation": "Defining the KIA. We do NOT play d4. We play d3 to support the e4 push later.",
+                            "children": [
+                              {
+                                "id": "kia_5_o_o",
+                                "move": "5... O-O",
+                                "player": "black",
+                                "label": "Castles",
+                                "response": {
+                                  "id": "kia_6_nbd2",
+                                  "move": "6. Nbd2",
+                                  "player": "white",
+                                  "explanation": "The Springboard. This knight doesn't go to c3 (where it blocks the bishop). It goes to d2 to support the e4 push.",
+                                  "children": [
+                                    {
+                                      "id": "kia_6_c5",
+                                      "move": "6... c5",
+                                      "player": "black",
+                                      "label": "Grabbing Space",
+                                      "response": {
+                                        "id": "kia_7_e4",
+                                        "move": "7. e4",
+                                        "player": "white",
+                                        "explanation": "We strike! We now have a foothold in the center. The 'Setup' is complete.",
+                                        "children": [
+                                          {
+                                            "id": "kia_7_nc6",
+                                            "move": "7... Nc6",
+                                            "player": "black",
+                                            "label": "Development",
+                                            "response": {
+                                              "id": "kia_choice_strategy",
+                                              "move": "Choose Middlegame",
+                                              "player": "white",
+                                              "isChoice": true,
+                                              "explanation": "The setup is done. Now you must choose your plan.",
+                                              "choices": [
+                                                {
+                                                  "id": "kia_opt_re1",
+                                                  "move": "8. Re1",
+                                                  "name": "Fischer Plan",
+                                                  "style": "Aggressive / Kingside Attack",
+                                                  "color": "red",
+                                                  "explanation": "The Killer Plan. We intend to push e5 (kicking their knight), then h4, Nf1, Nh2, and Ng4. A direct checkmate attack.",
+                                                  "children": []
+                                                },
+                                                {
+                                                  "id": "kia_opt_c3",
+                                                  "move": "8. c3",
+                                                  "name": "Positional Plan",
+                                                  "style": "Solid / Prophylactic",
+                                                  "color": "blue",
+                                                  "explanation": "We support the center. If Black plays d4, we can keep the center closed. We play for a long squeeze.",
+                                                  "children": []
+                                                }
+                                              ]
+                                            }
+                                          },
+                                          {
+                                            "id": "kia_7_dxe4",
+                                            "move": "7... dxe4",
+                                            "player": "black",
+                                            "label": "Trading Center",
+                                            "response": {
+                                              "id": "kia_8_dxe4",
+                                              "move": "8. dxe4",
+                                              "player": "white",
+                                              "explanation": "Recapture. The e-file is open for our rook later.",
+                                              "children": []
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "kia_1_c5",
+        "move": "1... c5",
+        "player": "black",
+        "label": "Sicilian Setup",
+        "response": {
+          "id": "kia_2_g3_sic",
+          "move": "2. g3",
+          "player": "white",
+          "explanation": "We stick to the system. No need to memorize open Sicilian theory.",
+          "children": [
+            {
+              "id": "kia_2_nc6",
+              "move": "2... Nc6",
+              "player": "black",
+              "label": "Main Line",
+              "response": {
+                "id": "kia_3_bg2_sic",
+                "move": "3. Bg2",
+                "player": "white",
+                "explanation": "Controlling d5 from a distance.",
+                "children": [
+                  {
+                    "id": "kia_3_g6",
+                    "move": "3... g6",
+                    "player": "black",
+                    "label": "Closed Sicilian",
+                    "response": {
+                      "id": "kia_4_d3",
+                      "move": "4. d3",
+                      "player": "white",
+                      "explanation": "Preparing e4. This transposition leads to the Closed Sicilian.",
+                      "children": [
+                        {
+                          "id": "kia_4_bg7",
+                          "move": "4... Bg7",
+                          "player": "black",
+                          "label": "Fianchetto",
+                          "response": {
+                            "id": "kia_5_nc3",
+                            "move": "5. Nc3",
+                            "player": "white",
+                            "explanation": "Against the Sicilian setup, we develop the Knight to c3 (Closed Sicilian style) rather than d2, to control d5 firmly.",
+                            "children": []
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
