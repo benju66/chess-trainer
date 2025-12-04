@@ -1,0 +1,105 @@
+{
+  "name": "Ruy Lopez: Berlin Defense, l'Hermet Variation",
+  "color": "white",
+  "description": "A hyper-solid, endgame-focused variation where Black accepts a temporary defensive task to secure the Bishop pair and a fortress-like structure without pawn weaknesses.",
+  "startingMoves": "1. e4",
+  "tree": {
+    "id": "root",
+    "move": "1. e4",
+    "player": "white",
+    "status": "Mainline",
+    "type": "Positional/Strategic",
+    "explanation": "We occupy the center and prepare to develop the Kingside pieces rapidly.",
+    "children": [
+      {
+        "id": "c1",
+        "move": "1... e5",
+        "player": "black",
+        "status": "Mainline",
+        "type": "Positional/Strategic",
+        "explanation": "Black mirrors the central claim, preventing an immediate d4 push.",
+        "children": [
+          {
+            "id": "c2",
+            "move": "2. Nf3",
+            "player": "white",
+            "status": "Mainline",
+            "type": "Dynamic",
+            "explanation": "We develop with a threat against e5, forcing Black to react.",
+            "children": [
+              {
+                "id": "c3",
+                "move": "2... Nc6",
+                "player": "black",
+                "status": "Mainline",
+                "type": "Defensive/Prophylactic",
+                "explanation": "The standard defense. Black develops a piece while protecting the e-pawn.",
+                "children": [
+                  {
+                    "id": "c4",
+                    "move": "3. Bb5",
+                    "player": "white",
+                    "status": "Mainline",
+                    "type": "Positional/Strategic",
+                    "explanation": "The Ruy Lopez. We pressure the c6 Knight, indirectly fighting for control of the e5 and d4 squares.",
+                    "children": [
+                      {
+                        "id": "c5",
+                        "move": "3... Nf6",
+                        "player": "black",
+                        "status": "Mainline",
+                        "type": "Positional/Strategic",
+                        "explanation": "The Berlin Defense. Instead of waiting, Black immediately develops the Knight to attack e4. This avoids slow maneuvering and threatens the immediate capture of our e4 pawn.",
+                        "children": [
+                          {
+                            "id": "c6",
+                            "move": "4. O-O",
+                            "player": "white",
+                            "status": "Mainline",
+                            "type": "Positional/Strategic",
+                            "explanation": "We ignore the threat to e4 to prioritize King safety and Rook activation. If Black takes e4, the e-file becomes an avenue of attack for our Rook.",
+                            "children": [
+                              {
+                                "id": "c7",
+                                "move": "4... Nxe4",
+                                "player": "black",
+                                "status": "Mainline",
+                                "type": "Tactical",
+                                "explanation": "Black accepts the challenge. By capturing the pawn, Black eliminates our central soldier but accepts that their King will remain in the center slightly longer.",
+                                "children": [
+                                  {
+                                    "id": "c8",
+                                    "move": "5. d4",
+                                    "player": "white",
+                                    "status": "Mainline",
+                                    "type": "Dynamic",
+                                    "explanation": "We strike the center immediately. This opens the d-file for our Queen and the c1-h6 diagonal for the Bishop. It also threatens to recover the pawn or pin the Knight on e4.",
+                                    "children": [
+                                      {
+                                        "id": "c9",
+                                        "move": "5... Nd6",
+                                        "player": "black",
+                                        "status": "Mainline",
+                                        "type": "Positional/Strategic",
+                                        "explanation": "The l'Hermet Variation. Black retreats the Knight while attacking our Bishop on b5. Plan: Black forces the Bishop exchange (Bxc6) and will likely trade Queens to enter the 'Berlin Endgame' with the Bishop pair.",
+                                        "children": []
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
