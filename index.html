@@ -3,2948 +3,1041 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Chess Opening Trainer</title>
+    <title>Chess Trainer V6.1 (Stable)</title>
+    <link rel="stylesheet" href="https://unpkg.com/cm-chessboard@4/assets/styles/cm-chessboard.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+    
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
+        /* =========================================
+           CORE STYLES
+           ========================================= */
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        :root {
+            --bg-gradient: linear-gradient(135deg, #1e293b 0%, #0f172a 50%, #1e293b 100%);
+            --header-color: #e2e8f0;
+            --accent-color: #fbbf24;
+            --card-bg: rgba(51, 65, 85, 0.5);
+        }
+        
+        body.theme-purple {
+            --bg-gradient: linear-gradient(135deg, #2e1065 0%, #1e1b4b 50%, #2e1065 100%);
+            --accent-color: #c4b5fd;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 50%, #1e293b 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-gradient);
             min-height: 100vh;
             color: #e2e8f0;
+            transition: background 0.5s ease;
         }
 
-        .container {
-            max-width: 500px;
-            margin: 0 auto;
-            padding: 16px;
-            padding-bottom: 120px;
-        }
+        .container { max-width: 500px; margin: 0 auto; padding: 16px; padding-bottom: 120px; }
+        
+        /* HEADER */
+        .header { text-align: center; padding: 20px 0; position: relative; }
+        .header h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 8px; color: var(--header-color); }
+        .header-tools { display: flex; justify-content: center; gap: 15px; margin-top: 10px; }
+        .tool-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; color: #94a3b8; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+        .tool-btn:hover { background: rgba(255,255,255,0.2); color: #fff; }
+        .version-tag { background: #0ea5e9; color: #fff; font-size: 0.7rem; font-weight: 800; padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 8px; }
 
-        .header {
-            text-align: center;
-            padding: 20px 0;
+        /* FOLDERS */
+        .folder-header {
+            background: rgba(255, 255, 255, 0.05); padding: 12px 16px; border-radius: 12px;
+            margin-top: 20px; margin-bottom: 10px; cursor: pointer; font-weight: 600;
+            color: var(--accent-color); display: flex; justify-content: space-between; align-items: center;
         }
+        .folder-header:hover { background: rgba(255, 255, 255, 0.1); }
+        .folder-content { display: none; }
+        .folder-content.open { display: block; }
+        .folder-count { background: rgba(0,0,0,0.3); padding: 2px 8px; border-radius: 10px; font-size: 0.75rem; color: #94a3b8; }
 
-        .header h1 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .header p {
-            color: #94a3b8;
-            font-size: 0.875rem;
-        }
-
-        .section-title {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: #64748b;
-            margin-top: 20px;
-            margin-bottom: 12px;
-        }
-
-        /* Cards */
+        /* CARDS */
         .card {
-            background: rgba(51, 65, 85, 0.5);
-            border: 1px solid #334155;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
-            position: relative;
+            background: var(--card-bg); border: 1px solid #334155; border-radius: 16px;
+            padding: 20px; margin-bottom: 12px; cursor: pointer; position: relative;
         }
+        .card h3 { font-size: 1.125rem; margin-bottom: 6px; }
+        .card p { color: #94a3b8; font-size: 0.875rem; }
+        .card .moves { font-family: monospace; color: var(--accent-color); font-size: 0.85rem; margin-top: 10px; }
+        .card-actions { position: absolute; top: 16px; right: 16px; display: flex; gap: 8px; }
+        .icon-btn { background: rgba(100, 116, 139, 0.3); border: none; color: #94a3b8; width: 36px; height: 36px; border-radius: 8px; cursor: pointer; font-size: 1.1rem; }
 
-        .card:hover, .card:active {
-            background: rgba(71, 85, 105, 0.5);
-            border-color: #475569;
+        /* NAVIGATION */
+        .nav-bar { display: grid; grid-template-columns: 80px 1fr 80px; align-items: center; margin-bottom: 16px; }
+        .nav-title { text-align: center; font-size: 0.9rem; font-weight: 700; color: var(--accent-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .nav-btn { background: rgba(255,255,255,0.1); border: none; color: #e2e8f0; padding: 10px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.9rem; }
+        .return-btn {
+            background: rgba(139, 92, 246, 0.2); border: 1px solid #8b5cf6; color: #c4b5fd;
+            display: flex; align-items: center; gap: 6px; padding: 10px 16px; border-radius: 8px; cursor: pointer; font-weight: 600;
         }
-
-        .card h3 {
-            font-size: 1.125rem;
-            margin-bottom: 6px;
-        }
-
-        .card p {
-            color: #94a3b8;
-            font-size: 0.875rem;
-        }
-
-        .card .moves {
-            font-family: monospace;
-            color: #fbbf24;
-            font-size: 0.85rem;
-            margin-top: 10px;
-        }
-
-        .color-badge {
-            display: inline-block;
-            padding: 3px 10px;
-            border-radius: 6px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            margin-left: 8px;
-            vertical-align: middle;
-        }
-
-        .color-badge.white {
-            background: #fbbf24;
-            color: #1e293b;
-        }
-
-        .color-badge.black {
-            background: #475569;
-            color: #e2e8f0;
-        }
-
-        .card-actions {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            display: flex;
-            gap: 8px;
-        }
-
-        .edit-btn, .delete-btn {
-            background: rgba(100, 116, 139, 0.3);
-            border: none;
-            color: #94a3b8;
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1.1rem;
-        }
-
-        .edit-btn:hover {
-            background: rgba(59, 130, 246, 0.3);
-            color: #60a5fa;
-        }
-
-        .delete-btn:hover {
-            background: rgba(239, 68, 68, 0.3);
-            color: #f87171;
-        }
-
-        /* Screens */
         .screen { display: none; }
-        .screen.active { display: block; }
 
-        /* Navigation */
-        .nav-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(71, 85, 105, 0.5);
-            border: 1px solid #475569;
-            border-radius: 12px;
-            color: #e2e8f0;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            padding: 14px 20px;
-            margin-bottom: 16px;
-            min-height: 50px;
+        /* TABS */
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tab { flex: 1; padding: 14px; background: rgba(51, 65, 85, 0.3); border: 1px solid #334155; border-radius: 12px; color: #94a3b8; font-weight: 600; cursor: pointer; text-align: center; }
+        .tab.active { background: rgba(251, 191, 36, 0.1); border-color: #fbbf24; color: #fbbf24; }
+
+        /* BOARD CONTAINER */
+        .board-container {
+            width: 100%;
+            max-width: 400px;
+            aspect-ratio: 1 / 1;
+            margin: 0 auto 16px auto;
+            border-radius: 4px;
+            overflow: hidden;
+            background: rgba(0,0,0,0.2); /* Placeholder bg */
         }
 
-        .nav-btn:hover { background: rgba(71, 85, 105, 0.7); }
+        .move-history { background: rgba(0,0,0,0.2); border-radius: 12px; padding: 14px; margin-bottom: 16px; overflow-x: auto; white-space: nowrap; scroll-behavior: smooth; }
+        
+        /* CURRENT MOVE CARD */
+        .current-move-card { background: #334155; border-radius: 12px; padding: 16px; margin-bottom: 16px; text-align: center; border: 1px solid #475569; }
+        .current-move-card.opponent { border-color: #94a3b8; }
+        .move-label { font-size: 0.7rem; text-transform: uppercase; color: #94a3b8; margin-bottom: 4px; letter-spacing: 1px; }
+        .current-move h2 { font-size: 1.4rem; font-family: monospace; margin: 4px 0; color: #e2e8f0; }
+        .explanation { color: #cbd5e1; line-height: 1.4; font-size: 0.9rem; margin-top: 6px; }
+        
+        .options-header { display: flex; justify-content: space-between; align-items: center; margin: 24px 0 12px 0; color: #94a3b8; font-size: 0.9rem; font-weight: 600; }
+        .toggle-group { display: flex; gap: 15px; }
+        .toggle-container { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; cursor: pointer; }
+        .toggle-checkbox { accent-color: #8b5cf6; width: 16px; height: 16px; cursor: pointer; }
 
-        /* Move History */
-        .move-history {
-            background: rgba(30, 41, 59, 0.5);
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 14px;
-            margin-bottom: 16px;
-            overflow-x: auto;
-        }
-
-        .move-history-inner {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .move-tag {
-            padding: 6px 10px;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            font-family: monospace;
-            white-space: nowrap;
-        }
-
-        .move-tag.white-move {
-            background: rgba(251, 191, 36, 0.2);
-            color: #fbbf24;
-        }
-
-        .move-tag.black-move {
-            background: rgba(71, 85, 105, 0.5);
-            color: #cbd5e1;
-        }
-
-        .move-tag.choice {
-            border: 1px solid #fbbf24;
-        }
-
-        /* Current Move Display */
-        .current-move-card {
-            background: #334155;
-            border-radius: 20px;
-            padding: 24px;
-            margin-bottom: 16px;
-        }
-
-        .move-label {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 14px;
-        }
-
-        .move-dot {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-        }
-
-        .move-dot.your-move {
-            background: #fbbf24;
-            box-shadow: 0 0 12px rgba(251, 191, 36, 0.4);
-        }
-
-        .move-dot.opponent-move {
-            background: #64748b;
-        }
-
-        .move-label span {
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        .move-label span.your-move { color: #fbbf24; }
-        .move-label span.opponent-move { color: #94a3b8; }
-
-        .current-move {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            border-radius: 14px;
-            padding: 20px;
-            margin-bottom: 16px;
-        }
-
-        .current-move.opponent {
-            background: linear-gradient(135deg, #475569 0%, #334155 100%);
-        }
-
-        .current-move h2 {
-            font-family: monospace;
-            font-size: 1.6rem;
-            color: #1e293b;
-        }
-
-        .current-move.opponent h2 { color: #e2e8f0; }
-
-        .explanation {
-            color: #cbd5e1;
-            font-size: 1rem;
-            line-height: 1.6;
-        }
-
-        /* Options */
-        .options-section { margin-top: 24px; }
-
-        .options-label {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 14px;
-            color: #94a3b8;
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-
+        /* OPTION BUTTONS */
         .option-btn {
-            width: 100%;
-            background: rgba(51, 65, 85, 0.5);
-            border: 1px solid #475569;
-            border-radius: 14px;
-            padding: 18px 20px;
-            margin-bottom: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: left;
-            color: #e2e8f0;
-            min-height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .option-btn:hover, .option-btn:active {
-            background: rgba(71, 85, 105, 0.6);
-            border-color: #64748b;
-        }
-
-        .option-btn .move-text {
-            font-family: monospace;
-            font-size: 1.2rem;
-            font-weight: 600;
-        }
-
-        .option-btn .label {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            margin-left: 10px;
-            background: #475569;
-        }
-
-        .option-btn .label.main {
-            background: rgba(16, 185, 129, 0.2);
-            color: #34d399;
-        }
-
-        .option-btn .label.blunder {
-            background: rgba(239, 68, 68, 0.2);
-            color: #f87171;
-        }
-
-        .option-btn .arrow {
-            color: #64748b;
-            font-size: 1.4rem;
-        }
-
-        /* Choice Cards */
-        .choices-grid {
-            display: grid;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-
-        .choice-card {
-            background: rgba(51, 65, 85, 0.3);
-            border: 2px solid;
-            border-radius: 12px;
-            padding: 16px;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: left;
-        }
-
-        .choice-card:hover, .choice-card:active {
-            transform: scale(1.02);
-        }
-
-        .choice-card.red {
-            border-color: rgba(239, 68, 68, 0.5);
-        }
-        .choice-card.red:hover {
-            border-color: #ef4444;
-            background: rgba(239, 68, 68, 0.1);
-        }
-
-        .choice-card.blue {
-            border-color: rgba(59, 130, 246, 0.5);
-        }
-        .choice-card.blue:hover {
-            border-color: #3b82f6;
-            background: rgba(59, 130, 246, 0.1);
-        }
-
-        .choice-card.purple {
-            border-color: rgba(168, 85, 247, 0.5);
-        }
-        .choice-card.purple:hover {
-            border-color: #a855f7;
-            background: rgba(168, 85, 247, 0.1);
-        }
-
-        .choice-card.green {
-            border-color: rgba(34, 197, 94, 0.5);
-        }
-        .choice-card.green:hover {
-            border-color: #22c55e;
-            background: rgba(34, 197, 94, 0.1);
-        }
-
-        .choice-card h4 {
-            font-family: monospace;
-            font-size: 1.125rem;
-            margin-bottom: 4px;
-        }
-
-        .choice-card.red h4 { color: #f87171; }
-        .choice-card.blue h4 { color: #60a5fa; }
-        .choice-card.purple h4 { color: #c084fc; }
-        .choice-card.green h4 { color: #4ade80; }
-
-        .choice-card .name {
-            font-weight: 600;
-            font-size: 0.875rem;
-            margin-bottom: 4px;
-        }
-
-        .choice-card.red .name { color: #fca5a5; }
-        .choice-card.blue .name { color: #93c5fd; }
-        .choice-card.purple .name { color: #d8b4fe; }
-        .choice-card.green .name { color: #86efac; }
-
-        .choice-card .style {
-            font-size: 0.75rem;
-            color: #94a3b8;
-        }
-
-        /* End State */
-        .end-card {
-            text-align: center;
-            padding: 40px 20px;
-        }
-
-        .end-card .icon { font-size: 3.5rem; margin-bottom: 16px; }
-        .end-card h3 { font-size: 1.3rem; margin-bottom: 8px; }
-        .end-card p { color: #94a3b8; }
-
-        /* Controls */
-        .controls {
-            display: flex;
-            gap: 12px;
-            margin-top: 24px;
-        }
-
-        .control-btn {
-            flex: 1;
-            padding: 16px;
-            border: none;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            min-height: 54px;
-        }
-
-        .control-btn.secondary {
-            background: #475569;
-            color: #e2e8f0;
-        }
-
-        .control-btn.secondary:hover { background: #64748b; }
-
-        /* Progress */
-        .progress-dots {
-            display: flex;
-            justify-content: center;
-            gap: 6px;
-            margin-top: 24px;
-        }
-
-        .progress-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: #334155;
-        }
-
-        .progress-dot.active { background: #fbbf24; }
-
-        /* Tip */
-        .tip-box {
-            background: rgba(30, 41, 59, 0.5);
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 14px;
-            margin-top: 24px;
-            font-size: 0.85rem;
-            color: #94a3b8;
-            text-align: center;
-        }
-
-        /* Buttons */
-        .btn {
-            width: 100%;
-            padding: 18px 24px;
-            border-radius: 14px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            text-align: center;
-            border: none;
-            min-height: 58px;
-            margin-bottom: 12px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-            color: white;
-        }
-
-        .btn-primary:hover { opacity: 0.9; }
-
-        .btn-secondary {
-            background: rgba(71, 85, 105, 0.5);
-            border: 1px solid #475569;
-            color: #e2e8f0;
-        }
-
-        .btn-purple {
-            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-            color: white;
-        }
-
-        .btn-row {
-            display: flex;
-            gap: 12px;
-        }
-
-        .btn-row .btn {
-            flex: 1;
-        }
-
-        /* ===== BUILDER STYLES ===== */
-
-        .builder-section {
-            background: rgba(30, 41, 59, 0.5);
-            border: 1px solid #334155;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 16px;
-        }
-
-        .builder-section h3 {
-            font-size: 0.9rem;
-            color: #94a3b8;
-            margin-bottom: 16px;
-        }
-
-        .form-group { margin-bottom: 20px; }
-
-        .form-group:last-child { margin-bottom: 0; }
-
-        .form-group label {
-            display: block;
-            font-size: 0.85rem;
-            color: #94a3b8;
-            margin-bottom: 8px;
-        }
-
-        .form-group input, .form-group textarea, .form-group select {
-            width: 100%;
-            padding: 16px;
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 12px;
-            color: #e2e8f0;
-            font-size: 1.1rem;
-        }
-
-        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
-            outline: none;
-            border-color: #fbbf24;
-        }
-
-        .form-group input::placeholder {
-            color: #64748b;
-        }
-
-        .form-group select {
-            cursor: pointer;
-        }
-
-        .color-toggle {
-            display: flex;
-            gap: 12px;
-        }
-
-        .color-option {
-            flex: 1;
-            padding: 16px;
-            border-radius: 12px;
-            text-align: center;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 1rem;
-            min-height: 56px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .color-option.white {
-            background: rgba(251, 191, 36, 0.1);
-            border: 2px solid rgba(251, 191, 36, 0.3);
-            color: #fbbf24;
-        }
-
-        .color-option.white.selected {
-            background: rgba(251, 191, 36, 0.2);
-            border-color: #fbbf24;
-        }
-
-        .color-option.black {
-            background: rgba(100, 116, 139, 0.1);
-            border: 2px solid rgba(100, 116, 139, 0.3);
-            color: #94a3b8;
-        }
-
-        .color-option.black.selected {
-            background: rgba(100, 116, 139, 0.2);
-            border-color: #94a3b8;
-        }
-
-        /* Style Color Options */
-        .style-colors {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .style-color {
-            flex: 1;
-            min-width: 70px;
-            padding: 12px 8px;
-            border-radius: 10px;
-            text-align: center;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.75rem;
-            border: 2px solid transparent;
-            transition: all 0.2s;
-        }
-
-        .style-color.red {
-            background: rgba(239, 68, 68, 0.1);
-            border-color: rgba(239, 68, 68, 0.3);
-            color: #f87171;
-        }
-        .style-color.red.selected {
-            background: rgba(239, 68, 68, 0.2);
-            border-color: #ef4444;
-        }
-
-        .style-color.blue {
-            background: rgba(59, 130, 246, 0.1);
-            border-color: rgba(59, 130, 246, 0.3);
-            color: #60a5fa;
-        }
-        .style-color.blue.selected {
-            background: rgba(59, 130, 246, 0.2);
-            border-color: #3b82f6;
-        }
-
-        .style-color.purple {
-            background: rgba(168, 85, 247, 0.1);
-            border-color: rgba(168, 85, 247, 0.3);
-            color: #c084fc;
-        }
-        .style-color.purple.selected {
-            background: rgba(168, 85, 247, 0.2);
-            border-color: #a855f7;
-        }
-
-        .style-color.green {
-            background: rgba(34, 197, 94, 0.1);
-            border-color: rgba(34, 197, 94, 0.3);
-            color: #4ade80;
-        }
-        .style-color.green.selected {
-            background: rgba(34, 197, 94, 0.2);
-            border-color: #22c55e;
-        }
-
-        /* Builder Position Display */
-        .position-card {
-            background: rgba(251, 191, 36, 0.1);
-            border: 1px solid rgba(251, 191, 36, 0.3);
-            border-radius: 14px;
-            padding: 18px;
-            margin-bottom: 16px;
-        }
-
-        .position-card.opponent {
-            background: rgba(100, 116, 139, 0.1);
-            border-color: rgba(100, 116, 139, 0.3);
-        }
-
-        .position-label {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: #fbbf24;
-            margin-bottom: 8px;
-        }
-
-        .position-card.opponent .position-label {
-            color: #94a3b8;
-        }
-
-        .position-move {
-            font-family: monospace;
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: #e2e8f0;
-        }
-
-        .position-expl {
-            font-size: 0.9rem;
-            color: #94a3b8;
-            margin-top: 6px;
-        }
-
-        /* Path Display */
-        .path-display {
-            background: #1e293b;
-            border-radius: 10px;
-            padding: 12px 14px;
-            margin-bottom: 16px;
-            font-size: 0.85rem;
-            color: #64748b;
-            overflow-x: auto;
-            white-space: nowrap;
-        }
-
-        .path-display span {
-            color: #94a3b8;
-        }
-
-        .path-display .current {
-            color: #fbbf24;
-            font-weight: 600;
-        }
-
-        /* Response List */
-        .response-list {
-            margin-bottom: 16px;
-        }
-
-        .response-item {
-            background: rgba(51, 65, 85, 0.5);
-            border: 1px solid #475569;
-            border-radius: 14px;
-            padding: 18px 20px;
-            margin-bottom: 10px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            min-height: 64px;
-        }
-
-        .response-item:hover, .response-item:active {
-            background: rgba(71, 85, 105, 0.6);
-        }
-
-        .response-item .move {
-            font-family: monospace;
-            font-size: 1.15rem;
-            font-weight: 600;
-            color: #cbd5e1;
-            flex: 1;
-        }
-
-        .response-item .tag {
-            background: #475569;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            color: #cbd5e1;
-            margin-right: 12px;
-        }
-
-        .response-item .arrow {
-            color: #64748b;
-            font-size: 1.3rem;
-        }
-
-        /* Your Response Card (for continuing) */
-        .your-response-card {
-            background: rgba(251, 191, 36, 0.1);
-            border: 2px solid rgba(251, 191, 36, 0.4);
-            border-radius: 14px;
-            padding: 18px 20px;
-            margin-bottom: 16px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            min-height: 64px;
-            transition: all 0.2s;
-        }
-
-        .your-response-card:hover {
-            background: rgba(251, 191, 36, 0.15);
-            border-color: #fbbf24;
-        }
-
-        .your-response-card .label {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: #fbbf24;
-            margin-bottom: 4px;
-        }
-
-        .your-response-card .move {
-            font-family: monospace;
-            font-size: 1.15rem;
-            font-weight: 600;
-            color: #fbbf24;
-            flex: 1;
-        }
-
-        .your-response-card .arrow {
-            color: #fbbf24;
-            font-size: 1.3rem;
-        }
-
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: #64748b;
-        }
-
-        .empty-state .icon {
-            font-size: 3rem;
-            margin-bottom: 12px;
-        }
-
-        .empty-state p {
-            font-size: 1rem;
-        }
-
-        /* Add Form */
-        .add-form {
-            background: rgba(34, 197, 94, 0.05);
-            border: 2px dashed rgba(34, 197, 94, 0.3);
-            border-radius: 14px;
-            padding: 20px;
-        }
-
-        .add-form.choice-form {
-            background: rgba(168, 85, 247, 0.05);
-            border-color: rgba(168, 85, 247, 0.3);
-        }
-
-        .add-form-title {
-            font-size: 0.85rem;
-            color: #4ade80;
-            font-weight: 600;
-            margin-bottom: 16px;
-        }
-
-        .add-form.choice-form .add-form-title {
-            color: #c084fc;
-        }
-
-        .add-form .form-group {
-            margin-bottom: 14px;
-        }
-
-        .add-form input, .add-form select {
-            width: 100%;
-            padding: 16px;
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 12px;
-            color: #e2e8f0;
-            font-size: 1.1rem;
-        }
-
-        .add-form input:focus, .add-form select:focus {
-            outline: none;
-            border-color: #4ade80;
-        }
-
-        .add-form.choice-form input:focus, .add-form.choice-form select:focus {
-            border-color: #a855f7;
-        }
-
-        .add-form .btn {
-            margin-top: 8px;
-            margin-bottom: 0;
-        }
-
-        /* Toggle Switch */
-        .toggle-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 14px 0;
-            border-bottom: 1px solid #334155;
-            margin-bottom: 14px;
-        }
-
-        .toggle-row:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-        }
-
-        .toggle-label {
-            font-size: 0.9rem;
-            color: #cbd5e1;
-        }
-
-        .toggle-switch {
-            position: relative;
-            width: 50px;
-            height: 28px;
-            background: #475569;
-            border-radius: 14px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .toggle-switch.active {
-            background: #8b5cf6;
-        }
-
-        .toggle-switch::after {
-            content: '';
-            position: absolute;
-            top: 3px;
-            left: 3px;
-            width: 22px;
-            height: 22px;
-            background: white;
-            border-radius: 50%;
-            transition: left 0.2s;
-        }
-
-        .toggle-switch.active::after {
-            left: 25px;
-        }
-
-        /* Choice Fields (hidden by default) */
-        .choice-fields {
-            display: none;
-            padding-top: 14px;
-            border-top: 1px solid #334155;
-            margin-top: 14px;
-        }
-
-        .choice-fields.visible {
-            display: block;
-        }
-
-        /* Edit Explanation */
-        .edit-explanation {
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px solid #334155;
-        }
-
-        .edit-explanation textarea {
-            width: 100%;
-            padding: 14px;
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 10px;
-            color: #e2e8f0;
-            font-size: 0.95rem;
-            min-height: 80px;
-            resize: vertical;
-        }
-
-        .edit-explanation textarea:focus {
-            outline: none;
-            border-color: #fbbf24;
-        }
-
-        .edit-explanation .btn {
-            margin-top: 10px;
-            padding: 12px;
-            min-height: 44px;
-        }
-
-        /* Detail View for Editing */
-        .detail-actions {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #334155;
-        }
-
-        .btn-danger {
-            background: rgba(239, 68, 68, 0.2);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            color: #f87171;
-        }
-
-        .btn-danger:hover {
-            background: rgba(239, 68, 68, 0.3);
-        }
-
-        /* Tabs */
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .tab {
-            flex: 1;
-            padding: 14px;
-            background: rgba(51, 65, 85, 0.3);
-            border: 1px solid #334155;
-            border-radius: 12px;
-            color: #94a3b8;
-            font-weight: 600;
-            cursor: pointer;
-            text-align: center;
-            font-size: 0.95rem;
-            min-height: 50px;
-        }
-
-        .tab.active {
-            background: rgba(251, 191, 36, 0.1);
-            border-color: #fbbf24;
-            color: #fbbf24;
-        }
-
-        .json-area {
-            width: 100%;
-            min-height: 180px;
-            background: #0f172a;
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 14px;
-            color: #e2e8f0;
-            font-family: monospace;
-            font-size: 0.8rem;
-            resize: vertical;
-        }
-
-        /* Delete button for list items */
-        .delete-item-btn {
-            background: rgba(239, 68, 68, 0.2);
-            border: none;
-            color: #f87171;
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin-right: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .delete-item-btn:hover {
-            background: rgba(239, 68, 68, 0.4);
-        }
-
-        .choice-card {
+            width: 100%; display: flex; justify-content: space-between; align-items: flex-start;
+            padding: 16px; margin-bottom: 10px; border-radius: 12px; cursor: pointer;
+            background: rgba(51, 65, 85, 0.5); border: 1px solid #475569; color: #e2e8f0; text-align: left;
             position: relative;
         }
-
-        .choice-card .delete-item-btn {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            width: 28px;
-            height: 28px;
-            font-size: 1rem;
+        .option-btn:hover { background: rgba(71, 85, 105, 0.6); }
+        .option-btn .main { flex: 1; }
+        .option-btn h4 { font-family: monospace; font-size: 1.1rem; margin-bottom: 4px; }
+        
+        /* Highlight Mainline */
+        .option-btn.mainline-highlight { border: 1px solid #fbbf24; background: rgba(251, 191, 36, 0.05); }
+        .option-btn.mainline-highlight h4 { color: #fbbf24; }
+        
+        /* Expandable Text */
+        .option-btn .branch-desc {
+            font-size: 0.85rem; color: #94a3b8; margin: 4px 0 6px 0; line-height: 1.4;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+            transition: all 0.2s ease;
         }
-
-        /* Template info box */
-        .template-info {
-            background: rgba(59, 130, 246, 0.1);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            border-radius: 10px;
-            padding: 12px;
-            margin-bottom: 12px;
-            font-size: 0.8rem;
-            color: #93c5fd;
+        .option-btn .branch-desc.expanded {
+            display: block; -webkit-line-clamp: unset; overflow: visible;
         }
-
-        .template-info summary {
-            cursor: pointer;
-            font-weight: 600;
-            margin-bottom: 8px;
+        .expand-link {
+            color: #60a5fa; font-size: 0.75rem; font-weight: 600; text-decoration: none; margin-left: 6px; cursor: pointer;
         }
+        .expand-link:hover { text-decoration: underline; }
+        
+        .option-btn .tags { display: flex; gap: 6px; margin-top: 4px; }
+        .tag-pill { padding: 2px 6px; border-radius: 4px; font-size: 0.65rem; text-transform: uppercase; font-weight: 700; }
+        .tag-pill.status { background: rgba(255,255,255,0.1); color: #e2e8f0; }
+        .tag-pill.type { background: rgba(0,0,0,0.2); color: #fbbf24; }
 
-        .template-info ul {
-            margin: 8px 0 0 16px;
-            color: #94a3b8;
-        }
+        /* Colors */
+        .option-btn.blue { border-left: 4px solid #3b82f6; }
+        .option-btn.red { border-left: 4px solid #ef4444; }
+        .option-btn.green { border-left: 4px solid #22c55e; }
+        .option-btn.purple { border-left: 4px solid #a855f7; }
+        
+        /* Remote Buttons */
+        .option-btn.remote { background: transparent; border: 1px dashed; opacity: 0.9; }
+        .option-btn.remote.blue { border-color: #3b82f6; }
+        .option-btn.remote.red { border-color: #ef4444; }
+        .option-btn.remote.green { border-color: #22c55e; }
+        .option-btn.remote.purple { border-color: #a855f7; }
+        .option-btn.remote h4 { color: #c4b5fd; }
+        .option-btn.remote .badge { background: #8b5cf6; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.65rem; margin-left: 8px; }
+        .arrow-icon { font-size: 1.2rem; padding-left: 10px; opacity: 0.5; align-self: center; }
 
-        .template-info li {
-            margin-bottom: 4px;
+        /* FORMS */
+        .add-form { background: rgba(255,255,255,0.05); padding: 16px; border-radius: 12px; border: 1px dashed #475569; margin-bottom: 16px; }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 0.8rem; color: #94a3b8; margin-bottom: 4px; }
+        .form-group input, .form-group select, textarea {
+            width: 100%; padding: 12px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; color: #e2e8f0; font-family: inherit;
         }
+        .form-group textarea, .edit-explanation textarea { background-color: #1e293b !important; color: #e2e8f0 !important; border-color: #334155 !important; }
+        .json-area { width: 100%; min-height: 200px; background: #0f172a; border: 1px solid #334155; border-radius: 12px; padding: 14px; color: #e2e8f0; font-family: monospace; font-size: 0.8rem; resize: vertical; }
 
-        .template-info code {
-            background: rgba(0,0,0,0.3);
-            padding: 1px 4px;
-            border-radius: 3px;
-            color: #fbbf24;
+        .details-toggle-btn { background: none; border: none; color: #94a3b8; font-size: 0.85rem; cursor: pointer; padding: 0; margin-bottom: 16px; display: inline-flex; align-items: center; gap: 4px; }
+        .details-drawer { display: none; margin-bottom: 16px; border-top: 1px solid #334155; padding-top: 16px; }
+        .details-drawer.visible { display: block; }
+        .delete-item-btn { background: rgba(239, 68, 68, 0.2); border: none; color: #f87171; width: 32px; height: 32px; border-radius: 8px; cursor: pointer; font-size: 1.2rem; margin-left: 10px; }
+        .empty-state { text-align: center; padding: 40px 20px; color: #64748b; } 
+        .empty-state .icon { font-size: 3rem; margin-bottom: 12px; }
+        .end-card { text-align: center; padding: 40px 20px; } 
+        .end-card h3 { font-size: 1.3rem; margin-bottom: 8px; } 
+
+        /* BREADCRUMB */
+        .breadcrumb-item { 
+            display: inline-block; padding: 6px 12px; border-radius: 6px; 
+            background: rgba(255,255,255,0.1); color: #94a3b8; margin-right: 6px; 
+            cursor: pointer; font-size: 0.9rem; font-weight: 500; transition: all 0.2s;
         }
+        .breadcrumb-item:hover { background: var(--accent-color); color: #1e293b; }
+        .breadcrumb-item.active { background: rgba(255,255,255,0.05); color: #e2e8f0; border: 1px solid #475569; pointer-events: none; }
+
+        /* MODAL */
+        .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:100; display:none; justify-content:center; align-items:center; padding:20px; }
+        .modal-content { background:#1e293b; padding:24px; border-radius:16px; width:100%; max-width:400px; max-height:80vh; overflow-y:auto; }
+        .ref-item { margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid #334155; }
+        .ref-term { color: #fbbf24; font-weight: 700; margin-bottom: 4px; }
+        .ref-def { color: #cbd5e1; font-size: 0.9rem; }
+        .info-icon { cursor: pointer; color: #60a5fa; font-size: 1rem; margin-left: 5px; }
+        
+        .builder-section { background: rgba(30, 41, 59, 0.5); border: 1px solid #334155; border-radius: 16px; padding: 20px; margin-bottom: 16px; } 
+        .builder-section h3 { font-size: 0.9rem; color: #94a3b8; margin-bottom: 16px; }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Menu Screen -->
-        <div class="screen active" id="menuScreen">
+        <div id="menuScreen" class="screen" style="display:block;">
             <div class="header">
-                <h1>♟️ Opening Trainer</h1>
-                <p>Master your chess openings move by move</p>
-            </div>
-            <div id="openingsContainer"></div>
-            <button class="btn btn-primary" onclick="showBuilder()">+ Create New Opening</button>
-            <div class="btn-row" style="margin-top: 8px;">
-                <button class="btn btn-secondary" onclick="triggerFileUpload()">📁 Upload JSON</button>
-                <button class="btn btn-secondary" onclick="showUrlImport()">🔗 Import URL</button>
-            </div>
-            <div id="urlImportSection" style="display:none; margin-top: 12px;">
-                <div class="builder-section">
-                    <h3>Import from URL</h3>
-                    <div class="form-group">
-                        <input type="text" id="importUrl" placeholder="https://raw.githubusercontent.com/...">
-                    </div>
-                    <div class="btn-row">
-                        <button class="btn btn-secondary" onclick="hideUrlImport()">Cancel</button>
-                        <button class="btn btn-primary" onclick="importFromUrl()">Import</button>
-                    </div>
+                <h1>♟️ Opening Trainer <span class="version-tag">V6.1</span></h1>
+                <p>Visual Repertoire Manager</p>
+                <div class="header-tools">
+                    <button class="tool-btn" onclick="backupLibrary()">☁️ Backup</button>
+                    <button class="tool-btn" onclick="document.getElementById('restoreInput').click()">📥 Restore</button>
                 </div>
             </div>
-            <input type="file" id="fileUploadInput" accept=".json" style="display:none" onchange="handleFileUpload(event)">
-        </div>
-
-        <!-- Trainer Screen -->
-        <div class="screen" id="trainerScreen">
-            <button class="nav-btn" id="trainerBackBtn" onclick="handleTrainerBack()">← Back to Openings</button>
-            <div class="header">
-                <h1 id="openingTitle"></h1>
-                <p id="openingSubtitle"></p>
+            <div id="openingsContainer"></div>
+            <button class="nav-btn" style="width:100%; margin-top:20px; background:#22c55e; color:white;" onclick="showNewOpeningModal()">+ Create New Opening</button>
+            
+            <div style="display:flex; gap:10px; margin-top:10px;">
+                <button class="nav-btn" style="flex:1" onclick="document.getElementById('fileInput').click()">📂 Add File</button>
+                <button class="nav-btn" style="flex:1" onclick="toggleUrlImport()">🔗 Add URL</button>
+                <button class="nav-btn" style="flex:1" onclick="toggleJsonImport()">📋 Paste JSON</button>
             </div>
-            <div class="move-history"><div class="move-history-inner" id="moveHistory"></div></div>
-            <div class="current-move-card" id="currentMoveCard"></div>
-            <div class="controls" id="controls"></div>
-            <div class="progress-dots" id="progressDots"></div>
-            <div class="tip-box">💡 <span id="tipText">Tap a move to continue</span></div>
-        </div>
-
-        <!-- Builder Screen -->
-        <div class="screen" id="builderScreen">
-            <button class="nav-btn" onclick="confirmExitBuilder()">← Back</button>
-            <div class="header">
-                <h1 id="builderTitle">🛠️ Create Opening</h1>
+            
+            <div id="urlImportBox" style="display:none; margin-top:10px;">
+                <input type="text" id="importUrl" placeholder="Paste raw JSON URL..." style="width:100%; padding:12px; border-radius:8px; margin-bottom:8px;">
+                <button class="nav-btn" style="width:100%" onclick="importFromUrl()">Fetch</button>
+            </div>
+            
+            <div id="jsonImportBox" style="display:none; margin-top:10px;">
+                <textarea id="importJsonText" class="json-area" placeholder="Paste ONE opening JSON here..." style="min-height: 150px; margin-bottom: 8px;"></textarea>
+                <button class="nav-btn" style="width:100%" onclick="importFromMenuText()">Import Opening</button>
             </div>
 
+            <input type="file" id="fileInput" style="display:none" onchange="handleFileUpload(this)">
+            <input type="file" id="restoreInput" style="display:none" onchange="restoreLibrary(this)">
+        </div>
+
+        <div class="modal-overlay" id="newOpeningModal">
+            <div class="modal-content">
+                <h3>Create New Opening</h3>
+                <div class="form-group" style="margin-top:20px;">
+                    <label>Opening Name</label>
+                    <input type="text" id="modalName" placeholder="e.g. London System">
+                </div>
+                <div class="form-group">
+                    <label>Folder / Group</label>
+                    <input type="text" id="modalGroup" placeholder="e.g. White Repertoire">
+                </div>
+                <div class="form-group">
+                    <label>You Play As</label>
+                    <select id="modalColor">
+                        <option value="white">White</option>
+                        <option value="black">Black</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>First Move</label>
+                    <input type="text" id="modalMove" placeholder="e.g. e4 or d4">
+                </div>
+                <div class="btn-row" style="display:flex; gap:10px; margin-top:20px;">
+                    <button class="nav-btn" style="flex:1; background:transparent; border:1px solid #64748b;" onclick="document.getElementById('newOpeningModal').style.display='none'">Cancel</button>
+                    <button class="nav-btn" style="flex:1; background:#22c55e;" onclick="initializeNewOpening()">Create</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="trainerScreen" class="screen" style="display:none;">
+            <div class="nav-bar">
+                <button id="trainerBackBtn" class="nav-btn" onclick="goBack()">← Menu</button>
+                <div id="trainerHeaderTitle" class="nav-title">Opening Name</div>
+                <div id="returnContainer"></div>
+            </div>
+            
+            <div id="trainerBoard" class="board-container"></div>
+            
+            <div class="current-move-card" id="trainerMoveCard">
+                <div class="move-label" id="trainerMoveLabel">CURRENT MOVE</div>
+                <h2 id="currentMoveText">Start</h2>
+                <p class="explanation" id="currentExplanation">Tap a move below to begin.</p>
+            </div>
+
+            <div class="options-header">
+                <span>CANDIDATE MOVES</span>
+                <div class="toggle-group">
+                    <label class="toggle-container">
+                        <input type="checkbox" id="coachToggle" class="toggle-checkbox" checked onchange="renderTrainer()">
+                        Coach Mode
+                    </label>
+                    <label class="toggle-container">
+                        <input type="checkbox" id="transpoToggle" class="toggle-checkbox" checked onchange="renderTrainer()">
+                        Transpositions
+                    </label>
+                </div>
+            </div>
+            <div id="trainerOptions"></div>
+        </div>
+
+        <div id="builderScreen" class="screen" style="display:none;">
+            <div class="nav-bar">
+                <button class="nav-btn" onclick="exitBuilder()">← Exit</button>
+                <button class="nav-btn" style="background:#22c55e" onclick="saveOpening()">Save</button>
+            </div>
+            
             <div class="tabs">
                 <button class="tab active" onclick="switchTab('build')" id="tabBuild">Build</button>
-                <button class="tab" onclick="switchTab('json')" id="tabJson">Import/Export</button>
+                <button class="tab" onclick="switchTab('json')" id="tabJson">JSON</button>
             </div>
-
+            
             <div id="buildTab">
-                <div class="builder-section">
-                    <h3>Opening Details</h3>
+                <div class="move-history" id="builderHistory"></div>
+                
+                <div id="builderBoard" class="board-container"></div>
+                
+                <div id="builderCurrentNode" class="current-move-card"></div>
+                
+                <div class="add-form" style="margin-top:20px;">
+                    <h4 id="addFormTitle">Add Move</h4>
                     <div class="form-group">
-                        <label>Name</label>
-                        <input type="text" id="openingName" placeholder="e.g., Italian Game">
+                        <input type="text" id="newMoveInput" placeholder="Move (e.g. Nf3)">
                     </div>
-                    <div class="form-group">
-                        <label>Description</label>
-                        <input type="text" id="openingDesc" placeholder="e.g., Targets f7 weakness">
+                    <button class="nav-btn" style="width:100%; font-size:0.8rem; margin-bottom:10px;" onclick="toggleDetails()">▼ Add Details (Coach Mode)</button>
+                    <div id="builderDetails" style="display:none;">
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select id="newStatus">
+                                <option>Mainline</option><option>Sideline</option><option>Novelty</option><option>Blunder</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Type <span class="info-icon" onclick="toggleRefModal()">ⓘ</span></label>
+                            <select id="newType">
+                                <option>Positional/Strategic</option><option>Tactical</option><option>Dynamic</option><option>Defensive/Prophylactic</option><option>Forcing</option><option>Quiet</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Explanation</label>
+                            <textarea id="newExpl" rows="3"></textarea>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>You Play As</label>
-                        <div class="color-toggle">
-                            <div class="color-option white selected" onclick="setColor('white')">♔ White</div>
-                            <div class="color-option black" onclick="setColor('black')">♚ Black</div>
+                    <button class="nav-btn" style="width:100%; background:#3b82f6" onclick="addBuilderMove()">Add Move</button>
+                    <div style="display:flex; gap:10px; margin-top:10px;">
+                        <button class="nav-btn" style="flex:1; background:#64748b;" onclick="builderBack()">↑ Up (Back)</button>
+                        <button id="btnDeleteBranch" class="nav-btn" style="flex:1; background:#ef4444;" onclick="deleteBuilderNode()">Delete</button>
+                    </div>
+                </div>
+                
+                <div style="margin-top:20px;">
+                    <p class="section-title">Existing Responses:</p>
+                    <div id="builderResponses"></div>
+                </div>
+                
+                <div class="add-form" style="margin-top:24px; opacity:0.8;">
+                     <div class="details-toggle-btn" onclick="document.getElementById('metaDrawer').classList.toggle('visible')">▶ Edit Opening Metadata</div>
+                     <div id="metaDrawer" class="details-drawer">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" id="builderName">
+                        </div>
+                        <div class="form-group">
+                            <label>Folder / Group</label>
+                            <input type="text" id="builderGroup">
+                        </div>
+                        <div class="form-group">
+                            <label>You Play As</label>
+                            <select id="builderColor">
+                                <option value="white">White</option>
+                                <option value="black">Black</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea id="builderDesc" rows="2"></textarea>
                         </div>
                     </div>
                 </div>
-
-                <div class="builder-section">
-                    <h3>Moves</h3>
-                    <div id="builderContent"></div>
-                </div>
-
-                <div class="btn-row">
-                    <button class="btn btn-secondary" onclick="previewOpening()">Preview</button>
-                    <button class="btn btn-primary" id="saveBtn" onclick="saveOpening()">Save</button>
-                </div>
-                <button class="btn btn-secondary" id="downloadCurrentBtn" style="display:none; margin-top: 8px;" onclick="downloadCurrentOpening()">📥 Download JSON</button>
             </div>
-
+            
             <div id="jsonTab" style="display:none">
                 <div class="builder-section">
-                    <h3>Import from JSON</h3>
-                    <details class="template-info">
-                        <summary>📋 JSON Schema Reference</summary>
-                        <ul>
-                            <li><code>name</code> - Opening name (e.g., "Italian Game")</li>
-                            <li><code>color</code> - "white" or "black" (your color)</li>
-                            <li><code>description</code> - Brief description</li>
-                            <li><code>startingMoves</code> - Display string (e.g., "1. e4 e5 2. Nf3")</li>
-                            <li><code>tree</code> - Root node of move tree</li>
-                        </ul>
-                        <p style="margin-top:8px;font-weight:600;">Structure Pattern:</p>
-                        <ul>
-                            <li><strong>Your move nodes</strong> have <code>children</code> = opponent's possible responses</li>
-                            <li><strong>Opponent move nodes</strong> have <code>response</code> = your reply</li>
-                        </ul>
-                        <p style="margin-top:8px;font-weight:600;">Your Move Node Fields:</p>
-                        <ul>
-                            <li><code>id</code> - Unique identifier</li>
-                            <li><code>move</code> - Move notation (e.g., "1. e4" or "1... c5")</li>
-                            <li><code>player</code> - "white" or "black"</li>
-                            <li><code>explanation</code> - Why this move (optional)</li>
-                            <li><code>children</code> - Array of opponent's response options</li>
-                        </ul>
-                        <p style="margin-top:8px;font-weight:600;">Opponent Response Node (in children):</p>
-                        <ul>
-                            <li><code>id</code>, <code>move</code>, <code>player</code> - Same as above</li>
-                            <li><code>label</code> - "Main Line", "Sideline", "Aggressive", "Blunder!", etc.</li>
-                            <li><code>response</code> - Your reply node</li>
-                        </ul>
-                        <p style="margin-top:8px;font-weight:600;">Choice Point (for your moves):</p>
-                        <ul>
-                            <li><code>isChoice</code> - Set to <code>true</code></li>
-                            <li><code>choices</code> - Array of your options</li>
-                        </ul>
-                        <p style="margin-top:8px;font-weight:600;">Choice Option:</p>
-                        <ul>
-                            <li><code>id</code>, <code>move</code>, <code>explanation</code>, <code>children</code></li>
-                            <li><code>name</code> - Option name (e.g., "Fried Liver")</li>
-                            <li><code>style</code> - Style description (e.g., "Aggressive attack")</li>
-                            <li><code>color</code> - "red", "blue", "purple", or "green"</li>
-                        </ul>
-                        <p style="margin-top:8px;font-weight:600;color:#fbbf24;">Note:</p>
-                        <p style="color:#94a3b8;font-size:0.8rem;">Select White or Black in the Build tab first, then view this tab to see the appropriate template structure.</p>
-                    </details>
+                    <h3>Raw JSON</h3>
                     <textarea class="json-area" id="jsonIn" placeholder="Paste opening JSON here..."></textarea>
-                    <button class="btn btn-primary" onclick="importJson()">Import</button>
-                </div>
-                <div class="builder-section">
-                    <h3>Export Current / Template</h3>
-                    <textarea class="json-area" id="jsonOut" readonly style="min-height:280px;"></textarea>
-                    <button class="btn btn-secondary" onclick="copyJson()">Copy to Clipboard</button>
+                    <div style="display:flex; gap:10px; margin-top:10px;">
+                        <button class="nav-btn" style="background:#3b82f6" onclick="importBuilderJson()">Import & Overwrite</button>
+                        <button class="nav-btn" onclick="copyBuilderJson()">Copy to Clipboard</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <div class="modal-overlay" id="refModal">
+        <div class="modal-content">
+            <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
+                <h3>Move Types Guide</h3>
+                <button class="icon-btn" onclick="toggleRefModal()">×</button>
+            </div>
+            <div id="refContent"></div>
+        </div>
+    </div>
+
 <script>
 // =====================================================
-// DEFAULT OPENINGS
+// UTILS
 // =====================================================
-const DEFAULT_OPENINGS = {
-    italian_game: {
-        name: "Italian Game",
-        color: "white",
-        description: "Classic 1.e4 opening targeting f7",
-        startingMoves: "1. e4 e5 2. Nf3 Nc6 3. Bc4",
-        tree: {
-            id: 'root', move: '1. e4', player: 'white', explanation: 'King\'s Pawn - control the center.',
-            children: [
-                {
-                    id: 'e5', move: '1... e5', player: 'black', label: 'Classical',
-                    response: {
-                        id: 'Nf3', move: '2. Nf3', player: 'white', explanation: 'Attack e5, develop knight!',
-                        children: [
-                            {
-                                id: 'Nc6', move: '2... Nc6', player: 'black', label: 'Main Line',
-                                response: {
-                                    id: 'Bc4', move: '3. Bc4', player: 'white', explanation: 'Italian Game! Bishop targets f7.',
-                                    children: [
-                                        {
-                                            id: 'Bc5', move: '3... Bc5', player: 'black', label: 'Giuoco Piano',
-                                            response: {
-                                                id: 'c3', move: '4. c3', player: 'white', explanation: 'Prepare d4 pawn push!',
-                                                children: []
-                                            }
-                                        },
-                                        {
-                                            id: 'Nf6_tk', move: '3... Nf6', player: 'black', label: 'Two Knights',
-                                            response: {
-                                                id: 'choice_tk', move: 'Choose Style', player: 'white', explanation: 'Pick your weapon!',
-                                                isChoice: true,
-                                                choices: [
-                                                    {
-                                                        id: 'Ng5', move: '4. Ng5', name: 'Fried Liver', style: 'Aggressive attack', color: 'red',
-                                                        explanation: 'Attack f7 now!', children: []
-                                                    },
-                                                    {
-                                                        id: 'd3', move: '4. d3', name: 'Pianissimo', style: 'Slow & solid', color: 'blue',
-                                                        explanation: 'Quiet buildup.', children: []
-                                                    },
-                                                    {
-                                                        id: 'OO', move: '4. O-O', name: 'Modern Italian', style: 'Flexible', color: 'purple',
-                                                        explanation: 'Castle first, decide later.', children: []
-                                                    }
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                }
-                            }
-                        ]
-                    }
-                },
-                {
-                    id: 'c5', move: '1... c5', player: 'black', label: 'Sicilian',
-                    response: { id: 'Nf3_sic', move: '2. Nf3', player: 'white', explanation: 'Open Sicilian begins.', children: [] }
-                }
-            ]
-        }
-    },
-    london_system: {
-        name: "London System",
-        color: "white",
-        description: "Solid d4 setup with early Bf4",
-        startingMoves: "1. d4 d5 2. Bf4",
-        tree: {
-            id: 'root', move: '1. d4', player: 'white', explanation: 'Queen\'s Pawn opening.',
-            children: [
-                {
-                    id: 'd5', move: '1... d5', player: 'black', label: 'Main Line',
-                    response: {
-                        id: 'Bf4', move: '2. Bf4', player: 'white', explanation: 'The London! Develop bishop before e3.',
-                        children: []
-                    }
-                }
-            ]
-        }
-    },
-    sicilian_najdorf: {
-        name: "Sicilian Najdorf",
-        color: "black",
-        description: "Fighting defense to 1.e4",
-        startingMoves: "1. e4 c5 2. Nf3 d6",
-        tree: {
-            id: 'root', move: '1. e4', player: 'white', explanation: 'White opens with the King\'s pawn.',
-            children: [
-                {
-                    id: 'c5', move: '1... c5', player: 'black', label: 'Sicilian!',
-                    explanation: 'The Sicilian Defense - fight for the center asymmetrically!',
-                    children: [
-                        {
-                            id: 'Nf3', move: '2. Nf3', player: 'white', label: 'Open Sicilian',
-                            response: {
-                                id: 'd6', move: '2... d6', player: 'black', 
-                                explanation: 'Preparing the Najdorf setup with ...a6 and ...e5.',
-                                children: [
-                                    {
-                                        id: 'd4', move: '3. d4', player: 'white', label: 'Main Line',
-                                        response: {
-                                            id: 'cxd4', move: '3... cxd4', player: 'black',
-                                            explanation: 'Capture to open the c-file.',
-                                            children: [
-                                                {
-                                                    id: 'Nxd4', move: '4. Nxd4', player: 'white', label: 'Natural',
-                                                    response: {
-                                                        id: 'Nf6', move: '4... Nf6', player: 'black',
-                                                        explanation: 'Develop and attack e4.',
-                                                        children: [
-                                                            {
-                                                                id: 'Nc3', move: '5. Nc3', player: 'white', label: 'Main',
-                                                                response: {
-                                                                    id: 'a6', move: '5... a6', player: 'black',
-                                                                    explanation: 'The Najdorf! Flexible and sharp.',
-                                                                    children: []
-                                                                }
-                                                            }
-                                                        ]
-                                                    }
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            }
-                        },
-                        {
-                            id: 'Nc3', move: '2. Nc3', player: 'white', label: 'Closed Sicilian',
-                            response: {
-                                id: 'Nc6', move: '2... Nc6', player: 'black',
-                                explanation: 'Develop naturally against the Closed.',
-                                children: []
-                            }
-                        },
-                        {
-                            id: 'c3', move: '2. c3', player: 'white', label: 'Alapin',
-                            response: {
-                                id: 'Nf6_alp', move: '2... Nf6', player: 'black',
-                                explanation: 'Counterattack e4 immediately.',
-                                children: []
-                            }
-                        }
-                    ]
-                }
-            ]
+function validateTree(node) {
+    if (!node) return false;
+    if (node.children) {
+        if (!Array.isArray(node.children)) return false;
+        for (let child of node.children) {
+            if (!validateTree(child)) return false;
         }
     }
-};
+    if (node.response || node.choices) return false;
+    return true;
+}
 
-// Comprehensive JSON template for export/AI generation
-const JSON_TEMPLATE_WHITE = {
-    "_comment": "TEMPLATE FOR WHITE OPENINGS - You play as White",
-    "name": "Example White Opening",
-    "color": "white",
-    "description": "Brief description of the opening strategy",
-    "startingMoves": "1. e4 e5 2. Nf3 Nc6",
-    "tree": {
-        "id": "root",
-        "move": "1. e4",
-        "player": "white",
-        "explanation": "Your first move explanation",
-        "children": [
-            {
-                "id": "child1",
-                "move": "1... e5",
-                "player": "black",
-                "label": "Main Line",
-                "response": {
-                    "id": "resp1",
-                    "move": "2. Nf3",
-                    "player": "white",
-                    "explanation": "Your response explanation",
-                    "children": [
-                        {
-                            "id": "child2",
-                            "move": "2... Nc6",
-                            "player": "black",
-                            "label": "Natural",
-                            "response": {
-                                "id": "choice1",
-                                "move": "Choose Style",
-                                "player": "white",
-                                "explanation": "Pick your preferred approach",
-                                "isChoice": true,
-                                "choices": [
-                                    {
-                                        "id": "opt1",
-                                        "move": "3. Bb5",
-                                        "name": "Ruy Lopez",
-                                        "style": "Classical pressure",
-                                        "color": "blue",
-                                        "explanation": "The Spanish Game",
-                                        "children": []
-                                    },
-                                    {
-                                        "id": "opt2",
-                                        "move": "3. Bc4",
-                                        "name": "Italian Game",
-                                        "style": "Targets f7",
-                                        "color": "red",
-                                        "explanation": "Aggressive approach",
-                                        "children": []
-                                    }
-                                ]
-                            }
-                        }
-                    ]
-                }
-            },
-            {
-                "id": "sideline1",
-                "move": "1... c5",
-                "player": "black",
-                "label": "Sicilian",
-                "response": {
-                    "id": "resp_sic",
-                    "move": "2. Nf3",
-                    "player": "white",
-                    "explanation": "Entering the Open Sicilian",
-                    "children": []
-                }
-            }
-        ]
-    }
-};
-
-const JSON_TEMPLATE_BLACK = {
-    "_comment": "TEMPLATE FOR BLACK OPENINGS - You play as Black",
-    "name": "Example Black Opening",
-    "color": "black",
-    "description": "Brief description of the defense strategy",
-    "startingMoves": "1. e4 c5 2. Nf3 d6",
-    "tree": {
-        "id": "root",
-        "move": "1. e4",
-        "player": "white",
-        "explanation": "Opponent's opening move",
-        "children": [
-            {
-                "id": "c5",
-                "move": "1... c5",
-                "player": "black",
-                "label": "Sicilian",
-                "explanation": "Your response - the Sicilian Defense!",
-                "children": [
-                    {
-                        "id": "Nf3",
-                        "move": "2. Nf3",
-                        "player": "white",
-                        "label": "Open Sicilian",
-                        "response": {
-                            "id": "d6",
-                            "move": "2... d6",
-                            "player": "black",
-                            "explanation": "Your next move explanation",
-                            "children": [
-                                {
-                                    "id": "d4",
-                                    "move": "3. d4",
-                                    "player": "white",
-                                    "label": "Main Line",
-                                    "response": {
-                                        "id": "cxd4",
-                                        "move": "3... cxd4",
-                                        "player": "black",
-                                        "explanation": "Capture and open the position",
-                                        "children": []
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        "id": "Nc3",
-                        "move": "2. Nc3",
-                        "player": "white",
-                        "label": "Closed Sicilian",
-                        "response": {
-                            "id": "Nc6",
-                            "move": "2... Nc6",
-                            "player": "black",
-                            "explanation": "Develop naturally",
-                            "children": []
-                        }
-                    }
-                ]
-            },
-            {
-                "id": "e5",
-                "move": "1... e5",
-                "player": "black",
-                "label": "Classical",
-                "explanation": "Alternative - mirror White's center control",
-                "children": []
-            }
-        ]
-    }
-};
-
-// Label options for dropdown
-const LABEL_OPTIONS = [
-    '', 'Main Line', 'Sideline', 'Natural', 'Aggressive', 'Solid', 
-    'Blunder!', 'Correct', 'Tricky', 'Theoretical', 'Custom'
+const TYPE_DEFINITIONS = [
+    { t: 'Positional/Strategic', d: 'Long-term improvements, better piece placement, controlling key squares.' },
+    { t: 'Tactical', d: 'Short-term, forcing sequences aiming for material or mate.' },
+    { t: 'Defensive/Prophylactic', d: 'Moves made to neutralize threats or prevent future plans.' },
+    { t: 'Dynamic', d: 'Complex, fluid positions prioritizing initiative over material.' },
+    { t: 'Forcing', d: 'Severely limits opponent options (checks, captures).' },
+    { t: 'Quiet', d: 'Subtle improvement without direct threats.' }
 ];
 
 // =====================================================
 // STATE
 // =====================================================
 let OPENINGS = {};
-let currentOpening = null;
-let currentPath = [];
-let userColor = 'white';
-let isPreviewMode = false;
-
-// Builder state
-let builderColor = 'white';
-let builderTree = null;
-let builderPath = [];  // Array of {type: 'child'|'response'|'choice', id: string}
-let editingKey = null; // Key of opening being edited, null if creating new
+let currentOpening = null, currentOpeningKey = null, originalOpeningKey = null;
+let currentPath = [], historyStack = [];
+let builderTree = null, builderPath = [], editingKey = null, builderColor = 'white';
+let transpositionMap = {};
 
 // =====================================================
-// INIT
+// INIT & STORAGE
 // =====================================================
 function init() {
-    OPENINGS = JSON.parse(JSON.stringify(DEFAULT_OPENINGS));
-    try {
-        const del = JSON.parse(localStorage.getItem('deletedOp5') || '[]');
-        del.forEach(k => delete OPENINGS[k]);
-        const custom = JSON.parse(localStorage.getItem('customOp5') || '{}');
-        Object.assign(OPENINGS, custom);
-    } catch(e) {}
+    const stored = localStorage.getItem('customOp5');
+    if (stored) {
+        OPENINGS = JSON.parse(stored);
+    }
+    
+    document.getElementById('refContent').innerHTML = TYPE_DEFINITIONS.map(x => 
+        `<div class="ref-item"><div class="ref-term">${x.t}</div><div class="ref-def">${x.d}</div></div>`
+    ).join('');
+    
+    rebuildTranspositionMap();
     renderMenu();
 }
 
 function saveStorage() {
-    const custom = {};
-    for (const [k, v] of Object.entries(OPENINGS)) {
-        if (!DEFAULT_OPENINGS[k]) custom[k] = v;
-    }
-    localStorage.setItem('customOp5', JSON.stringify(custom));
+    localStorage.setItem('customOp5', JSON.stringify(OPENINGS));
+    rebuildTranspositionMap();
 }
 
 // =====================================================
-// SCREENS
+// FIXED: TRANSPOSITION LOGIC WITH PATH TRACKING
 // =====================================================
-function showScreen(id) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-}
-
-function goToMenu() {
-    isPreviewMode = false;
-    showScreen('menuScreen');
-    renderMenu();
-}
-
-// =====================================================
-// MENU
-// =====================================================
-function renderMenu() {
-    const c = document.getElementById('openingsContainer');
-    const w = Object.entries(OPENINGS).filter(([k, o]) => o.color === 'white' && k !== '_preview');
-    const b = Object.entries(OPENINGS).filter(([k, o]) => o.color === 'black' && k !== '_preview');
-    let h = '';
+function rebuildTranspositionMap() {
+    if (typeof Chess === 'undefined') return;
+    transpositionMap = {};
     
-    if (w.length) {
-        h += '<p class="section-title">White Openings</p>';
-        w.forEach(([k, o]) => h += openingCard(k, o));
-    }
-    if (b.length) {
-        h += '<p class="section-title">Black Openings</p>';
-        b.forEach(([k, o]) => h += openingCard(k, o));
-    }
-    c.innerHTML = h;
-}
-
-function openingCard(k, o) {
-    return `<div class="card" onclick="startTraining('${k}')">
-        <h3>${o.name}<span class="color-badge ${o.color}">${o.color[0].toUpperCase() + o.color.slice(1)}</span></h3>
-        <p>${o.description}</p>
-        <div class="moves">${o.startingMoves}</div>
-        <div class="card-actions">
-            <button class="edit-btn" onclick="event.stopPropagation();downloadOpening('${k}')" title="Download JSON">📥</button>
-            <button class="edit-btn" onclick="event.stopPropagation();editOpening('${k}')" title="Edit">✏️</button>
-            <button class="delete-btn" onclick="event.stopPropagation();deleteOpening('${k}')" title="Delete">🗑</button>
-        </div>
-    </div>`;
-}
-
-function deleteOpening(k) {
-    if (!confirm('Delete "' + (OPENINGS[k]?.name || k) + '"?')) return;
-    delete OPENINGS[k];
-    if (DEFAULT_OPENINGS[k]) {
-        let del = JSON.parse(localStorage.getItem('deletedOp5') || '[]');
-        del.push(k);
-        localStorage.setItem('deletedOp5', JSON.stringify(del));
-    }
-    saveStorage();
-    renderMenu();
-}
-
-// =====================================================
-// TRAINER
-// =====================================================
-function startTraining(k) {
-    currentOpening = OPENINGS[k];
-    userColor = currentOpening.color;
-    currentPath = [];
-    showScreen('trainerScreen');
-    document.getElementById('openingTitle').textContent = currentOpening.name;
-    document.getElementById('openingSubtitle').textContent = 'Playing as ' + userColor[0].toUpperCase() + userColor.slice(1);
-    
-    const backBtn = document.getElementById('trainerBackBtn');
-    backBtn.textContent = isPreviewMode ? '← Back to Editor' : '← Back to Openings';
-    
-    renderTrainer();
-}
-
-function handleTrainerBack() {
-    if (isPreviewMode) {
-        isPreviewMode = false;
-        showScreen('builderScreen');
-    } else {
-        goToMenu();
-    }
-}
-
-function getTrainerNode() {
-    let n = currentOpening.tree;
-    for (const id of currentPath) {
-        if (n.isChoice && n.choices) {
-            const c = n.choices.find(x => x.id === id);
-            if (c) n = c;
-        } else if (n.children) {
-            const c = n.children.find(x => x.id === id);
-            if (c) {
-                // Check if this child is our move or opponent's move
-                if (c.player === userColor) {
-                    // It's our move - stay at this node to display it
-                    n = c;
-                } else {
-                    // It's opponent's move - go to our response
-                    n = c.response || c;
-                }
+    Object.entries(OPENINGS).forEach(([key, op]) => {
+        if (!op.version) op = migrateOpening(op);
+        
+        const game = new Chess();
+        
+        // Recursive map that passes the current PATH (array of IDs)
+        function mapNode(node, currentPathAccumulator) {
+            if (!node) return;
+            const clean = node.move.replace(/^[0-9]+\.+/, '').trim();
+            if (clean) {
+                try { game.move(clean); } catch (e) { return; }
             }
-        }
-    }
-    return n;
-}
-
-function getTrainerOpts(n) {
-    if (n.isChoice && n.choices) return { type: 'choices', opts: n.choices };
-    if (n.children?.length) return { type: 'moves', opts: n.children };
-    // For backward compatibility: if this is your move with a single response (old Black structure)
-    // Present the response as an option to continue
-    if (n.player === userColor && n.response) {
-        return { type: 'moves', opts: [n.response] };
-    }
-    return { type: 'end', opts: [] };
-}
-
-function getTrainerHistory() {
-    let h = [{ m: currentOpening.tree.move, p: currentOpening.tree.player, isChoice: false }];
-    let n = currentOpening.tree;
-    for (const id of currentPath) {
-        if (n.isChoice && n.choices) {
-            const c = n.choices.find(x => x.id === id);
-            if (c) {
-                h.push({ m: c.move, p: userColor, isChoice: true });
-                n = c;
-            }
-        } else if (n.children) {
-            const c = n.children.find(x => x.id === id);
-            if (c) {
-                h.push({ m: c.move, p: c.player });
-                if (c.player === userColor) {
-                    // This is our move - we stay here, don't add response yet
-                    n = c;
-                } else {
-                    // This is opponent's move - add our response if exists
-                    if (c.response) {
-                        h.push({ m: c.response.move, p: c.response.player, isChoice: c.response.isChoice });
-                        n = c.response;
-                    }
-                }
-            }
-        }
-    }
-    return h;
-}
-
-function renderTrainer() {
-    const n = getTrainerNode(), o = getTrainerOpts(n), h = getTrainerHistory(), mc = Math.ceil(h.length / 2);
-    
-    document.getElementById('moveHistory').innerHTML = h.map(x => 
-        `<span class="move-tag ${x.p === 'white' ? 'white-move' : 'black-move'} ${x.isChoice ? 'choice' : ''}">${x.m}</span>`
-    ).join('');
-    
-    const isU = n.player === userColor || n.isChoice;
-    let html = `
-        <div class="move-label">
-            <div class="move-dot ${isU ? 'your-move' : 'opponent-move'}"></div>
-            <span class="${isU ? 'your-move' : 'opponent-move'}">${isU ? 'Your Move' : 'Opponent\'s Move'}</span>
-        </div>
-        <div class="current-move ${isU ? '' : 'opponent'}">
-            <h2>${n.move}</h2>
-        </div>
-        <p class="explanation">${n.explanation || ''}</p>`;
-    
-    if (o.type === 'choices') {
-        html += `<div class="options-section">
-            <div class="options-label"><div class="move-dot your-move"></div><span>Choose your approach:</span></div>
-            <div class="choices-grid">`;
-        o.opts.forEach(x => {
-            html += `<button class="choice-card ${x.color || 'blue'}" onclick="trainerSelect('${x.id}')">
-                <h4>${x.move}</h4><p class="name">${x.name || ''}</p><p class="style">${x.style || ''}</p>
-            </button>`;
-        });
-        html += '</div></div>';
-    } else if (o.type === 'moves') {
-        // FIX: Check if the children are YOUR moves or OPPONENT moves based on player color
-        const childrenAreYourMoves = o.opts.length > 0 && o.opts[0].player === userColor;
-        
-        if (childrenAreYourMoves) {
-            // These are YOUR response options
-            html += `<div class="options-section">
-                <div class="options-label"><div class="move-dot your-move"></div><span>Your response...</span></div>`;
-            o.opts.forEach(x => {
-                const lbl = x.label?.includes('Blunder') ? 'blunder' : (x.label === 'Main Line' || x.label === 'Main') ? 'main' : '';
-                html += `<button class="option-btn" onclick="trainerSelect('${x.id}')">
-                    <div><span class="move-text">${x.move}</span>${x.label ? `<span class="label ${lbl}">${x.label}</span>` : ''}</div>
-                    <span class="arrow">→</span>
-                </button>`;
-            });
-            html += '</div>';
-        } else {
-            // These are OPPONENT response options
-            const opp = userColor === 'white' ? 'Black' : 'White';
-            html += `<div class="options-section">
-                <div class="options-label"><div class="move-dot opponent-move"></div><span>${opp} might play...</span></div>`;
-            o.opts.forEach(x => {
-                const lbl = x.label?.includes('Blunder') ? 'blunder' : (x.label === 'Main Line' || x.label === 'Main') ? 'main' : '';
-                html += `<button class="option-btn" onclick="trainerSelect('${x.id}')">
-                    <div><span class="move-text">${x.move}</span>${x.label ? `<span class="label ${lbl}">${x.label}</span>` : ''}</div>
-                    <span class="arrow">→</span>
-                </button>`;
-            });
-            html += '</div>';
-        }
-    } else {
-        html += `<div class="end-card"><div class="icon">🎯</div><h3>End of Line</h3><p>Move ${mc} reached</p></div>`;
-    }
-    
-    document.getElementById('currentMoveCard').innerHTML = html;
-    document.getElementById('controls').innerHTML = currentPath.length ? 
-        `<button class="control-btn secondary" onclick="trainerBack()">← Back</button>
-         <button class="control-btn secondary" onclick="trainerReset()">Start Over</button>` : '';
-    document.getElementById('progressDots').innerHTML = Array.from({length: 12}, (_, i) => 
-        `<div class="progress-dot ${i < mc ? 'active' : ''}"></div>`).join('');
-}
-
-function trainerSelect(id) { currentPath.push(id); renderTrainer(); }
-function trainerBack() { currentPath.pop(); renderTrainer(); }
-function trainerReset() { currentPath = []; renderTrainer(); }
-
-// =====================================================
-// BUILDER - Core Navigation
-// =====================================================
-
-function showBuilder() {
-    builderColor = 'white';
-    builderTree = null;
-    builderPath = [];
-    editingKey = null;
-    document.getElementById('openingName').value = '';
-    document.getElementById('openingDesc').value = '';
-    document.getElementById('builderTitle').textContent = '🛠️ Create Opening';
-    document.getElementById('saveBtn').textContent = 'Save';
-    document.getElementById('downloadCurrentBtn').style.display = 'none';
-    updateColorToggle();
-    switchTab('build');
-    showScreen('builderScreen');
-    renderBuilder();
-}
-
-function editOpening(key) {
-    const opening = OPENINGS[key];
-    if (!opening) return;
-    
-    // Load opening data into builder
-    builderColor = opening.color;
-    builderTree = JSON.parse(JSON.stringify(opening.tree)); // Deep copy
-    builderPath = [];
-    editingKey = key;
-    
-    document.getElementById('openingName').value = opening.name;
-    document.getElementById('openingDesc').value = opening.description || '';
-    document.getElementById('builderTitle').textContent = '✏️ Edit Opening';
-    document.getElementById('saveBtn').textContent = 'Update';
-    document.getElementById('downloadCurrentBtn').style.display = 'block';
-    updateColorToggle();
-    switchTab('build');
-    showScreen('builderScreen');
-    renderBuilder();
-}
-
-function confirmExitBuilder() {
-    if (builderTree && !confirm('Exit without saving?')) return;
-    editingKey = null;
-    goToMenu();
-}
-
-function switchTab(t) {
-    document.getElementById('tabBuild').classList.toggle('active', t === 'build');
-    document.getElementById('tabJson').classList.toggle('active', t === 'json');
-    document.getElementById('buildTab').style.display = t === 'build' ? 'block' : 'none';
-    document.getElementById('jsonTab').style.display = t === 'json' ? 'block' : 'none';
-    if (t === 'json') {
-        // Show comprehensive template if no tree built, otherwise show current opening
-        if (builderTree) {
-            document.getElementById('jsonOut').value = JSON.stringify(buildOpeningObj(), null, 2);
-        } else {
-            // Show template based on selected color
-            const template = builderColor === 'white' ? JSON_TEMPLATE_WHITE : JSON_TEMPLATE_BLACK;
-            document.getElementById('jsonOut').value = JSON.stringify(template, null, 2);
-        }
-    }
-}
-
-function setColor(c) {
-    // Don't allow color change when editing (tree structure is color-dependent)
-    if (editingKey) {
-        alert('Cannot change color when editing an existing opening. The move tree is built for ' + builderColor + '.');
-        return;
-    }
-    builderColor = c;
-    updateColorToggle();
-    builderTree = null;
-    builderPath = [];
-    renderBuilder();
-}
-
-function updateColorToggle() {
-    document.querySelectorAll('.color-option').forEach(el => 
-        el.classList.toggle('selected', el.classList.contains(builderColor)));
-}
-
-// =====================================================
-// BUILDER - Navigation Model
-// 
-// builderPath is an array of steps. Each step is:
-//   { type: 'child', id: '...' }    - Navigating to an opponent's response
-//   { type: 'response' }            - Navigating into your response to that
-//   { type: 'choice', id: '...' }   - Navigating into a specific choice
-// =====================================================
-
-function getBuilderPosition() {
-    if (!builderTree) return { node: null, context: 'empty' };
-    
-    let node = builderTree;
-    let parent = null;
-    let childRef = null;
-    
-    for (let i = 0; i < builderPath.length; i++) {
-        const step = builderPath[i];
-        
-        if (step.type === 'child') {
-            // Navigate to a child (opponent's move)
-            if (!node.children) return { node: null, context: 'error' };
-            const child = node.children.find(c => c.id === step.id);
-            if (!child) return { node: null, context: 'error' };
-            parent = node;
-            childRef = child;
-            node = child;
-        } else if (step.type === 'response') {
-            // Navigate into the response
-            if (!childRef || !childRef.response) return { node: null, context: 'error' };
-            node = childRef.response;
-            childRef = null;
-        } else if (step.type === 'choice') {
-            // Navigate into a choice
-            if (!node.isChoice || !node.choices) return { node: null, context: 'error' };
-            const choice = node.choices.find(c => c.id === step.id);
-            if (!choice) return { node: null, context: 'error' };
-            node = choice;
-        }
-    }
-    
-    // Determine context
-    let context;
-    if (builderPath.length === 0) {
-        // At root
-        context = (node.player === builderColor) ? 'your-move' : 'opponent-move-root';
-    } else {
-        const lastStep = builderPath[builderPath.length - 1];
-        if (lastStep.type === 'child') {
-            // At an opponent's move (or your move if playing black at certain positions)
-            context = (node.player === builderColor) ? 'your-move-as-child' : 'opponent-move';
-        } else if (lastStep.type === 'response' || lastStep.type === 'choice') {
-            context = 'your-move';
-        }
-    }
-    
-    return { node, context, parent, childRef };
-}
-
-function getCurrentChildRef() {
-    // Get the child reference for the current position (used when at opponent's move)
-    if (!builderTree || builderPath.length === 0) return null;
-    
-    let node = builderTree;
-    let childRef = null;
-    
-    for (const step of builderPath) {
-        if (step.type === 'child') {
-            if (!node.children) return null;
-            childRef = node.children.find(c => c.id === step.id);
-            if (!childRef) return null;
-            node = childRef;
-        } else if (step.type === 'response') {
-            if (!childRef?.response) return null;
-            node = childRef.response;
-            childRef = null;
-        } else if (step.type === 'choice') {
-            if (!node.choices) return null;
-            const choice = node.choices.find(c => c.id === step.id);
-            if (!choice) return null;
-            node = choice;
-            childRef = null;
-        }
-    }
-    
-    return childRef;
-}
-
-function getMoveNumber() {
-    if (!builderTree) return 1;
-    
-    let num = 1;
-    let node = builderTree;
-    let childRef = null;
-    
-    for (const step of builderPath) {
-        if (step.type === 'child') {
-            childRef = node.children?.find(c => c.id === step.id);
-            if (childRef) node = childRef;
-        } else if (step.type === 'response') {
-            if (childRef?.response) {
-                num++;
-                node = childRef.response;
-                childRef = null;
-            }
-        } else if (step.type === 'choice') {
-            // Choice is same move number as the choice point
-            const choice = node.choices?.find(c => c.id === step.id);
-            if (choice) node = choice;
-        }
-    }
-    
-    return num;
-}
-
-// =====================================================
-// BUILDER - Rendering
-// =====================================================
-
-function renderBuilder() {
-    const content = document.getElementById('builderContent');
-    const pos = getBuilderPosition();
-    
-    // No tree yet
-    if (!builderTree) {
-        const isWhite = builderColor === 'white';
-        content.innerHTML = `
-            <div class="empty-state">
-                <div class="icon">♟️</div>
-                <p>Start by adding ${isWhite ? 'your first move' : 'White\'s opening move'}</p>
-            </div>
-            <div class="add-form">
-                <div class="add-form-title">${isWhite ? 'Your First Move (White)' : 'White\'s First Move'}</div>
-                <div class="form-group">
-                    <input type="text" id="newMove" placeholder="e.g., e4 or d4">
-                </div>
-                ${isWhite ? `<div class="form-group">
-                    <input type="text" id="newExpl" placeholder="Explanation (optional)">
-                </div>` : ''}
-                <button class="btn btn-primary" onclick="addFirstMove()">Add Move</button>
-            </div>`;
-        setupEnter();
-        return;
-    }
-    
-    if (!pos.node) {
-        content.innerHTML = '<p>Error: Could not navigate to position</p>';
-        return;
-    }
-    
-    const node = pos.node;
-    const opponent = builderColor === 'white' ? 'Black' : 'White';
-    const you = builderColor === 'white' ? 'White' : 'Black';
-    
-    // Build path display
-    let pathParts = [builderTree.move];
-    let tempNode = builderTree;
-    let tempChild = null;
-    for (const step of builderPath) {
-        if (step.type === 'child') {
-            tempChild = tempNode.children?.find(c => c.id === step.id);
-            if (tempChild) {
-                pathParts.push(tempChild.move);
-                tempNode = tempChild;
-            }
-        } else if (step.type === 'response') {
-            if (tempChild?.response) {
-                pathParts.push(tempChild.response.move);
-                tempNode = tempChild.response;
-                tempChild = null;
-            }
-        } else if (step.type === 'choice') {
-            const choice = tempNode.choices?.find(c => c.id === step.id);
-            if (choice) {
-                pathParts.push(choice.move);
-                tempNode = choice;
-            }
-        }
-    }
-    
-    let html = '';
-    
-    // Back button
-    if (builderPath.length > 0) {
-        html += `<button class="btn btn-secondary" onclick="builderBack()" style="margin-bottom:16px">← Back</button>`;
-    }
-    
-    // Path display
-    html += `<div class="path-display"><span class="current">${pathParts.join(' → ')}</span></div>`;
-    
-    // Render based on context
-    if (pos.context === 'your-move' || pos.context === 'your-move-as-child') {
-        // AT YOUR MOVE - Show opponent's possible responses
-        html += renderYourMoveView(node, opponent);
-    } else if (pos.context === 'opponent-move' || pos.context === 'opponent-move-root') {
-        // AT OPPONENT'S MOVE - Show your response options
-        html += renderOpponentMoveView(node, you, pos.context === 'opponent-move-root');
-    }
-    
-    content.innerHTML = html;
-    setupEnter();
-    setupLabelDropdown();
-}
-
-function renderYourMoveView(node, opponent) {
-    let html = '';
-    
-    // Check if this is a choice point
-    if (node.isChoice) {
-        html += `<div class="position-card">
-            <div class="position-label">Choice Point</div>
-            <div class="position-move">${node.move}</div>
-            ${node.explanation ? `<div class="position-expl">${node.explanation}</div>` : ''}
-        </div>`;
-        
-        // Show existing choices
-        if (node.choices?.length) {
-            html += `<p class="section-title">Your Options</p><div class="choices-grid">`;
-            node.choices.forEach(c => {
-                html += `<div class="choice-card ${c.color || 'blue'}" style="position:relative;">
-                    <div onclick="navigateToChoice('${c.id}')" style="cursor:pointer;">
-                        <h4>${c.move}</h4><p class="name">${c.name || ''}</p><p class="style">${c.style || ''}</p>
-                    </div>
-                    <button class="delete-item-btn" onclick="event.stopPropagation();deleteChoice('${c.id}')" title="Delete">×</button>
-                </div>`;
-            });
-            html += '</div>';
-        }
-        
-        // Form to add another choice
-        html += renderAddChoiceForm();
-    } else {
-        // Regular your move
-        html += `<div class="position-card">
-            <div class="position-label">Your Move</div>
-            <div class="position-move">${node.move}</div>
-            ${node.explanation ? `<div class="position-expl">${node.explanation}</div>` : ''}
-        </div>`;
-        
-        // Edit explanation
-        html += renderEditExplanation(node);
-        
-        // Show existing opponent responses
-        if (node.children?.length) {
-            html += `<p class="section-title">${opponent}'s Responses</p><div class="response-list">`;
-            node.children.forEach(c => {
-                html += `<div class="response-item">
-                    <div onclick="navigateToChild('${c.id}')" style="flex:1;display:flex;align-items:center;cursor:pointer;">
-                        <span class="move">${c.move}</span>
-                        ${c.label ? `<span class="tag">${c.label}</span>` : ''}
-                    </div>
-                    <button class="delete-item-btn" onclick="event.stopPropagation();deleteChildFromList('${c.id}')" title="Delete">×</button>
-                    <span class="arrow" onclick="navigateToChild('${c.id}')" style="cursor:pointer;">→</span>
-                </div>`;
-            });
-            html += '</div>';
-        }
-        
-        // Form to add opponent response
-        html += `<div class="add-form">
-            <div class="add-form-title">Add ${opponent}'s Response</div>
-            <div class="form-group">
-                <input type="text" id="newMove" placeholder="e.g., e5 or Nf6">
-            </div>
-            <div class="form-group">
-                <label>Label</label>
-                <select id="newLabel">
-                    ${LABEL_OPTIONS.map(l => `<option value="${l}">${l || '(No label)'}</option>`).join('')}
-                </select>
-            </div>
-            <div class="form-group" id="customLabelGroup" style="display:none">
-                <input type="text" id="customLabel" placeholder="Custom label">
-            </div>
-            <button class="btn btn-purple" onclick="addChildMove()">+ Add Response</button>
-        </div>`;
-    }
-    
-    return html;
-}
-
-function renderOpponentMoveView(node, you, isRoot) {
-    let html = '';
-    
-    // Show opponent's move
-    html += `<div class="position-card opponent">
-        <div class="position-label">Opponent's Move</div>
-        <div class="position-move">${node.move}</div>
-        ${node.label ? `<div class="position-expl">Label: ${node.label}</div>` : ''}
-    </div>`;
-    
-    // For root of Black openings, children are YOUR responses
-    if (isRoot) {
-        // Show existing responses (your moves)
-        if (node.children?.length) {
-            html += `<p class="section-title">Your Responses</p><div class="response-list">`;
-            node.children.forEach(c => {
-                html += `<div class="response-item">
-                    <div onclick="navigateToChild('${c.id}')" style="flex:1;display:flex;align-items:center;cursor:pointer;">
-                        <span class="move">${c.move}</span>
-                        ${c.label ? `<span class="tag">${c.label}</span>` : ''}
-                    </div>
-                    <button class="delete-item-btn" onclick="event.stopPropagation();deleteChildFromRoot('${c.id}')" title="Delete">×</button>
-                    <span class="arrow" onclick="navigateToChild('${c.id}')" style="cursor:pointer;">→</span>
-                </div>`;
-            });
-            html += '</div>';
-        }
-        
-        // Add form for your response at root
-        html += `<div class="add-form">
-            <div class="add-form-title">Add Your (${you}) Response</div>
-            <div class="form-group">
-                <input type="text" id="newMove" placeholder="Your move (e.g., c5 or e5)">
-            </div>
-            <div class="form-group">
-                <label>Label</label>
-                <select id="newLabel">
-                    ${LABEL_OPTIONS.map(l => `<option value="${l}">${l || '(No label)'}</option>`).join('')}
-                </select>
-            </div>
-            <div class="form-group" id="customLabelGroup" style="display:none">
-                <input type="text" id="customLabel" placeholder="Custom label">
-            </div>
-            <div class="form-group">
-                <input type="text" id="newExpl" placeholder="Explanation (optional)">
-            </div>
-            <button class="btn btn-primary" onclick="addYourResponseAtRoot()">Add Response</button>
-        </div>`;
-        
-        return html;
-    }
-    
-    // Get the child reference to check for response
-    const childRef = getCurrentChildRef();
-    
-    // If there's already a response, show it as a continue option
-    if (childRef?.response) {
-        const resp = childRef.response;
-        
-        if (resp.isChoice) {
-            // Response is a choice point
-            html += `<p class="section-title">Your Response (Choice Point)</p>`;
-            html += `<div class="your-response-card" onclick="navigateToResponse()">
-                <div style="flex:1">
-                    <div class="label">Tap to continue</div>
-                    <div class="move">${resp.move}</div>
-                </div>
-                <span class="arrow">→</span>
-            </div>`;
-        } else {
-            // Single response - show it and offer to add alternatives
-            html += `<p class="section-title">Your Response</p>`;
-            html += `<div class="your-response-card" onclick="navigateToResponse()">
-                <div style="flex:1">
-                    <div class="label">Tap to continue</div>
-                    <div class="move">${resp.move}</div>
-                </div>
-                <span class="arrow">→</span>
-            </div>`;
             
-            // Option to convert to choice point / add alternative
-            html += `<div class="add-form choice-form">
-                <div class="add-form-title">Add Alternative Response</div>
-                <p style="color:#94a3b8;font-size:0.85rem;margin-bottom:14px;">This will convert your response into a choice point with multiple options.</p>
-                <div class="form-group">
-                    <input type="text" id="altMove" placeholder="Alternative move">
-                </div>
-                <div class="form-group">
-                    <input type="text" id="altName" placeholder="Name (e.g., Aggressive Line)">
-                </div>
-                <div class="form-group">
-                    <input type="text" id="altStyle" placeholder="Style description">
-                </div>
-                <div class="form-group">
-                    <label>Color</label>
-                    <div class="style-colors">
-                        <div class="style-color red" onclick="selectStyleColor('red')">Aggressive</div>
-                        <div class="style-color blue selected" onclick="selectStyleColor('blue')">Solid</div>
-                        <div class="style-color purple" onclick="selectStyleColor('purple')">Flexible</div>
-                        <div class="style-color green" onclick="selectStyleColor('green')">Safe</div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <input type="text" id="altExpl" placeholder="Explanation (optional)">
-                </div>
-                <button class="btn btn-purple" onclick="addAlternativeResponse()">+ Add Alternative</button>
-            </div>`;
+            const fen = game.fen();
+            if (!transpositionMap[fen]) transpositionMap[fen] = [];
+            
+            // Avoid duplicates
+            if (!transpositionMap[fen].find(x => x.key === key)) {
+                transpositionMap[fen].push({
+                    key: key, 
+                    name: op.name,
+                    color: op.color,
+                    group: op.group || "Uncategorized",
+                    // IMPORTANT: Store the path required to get here!
+                    path: [...currentPathAccumulator], 
+                    nextMoves: node.children ? node.children.map(c => ({
+                        id: c.id, // Store ID so we can jump to it
+                        move: c.move, type: c.type, status: c.status, explanation: c.explanation
+                    })) : []
+                });
+            }
+            
+            // Recurse, adding current node ID to path for children
+            if (node.children) {
+                node.children.forEach(child => {
+                    // Note: The root's children don't need the root ID in currentPath typically, 
+                    // but logic elsewhere expects currentPath to be list of CHILD ids. 
+                    // Root is implied. So we add child.id for the NEXT step.
+                    mapNode(child, [...currentPathAccumulator, child.id]);
+                });
+            }
+            game.undo();
         }
         
-        // Delete branch option
-        html += `<div class="detail-actions">
-            <button class="btn btn-danger" onclick="deleteCurrentBranch()">Delete This Branch</button>
-        </div>`;
-    } else {
-        // No response yet - show form to add
-        html += `<div class="add-form">
-            <div class="add-form-title">Add Your (${you}) Response</div>
-            
-            <div class="toggle-row">
-                <span class="toggle-label">Create choice point (multiple options)</span>
-                <div class="toggle-switch" id="choiceToggle" onclick="toggleChoiceMode()"></div>
-            </div>
-            
-            <div id="singleResponseFields">
-                <div class="form-group">
-                    <input type="text" id="newMove" placeholder="Your move (e.g., Nf3)">
-                </div>
-                <div class="form-group">
-                    <input type="text" id="newExpl" placeholder="Explanation (optional)">
-                </div>
-                <button class="btn btn-primary" onclick="addResponse()">Add Response</button>
-            </div>
-            
-            <div class="choice-fields" id="choicePointFields">
-                <p style="color:#94a3b8;font-size:0.85rem;margin-bottom:14px;">Add your first option:</p>
-                <div class="form-group">
-                    <input type="text" id="choiceMove" placeholder="Move (e.g., Ng5)">
-                </div>
-                <div class="form-group">
-                    <input type="text" id="choiceName" placeholder="Name (e.g., Fried Liver)">
-                </div>
-                <div class="form-group">
-                    <input type="text" id="choiceStyle" placeholder="Style (e.g., Aggressive attack)">
-                </div>
-                <div class="form-group">
-                    <label>Color</label>
-                    <div class="style-colors">
-                        <div class="style-color red selected" onclick="selectStyleColor('red')">Aggressive</div>
-                        <div class="style-color blue" onclick="selectStyleColor('blue')">Solid</div>
-                        <div class="style-color purple" onclick="selectStyleColor('purple')">Flexible</div>
-                        <div class="style-color green" onclick="selectStyleColor('green')">Safe</div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <input type="text" id="choiceExpl" placeholder="Explanation (optional)">
-                </div>
-                <button class="btn btn-purple" onclick="addChoicePointResponse()">Create Choice Point</button>
-            </div>
-        </div>`;
-        
-        // Delete branch option
-        html += `<div class="detail-actions">
-            <button class="btn btn-danger" onclick="deleteCurrentBranch()">Delete This Branch</button>
-        </div>`;
-    }
-    
-    return html;
-}
-
-function renderEditExplanation(node) {
-    return `<div class="edit-explanation">
-        <label style="display:block;font-size:0.85rem;color:#94a3b8;margin-bottom:8px;">Explanation</label>
-        <textarea id="editExpl" placeholder="Add explanation...">${node.explanation || ''}</textarea>
-        <button class="btn btn-secondary" onclick="saveExplanation()">Save</button>
-    </div>`;
-}
-
-function renderAddChoiceForm() {
-    return `<div class="add-form choice-form">
-        <div class="add-form-title">Add Another Option</div>
-        <div class="form-group">
-            <input type="text" id="choiceMove" placeholder="Move (e.g., d3)">
-        </div>
-        <div class="form-group">
-            <input type="text" id="choiceName" placeholder="Name (e.g., Pianissimo)">
-        </div>
-        <div class="form-group">
-            <input type="text" id="choiceStyle" placeholder="Style (e.g., Slow & solid)">
-        </div>
-        <div class="form-group">
-            <label>Color</label>
-            <div class="style-colors">
-                <div class="style-color red" onclick="selectStyleColor('red')">Aggressive</div>
-                <div class="style-color blue selected" onclick="selectStyleColor('blue')">Solid</div>
-                <div class="style-color purple" onclick="selectStyleColor('purple')">Flexible</div>
-                <div class="style-color green" onclick="selectStyleColor('green')">Safe</div>
-            </div>
-        </div>
-        <div class="form-group">
-            <input type="text" id="choiceExpl" placeholder="Explanation (optional)">
-        </div>
-        <button class="btn btn-purple" onclick="addChoiceToExisting()">+ Add Option</button>
-    </div>`;
-}
-
-// =====================================================
-// BUILDER - UI Helpers
-// =====================================================
-
-function setupEnter() {
-    setTimeout(() => {
-        const input = document.getElementById('newMove') || document.getElementById('choiceMove');
-        if (input) {
-            input.focus();
-            input.addEventListener('keypress', e => {
-                if (e.key === 'Enter') {
-                    const btns = document.querySelectorAll('.add-form .btn');
-                    if (btns.length) btns[btns.length - 1].click();
-                }
-            });
-        }
-    }, 50);
-}
-
-function setupLabelDropdown() {
-    const select = document.getElementById('newLabel');
-    const customGroup = document.getElementById('customLabelGroup');
-    if (select && customGroup) {
-        select.addEventListener('change', () => {
-            customGroup.style.display = select.value === 'Custom' ? 'block' : 'none';
-        });
-    }
-}
-
-function toggleChoiceMode() {
-    const toggle = document.getElementById('choiceToggle');
-    const single = document.getElementById('singleResponseFields');
-    const choice = document.getElementById('choicePointFields');
-    
-    toggle.classList.toggle('active');
-    const isChoice = toggle.classList.contains('active');
-    
-    single.style.display = isChoice ? 'none' : 'block';
-    choice.style.display = isChoice ? 'block' : 'none';
-}
-
-let selectedStyleColor = 'red';
-
-function selectStyleColor(color) {
-    selectedStyleColor = color;
-    document.querySelectorAll('.style-color').forEach(el => {
-        el.classList.toggle('selected', el.classList.contains(color));
+        // Start mapping. Root has no ID in the path array.
+        if(op.tree) mapNode(op.tree, []);
     });
 }
 
-// =====================================================
-// BUILDER - Navigation Actions
-// =====================================================
-
-function navigateToChild(id) {
-    builderPath.push({ type: 'child', id });
-    renderBuilder();
-}
-
-function navigateToResponse() {
-    builderPath.push({ type: 'response' });
-    renderBuilder();
-}
-
-function navigateToChoice(id) {
-    builderPath.push({ type: 'choice', id });
-    renderBuilder();
-}
-
-function builderBack() {
-    builderPath.pop();
-    renderBuilder();
-}
-
-// =====================================================
-// BUILDER - Add Actions
-// =====================================================
-
-function addFirstMove() {
-    const move = document.getElementById('newMove').value.trim();
-    if (!move) return;
-    const expl = document.getElementById('newExpl')?.value.trim() || '';
-    
-    builderTree = {
-        id: 'root',
-        move: '1. ' + move,
-        player: 'white',
-        explanation: builderColor === 'white' ? expl : '',
-        children: []
-    };
-    
-    renderBuilder();
-}
-
-function addChildMove() {
-    const move = document.getElementById('newMove').value.trim();
-    if (!move) return;
-    
-    let label = document.getElementById('newLabel')?.value || '';
-    if (label === 'Custom') {
-        label = document.getElementById('customLabel')?.value.trim() || '';
+function migrateOpening(op) {
+    if (op.version === "4.0") return op;
+    function walk(n) {
+        if (!n) return;
+        if (!n.children) n.children = [];
+        if (n.label && !n.status) n.status = n.label;
+        if (n.style && !n.type) {
+            const s = n.style.toLowerCase();
+            if (s.includes('agg')||s.includes('tact')) n.type='Tactical';
+            else if (s.includes('sol')||s.includes('pos')) n.type='Positional/Strategic';
+            else if (s.includes('safe')) n.type='Defensive/Prophylactic';
+            else n.type='Dynamic';
+        }
+        n.children.forEach(walk);
     }
-    
-    const pos = getBuilderPosition();
-    if (!pos.node) return;
-    
-    const moveNum = getMoveNumber();
-    const opponentColor = builderColor === 'white' ? 'black' : 'white';
-    const notation = opponentColor === 'black' ? `${moveNum}... ${move}` : `${moveNum}. ${move}`;
-    
-    const newChild = {
-        id: 'c' + Date.now(),
-        move: notation,
-        player: opponentColor,
-        label: label,
-        response: null
-    };
-    
-    if (!pos.node.children) pos.node.children = [];
-    pos.node.children.push(newChild);
-    
-    // Navigate into this child
-    builderPath.push({ type: 'child', id: newChild.id });
-    renderBuilder();
+    if(op.tree) walk(op.tree);
+    op.version = "4.0";
+    return op;
 }
 
-function addResponse() {
-    const move = document.getElementById('newMove').value.trim();
-    if (!move) return;
-    const expl = document.getElementById('newExpl')?.value.trim() || '';
+function getUnifiedOptions(currentNode) {
+    let options = (currentNode.children || []).map(c => ({ ...c, source: 'local' }));
     
-    const childRef = getCurrentChildRef();
-    if (!childRef) return;
-    
-    const moveNum = getMoveNumber() + 1;
-    const notation = builderColor === 'white' ? `${moveNum}. ${move}` : `${moveNum}... ${move}`;
-    
-    childRef.response = {
-        id: 'r' + Date.now(),
-        move: notation,
-        player: builderColor,
-        explanation: expl,
-        children: []
-    };
-    
-    // Navigate into the response
-    builderPath.push({ type: 'response' });
-    renderBuilder();
-}
+    if (document.getElementById('transpoToggle').checked) {
+        const game = new Chess();
+        let ptr = currentOpening.tree;
+        const rootMove = ptr.move.replace(/^[0-9]+\.+/, '').trim();
+        if (rootMove) game.move(rootMove);
+        
+        for (let id of currentPath) {
+            ptr = ptr.children.find(c => c.id === id);
+            if (ptr) game.move(ptr.move.replace(/^[0-9]+\.+/, '').trim());
+        }
+        
+        const history = game.history();
+        const lastMove = history.length > 0 ? history[history.length - 1] : "Start";
+        const userColor = currentOpening.color;
 
-function addChoicePointResponse() {
-    const move = document.getElementById('choiceMove').value.trim();
-    if (!move) return;
-    
-    const name = document.getElementById('choiceName')?.value.trim() || '';
-    const style = document.getElementById('choiceStyle')?.value.trim() || '';
-    const expl = document.getElementById('choiceExpl')?.value.trim() || '';
-    
-    const childRef = getCurrentChildRef();
-    if (!childRef) return;
-    
-    const moveNum = getMoveNumber() + 1;
-    const notation = builderColor === 'white' ? `${moveNum}. ${move}` : `${moveNum}... ${move}`;
-    
-    // Create choice point
-    childRef.response = {
-        id: 'cp' + Date.now(),
-        move: 'Choose Style',
-        player: builderColor,
-        explanation: 'Pick your approach!',
-        isChoice: true,
-        choices: [{
-            id: 'ch' + Date.now(),
-            move: notation,
-            name: name,
-            style: style,
-            color: selectedStyleColor,
-            explanation: expl,
-            children: []
-        }]
-    };
-    
-    // Navigate into the response (choice point)
-    builderPath.push({ type: 'response' });
-    renderBuilder();
-}
-
-function addChoiceToExisting() {
-    const move = document.getElementById('choiceMove').value.trim();
-    if (!move) return;
-    
-    const name = document.getElementById('choiceName')?.value.trim() || '';
-    const style = document.getElementById('choiceStyle')?.value.trim() || '';
-    const expl = document.getElementById('choiceExpl')?.value.trim() || '';
-    
-    const pos = getBuilderPosition();
-    if (!pos.node?.isChoice) return;
-    
-    const moveNum = getMoveNumber();
-    const notation = builderColor === 'white' ? `${moveNum}. ${move}` : `${moveNum}... ${move}`;
-    
-    const newChoice = {
-        id: 'ch' + Date.now(),
-        move: notation,
-        name: name,
-        style: style,
-        color: selectedStyleColor,
-        explanation: expl,
-        children: []
-    };
-    
-    if (!pos.node.choices) pos.node.choices = [];
-    pos.node.choices.push(newChoice);
-    renderBuilder();
-}
-
-function saveExplanation() {
-    const expl = document.getElementById('editExpl')?.value.trim() || '';
-    const pos = getBuilderPosition();
-    if (pos.node) {
-        pos.node.explanation = expl;
-        renderBuilder();
+        const matches = transpositionMap[game.fen()] || [];
+        matches.forEach(match => {
+            if (match.key === currentOpeningKey) return;
+            if (match.color !== userColor) return;
+            
+            match.nextMoves.forEach(next => {
+                if (options.find(o => o.move === next.move)) return;
+                
+                // IMPORTANT: Calculate the full path to the NEXT node
+                // Match.path is path to parent. We need to add the child ID.
+                const targetFullPath = [...match.path, next.id];
+                
+                options.push({
+                    id: 'remote_' + match.key,
+                    move: next.move, type: next.type, status: next.status,
+                    source: 'remote', targetKey: match.key, targetName: match.name,
+                    // Pass the calculated path
+                    targetPath: targetFullPath,
+                    via: lastMove, explanation: next.explanation 
+                });
+            });
+        });
     }
+    return options;
 }
 
-function deleteCurrentBranch() {
-    if (!confirm('Delete this branch?')) return;
+// =====================================================
+// TRAINER LOGIC
+// =====================================================
+function startTraining(key) {
+    currentOpening = OPENINGS[key];
+    currentOpeningKey = key;
+    originalOpeningKey = key;
+    historyStack = []; 
+    currentPath = [];
+    showScreen('trainerScreen');
     
-    if (builderPath.length === 0) {
-        builderTree = null;
+    // FIXED: Initialize Board Once (Singleton)
+    if(window.initVisualBoard) {
+        window.initVisualBoard('trainer')
+            .then(() => {
+                updateTheme();
+                renderTrainer();
+            });
     } else {
-        // Find parent and remove
-        const lastStep = builderPath[builderPath.length - 1];
-        
-        // Navigate to parent
-        const parentPath = builderPath.slice(0, -1);
-        let node = builderTree;
-        let childRef = null;
-        
-        for (const step of parentPath) {
-            if (step.type === 'child') {
-                childRef = node.children?.find(c => c.id === step.id);
-                if (childRef) node = childRef;
-            } else if (step.type === 'response') {
-                if (childRef?.response) node = childRef.response;
-                childRef = null;
-            } else if (step.type === 'choice') {
-                const choice = node.choices?.find(c => c.id === step.id);
-                if (choice) node = choice;
-            }
+        updateTheme();
+        renderTrainer();
+    }
+}
+
+// FIXED: Jump to Opening now accepts a PATH
+function jumpToOpening(targetKey, targetPath = []) {
+    historyStack.push({ 
+        key: currentOpeningKey, 
+        path: [...currentPath], 
+        name: currentOpening.name 
+    });
+    
+    currentOpeningKey = targetKey;
+    currentOpening = OPENINGS[targetKey];
+    
+    // FIXED: Use the specific path provided by the transposition map
+    currentPath = targetPath; 
+    
+    updateTheme();
+    renderTrainer();
+}
+
+function returnToPrevious() {
+    if (historyStack.length === 0) return;
+    const state = historyStack.pop();
+    currentOpeningKey = state.key;
+    currentOpening = OPENINGS[state.key];
+    currentPath = state.path;
+    updateTheme();
+    renderTrainer();
+}
+
+function renderTrainer() {
+    let node = currentOpening.tree;
+    const game = new Chess();
+    const rootMove = node.move.replace(/^[0-9]+\.+/, '').trim();
+    if(rootMove) game.move(rootMove);
+
+    // Update Header
+    document.getElementById('trainerHeaderTitle').innerText = currentOpening.name;
+    
+    for (let id of currentPath) {
+        const child = node.children?.find(c => c.id === id);
+        if (child) { 
+            node = child; 
+            game.move(child.move.replace(/^[0-9]+\.+/, '').trim()); 
         }
-        
-        if (lastStep.type === 'child' && node.children) {
-            const idx = node.children.findIndex(c => c.id === lastStep.id);
-            if (idx > -1) node.children.splice(idx, 1);
-        } else if (lastStep.type === 'choice' && node.choices) {
-            const idx = node.choices.findIndex(c => c.id === lastStep.id);
-            if (idx > -1) node.choices.splice(idx, 1);
+    }
+    
+    // Update Board
+    if(window.updateBoardPosition) {
+        window.updateBoardPosition('trainer', game.fen(), currentOpening.color);
+    }
+
+    // Determine Turn
+    const isPlayerTurn = (game.turn() === 'w' && currentOpening.color === 'white') || 
+                         (game.turn() === 'b' && currentOpening.color === 'black');
+    
+    // Update Text Card
+    const cardEl = document.getElementById('trainerMoveCard');
+    const labelEl = document.getElementById('trainerMoveLabel');
+    const textEl = document.getElementById('currentMoveText');
+    const explEl = document.getElementById('currentExplanation');
+    
+    cardEl.className = isPlayerTurn ? 'current-move-card' : 'current-move-card opponent';
+    labelEl.textContent = isPlayerTurn ? "YOUR MOVE" : "OPPONENT'S MOVE";
+    textEl.textContent = node.move;
+    
+    const showCoach = document.getElementById('coachToggle').checked;
+    const expl = node.explanation || "No notes.";
+    explEl.textContent = showCoach ? expl : (expl === "No notes." ? expl : "Explanation hidden (Coach Mode)");
+    
+    const options = getUnifiedOptions(node);
+    const container = document.getElementById('trainerOptions');
+    
+    // Draw Arrows
+    try {
+        if(showCoach && window.drawCoachArrows) {
+            const arrows = options.map(opt => {
+                const temp = new Chess(game.fen());
+                const clean = opt.move.replace(/^[0-9]+\.+/, '').trim();
+                if(!clean) return null;
+                const m = temp.move(clean);
+                return m ? { from: m.from, to: m.to, type: opt.type } : null;
+            }).filter(x => x);
+            window.drawCoachArrows('trainer', arrows);
+        } else if (window.clearArrows) {
+            window.clearArrows('trainer');
         }
-        
-        builderPath.pop();
+    } catch(err) { console.log(err); }
+    
+    if (options.length === 0) {
+        container.innerHTML = `<div class="end-card"><h3>End of Line</h3><p>No moves defined.</p></div>`;
+        return;
     }
-    renderBuilder();
+    
+    container.innerHTML = options.map(opt => {
+        const branchName = opt.explanation || "";
+        const color = getColorClass(opt.type);
+        const descriptionHtml = (showCoach && branchName) ? renderExpandableText(branchName) : '';
+        const isMain = isPlayerTurn && opt.status === 'Mainline';
+        const highlightClass = isMain ? 'mainline-highlight' : '';
+
+        if (opt.source === 'local') {
+            return `<div class="option-btn ${color} ${highlightClass}" onclick="handleLocalMove('${opt.id}')">
+                <div class="main">
+                    <h4>${opt.move}</h4>
+                    ${descriptionHtml}
+                    ${showCoach ? `
+                    <div class="tags">
+                        ${opt.status ? `<span class="tag-pill status">${opt.status}</span>` : ''}
+                        ${opt.type ? `<span class="tag-pill type">${opt.type}</span>` : ''}
+                    </div>` : ''}
+                </div>
+                <span class="arrow-icon">➜</span>
+            </div>`;
+        } else {
+            // FIXED: Passing targetPath to function
+            const pathString = JSON.stringify(opt.targetPath).replace(/"/g, '&quot;');
+            return `<div class="option-btn remote ${color}" onclick="jumpToOpening('${opt.targetKey}', ${pathString})">
+                <div class="main">
+                    <h4>${opt.move} <span class="badge">${opt.targetName}</span></h4>
+                    ${descriptionHtml}
+                    ${showCoach ? `
+                    <div class="tags">
+                        <span class="tag-pill type" style="opacity:0.7">VIA ${opt.via}</span>
+                        ${opt.status ? `<span class="tag-pill status">${opt.status}</span>` : ''}
+                        ${opt.type ? `<span class="tag-pill type">${opt.type}</span>` : ''}
+                    </div>` : ''}
+                </div>
+                <span class="arrow-icon">↗</span>
+            </div>`;
+        }
+    }).join('');
 }
 
-function deleteChildFromList(id) {
-    if (!confirm('Delete this response and all its continuations?')) return;
-    
-    const pos = getBuilderPosition();
-    if (!pos.node?.children) return;
-    
-    const idx = pos.node.children.findIndex(c => c.id === id);
-    if (idx > -1) {
-        pos.node.children.splice(idx, 1);
-        renderBuilder();
-    }
+function renderExpandableText(text) {
+    if (!text) return '';
+    const isLong = text.length > 85; 
+    const id = 'desc_' + Math.random().toString(36).substr(2, 9);
+    if (!isLong) return `<p class="branch-desc">${text}</p>`;
+    return `<p class="branch-desc" id="${id}">${text}</p>
+            <span class="expand-link" onclick="toggleDesc(event, '${id}')">...more</span>`;
 }
 
-function deleteChildFromRoot(id) {
-    if (!confirm('Delete this response and all its continuations?')) return;
-    
-    if (!builderTree?.children) return;
-    
-    const idx = builderTree.children.findIndex(c => c.id === id);
-    if (idx > -1) {
-        builderTree.children.splice(idx, 1);
-        renderBuilder();
-    }
-}
-
-function addYourResponseAtRoot() {
-    const move = document.getElementById('newMove').value.trim();
-    if (!move) return;
-    
-    let label = document.getElementById('newLabel')?.value || '';
-    if (label === 'Custom') {
-        label = document.getElementById('customLabel')?.value.trim() || '';
-    }
-    const expl = document.getElementById('newExpl')?.value.trim() || '';
-    
-    if (!builderTree) return;
-    
-    const notation = `1... ${move}`;
-    
-    const newChild = {
-        id: 'c' + Date.now(),
-        move: notation,
-        player: builderColor,
-        label: label,
-        explanation: expl,
-        children: []  // For Black openings, your move has children (opponent responses)
-    };
-    
-    if (!builderTree.children) builderTree.children = [];
-    builderTree.children.push(newChild);
-    
-    // Navigate into this child
-    builderPath.push({ type: 'child', id: newChild.id });
-    renderBuilder();
-}
-
-function deleteChoice(id) {
-    if (!confirm('Delete this option?')) return;
-    
-    const pos = getBuilderPosition();
-    if (!pos.node?.choices) return;
-    
-    const idx = pos.node.choices.findIndex(c => c.id === id);
-    if (idx > -1) {
-        pos.node.choices.splice(idx, 1);
-        renderBuilder();
-    }
-}
-
-function addAlternativeResponse() {
-    const move = document.getElementById('altMove').value.trim();
-    if (!move) return;
-    
-    const name = document.getElementById('altName')?.value.trim() || '';
-    const style = document.getElementById('altStyle')?.value.trim() || '';
-    const expl = document.getElementById('altExpl')?.value.trim() || '';
-    
-    const childRef = getCurrentChildRef();
-    if (!childRef?.response) return;
-    
-    const existingResponse = childRef.response;
-    const moveNum = getMoveNumber() + 1;
-    const notation = builderColor === 'white' ? `${moveNum}. ${move}` : `${moveNum}... ${move}`;
-    
-    // Convert existing response to a choice
-    const existingAsChoice = {
-        id: 'ch' + Date.now() + '_orig',
-        move: existingResponse.move,
-        name: existingResponse.name || 'Original Line',
-        style: existingResponse.style || 'First option',
-        color: existingResponse.color || 'blue',
-        explanation: existingResponse.explanation || '',
-        children: existingResponse.children || []
-    };
-    
-    // Create new alternative
-    const newChoice = {
-        id: 'ch' + Date.now(),
-        move: notation,
-        name: name,
-        style: style,
-        color: selectedStyleColor,
-        explanation: expl,
-        children: []
-    };
-    
-    // Convert response to choice point
-    childRef.response = {
-        id: 'cp' + Date.now(),
-        move: 'Choose Style',
-        player: builderColor,
-        explanation: 'Pick your approach!',
-        isChoice: true,
-        choices: [existingAsChoice, newChoice]
-    };
-    
-    renderBuilder();
-}
-
-// =====================================================
-// BUILDER - Save/Export
-// =====================================================
-
-function buildOpeningObj() {
-    return {
-        name: document.getElementById('openingName').value.trim() || 'My Opening',
-        color: builderColor,
-        description: document.getElementById('openingDesc').value.trim() || '',
-        startingMoves: getStartingMoves(),
-        tree: builderTree || { id: 'root', move: '1. e4', player: 'white', explanation: '', children: [] }
-    };
-}
-
-function getStartingMoves() {
-    if (!builderTree) return '1. e4';
-    let moves = [builderTree.move];
-    let node = builderTree;
-    while (node.children?.length && moves.length < 6) {
-        const c = node.children[0];
-        moves.push(c.move);
-        if (c.response) {
-            if (c.response.isChoice && c.response.choices?.length) {
-                moves.push(c.response.choices[0].move);
-                node = c.response.choices[0];
-            } else {
-                moves.push(c.response.move);
-                node = c.response;
-            }
-        } else break;
-    }
-    return moves.join(' ');
-}
-
-function previewOpening() {
-    if (!builderTree) { alert('Add at least one move'); return; }
-    OPENINGS['_preview'] = buildOpeningObj();
-    isPreviewMode = true;
-    startTraining('_preview');
-}
-
-function saveOpening() {
-    const name = document.getElementById('openingName').value.trim();
-    if (!name) { alert('Enter an opening name'); return; }
-    if (!builderTree) { alert('Add at least one move'); return; }
-    
-    const openingData = buildOpeningObj();
-    
-    if (editingKey) {
-        // Editing existing opening
-        OPENINGS[editingKey] = openingData;
-        saveStorage();
-        alert('"' + name + '" updated!');
+function toggleDesc(e, id) {
+    e.stopPropagation();
+    const el = document.getElementById(id);
+    const link = e.target;
+    if (el.classList.contains('expanded')) {
+        el.classList.remove('expanded');
+        link.innerText = '...more';
     } else {
-        // Creating new opening
-        const key = name.toLowerCase().replace(/[^a-z0-9]/g, '_') + '_' + Date.now();
-        OPENINGS[key] = openingData;
-        saveStorage();
-        alert('"' + name + '" saved!');
+        el.classList.add('expanded');
+        link.innerText = 'less';
+    }
+}
+
+function handleLocalMove(id) { currentPath.push(id); renderTrainer(); }
+function updateTheme() {
+    document.body.className = (currentOpeningKey !== originalOpeningKey) ? 'theme-purple' : '';
+    document.getElementById('returnContainer').innerHTML = historyStack.length ? 
+        `<button class="return-btn" onclick="returnToPrevious()">↩</button>` : '';
+}
+
+// =====================================================
+// UI & IMPORT
+// =====================================================
+function showScreen(id) { 
+    ['menuScreen', 'trainerScreen', 'builderScreen'].forEach(s => document.getElementById(s).style.display = 'none'); 
+    document.getElementById(id).style.display = 'block'; 
+    window.scrollTo(0, 0); 
+}
+
+function renderMenu() {
+    const container = document.getElementById('openingsContainer'); 
+    container.innerHTML = '';
+    const groups = {};
+    
+    Object.entries(OPENINGS).forEach(([key, op]) => { 
+        if (!op.version) op = migrateOpening(op); 
+        const g = op.group || "Uncategorized"; 
+        if (!groups[g]) groups[g] = []; 
+        groups[g].push({ key, ...op }); 
+    });
+    
+    if (Object.keys(groups).length === 0) { 
+        container.innerHTML = `<div class="empty-state"><div class="icon">♟️</div><p>No openings found.</p></div>`; 
+        return; 
     }
     
-    editingKey = null;
-    goToMenu();
+    Object.entries(groups).forEach(([groupName, items]) => {
+        const folderId = 'folder_' + groupName.replace(/\s/g, '');
+        container.innerHTML += `<div class="folder-header" onclick="toggleFolder('${folderId}')"><span>📂 ${groupName}</span><span class="folder-count">${items.length}</span></div><div id="${folderId}" class="folder-content open">${items.map(item => `<div class="card" onclick="startTraining('${item.key}')"><div class="card-actions"><button class="icon-btn" onclick="event.stopPropagation(); editOpening('${item.key}')">✏️</button><button class="icon-btn" onclick="event.stopPropagation(); deleteOpening('${item.key}')">🗑</button></div><h3>${item.name} <span class="version-tag" style="background:${item.color==='white'?'#fbbf24':'#334155'}; color:${item.color==='white'?'#000':'#fff'}">${item.color.toUpperCase()}</span></h3><p>${item.description || ''}</p><div class="moves">${item.startingMoves || ''}</div></div>`).join('')}</div>`;
+    });
 }
 
-function copyJson() {
-    navigator.clipboard.writeText(document.getElementById('jsonOut').value);
-    alert('Copied!');
-}
+function toggleFolder(id) { const el = document.getElementById(id); if (el) el.classList.toggle('open'); }
+function deleteOpening(key) { if (confirm(`Delete "${OPENINGS[key].name}"?`)) { delete OPENINGS[key]; saveStorage(); renderMenu(); } }
 
-function importJson() {
+function importFromMenuText() {
     try {
-        const o = JSON.parse(document.getElementById('jsonIn').value);
-        if (!o.name || !o.tree) { alert('Invalid JSON format'); return; }
-        const key = o.name.toLowerCase().replace(/[^a-z0-9]/g, '_') + '_' + Date.now();
-        OPENINGS[key] = o;
+        let raw = document.getElementById('importJsonText').value;
+        raw = raw.replace(/```json/g, '').replace(/```/g, '').trim();
+        if (!raw) return;
+        const json = JSON.parse(raw);
+        if (!json.tree && !json.startingMoves && Object.keys(json).length > 0) throw new Error("This looks like a Backup file. Use 'Restore' instead.");
+        if(!validateTree(json.tree)) throw new Error("Invalid V4 Tree Structure");
+        const migrated = migrateOpening(json);
+        const key = 'import_' + Date.now();
+        OPENINGS[key] = migrated;
         saveStorage();
-        alert('"' + o.name + '" imported!');
-        goToMenu();
-    } catch(e) { alert('Invalid JSON: ' + e.message); }
-}
-
-// =====================================================
-// DOWNLOAD / UPLOAD / IMPORT FROM URL
-// =====================================================
-
-function downloadOpening(key) {
-    const opening = OPENINGS[key];
-    if (!opening) return;
-    
-    const json = JSON.stringify(opening, null, 2);
-    const blob = new Blob([json], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = opening.name.toLowerCase().replace(/[^a-z0-9]/g, '-') + '.json';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-}
-
-function downloadCurrentOpening() {
-    if (!builderTree) { alert('No opening to download'); return; }
-    
-    const opening = buildOpeningObj();
-    const json = JSON.stringify(opening, null, 2);
-    const blob = new Blob([json], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = opening.name.toLowerCase().replace(/[^a-z0-9]/g, '-') + '.json';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-}
-
-function triggerFileUpload() {
-    document.getElementById('fileUploadInput').click();
-}
-
-function handleFileUpload(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        try {
-            const o = JSON.parse(e.target.result);
-            if (!o.name || !o.tree) { 
-                alert('Invalid JSON format: missing name or tree'); 
-                return; 
-            }
-            const key = o.name.toLowerCase().replace(/[^a-z0-9]/g, '_') + '_' + Date.now();
-            OPENINGS[key] = o;
-            saveStorage();
-            alert('"' + o.name + '" imported successfully!');
-            renderMenu();
-        } catch(err) {
-            alert('Error parsing JSON: ' + err.message);
-        }
-    };
-    reader.readAsText(file);
-    
-    // Reset input so same file can be uploaded again
-    event.target.value = '';
-}
-
-function showUrlImport() {
-    document.getElementById('urlImportSection').style.display = 'block';
-    document.getElementById('importUrl').value = '';
-    document.getElementById('importUrl').focus();
-}
-
-function hideUrlImport() {
-    document.getElementById('urlImportSection').style.display = 'none';
-}
-
-async function importFromUrl() {
-    const url = document.getElementById('importUrl').value.trim();
-    if (!url) { alert('Please enter a URL'); return; }
-    
-    try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error('Failed to fetch: ' + response.status);
-        }
-        
-        const o = await response.json();
-        if (!o.name || !o.tree) { 
-            alert('Invalid JSON format: missing name or tree'); 
-            return; 
-        }
-        
-        const key = o.name.toLowerCase().replace(/[^a-z0-9]/g, '_') + '_' + Date.now();
-        OPENINGS[key] = o;
-        saveStorage();
-        alert('"' + o.name + '" imported successfully!');
-        hideUrlImport();
+        alert('Imported Successfully!');
+        document.getElementById('importJsonText').value = '';
+        document.getElementById('jsonImportBox').style.display = 'none';
         renderMenu();
-    } catch(err) {
-        alert('Error importing from URL: ' + err.message);
+    } catch (e) { alert('Import Error: ' + e.message); }
+}
+
+// =====================================================
+// BUILDER LOGIC
+// =====================================================
+function showNewOpeningModal() { builderTree = null; builderPath = []; editingKey = null; document.getElementById('modalName').value = ''; document.getElementById('modalGroup').value = ''; document.getElementById('modalMove').value = ''; document.getElementById('newOpeningModal').style.display = 'flex'; }
+function initializeNewOpening() { try { const name = document.getElementById('modalName').value || "Untitled"; const group = document.getElementById('modalGroup').value || "Uncategorized"; const color = document.getElementById('modalColor').value; const moveRaw = document.getElementById('modalMove').value || "e4"; const game = new Chess(); const validMove = game.move(moveRaw); if (validMove === null) { alert("Invalid starting move!"); return; } const formattedMove = "1. " + validMove.san; builderTree = { id: 'root', move: formattedMove, player: 'white', explanation: 'Starting move.', children: [] }; builderColor = color; document.getElementById('builderName').value = name; document.getElementById('builderGroup').value = group; const colorInput = document.getElementById('builderColor'); if (colorInput) colorInput.value = color; document.getElementById('builderDesc').value = ''; document.getElementById('newMoveInput').value = ''; document.getElementById('newExpl').value = ''; document.getElementById('newOpeningModal').style.display = 'none'; showScreen('builderScreen'); renderBuilder(); } catch (e) { alert("Error: " + e.message); } }
+
+function editOpening(key) { 
+    editingKey = key; 
+    const op = OPENINGS[key]; 
+    builderTree = JSON.parse(JSON.stringify(op.tree)); 
+    builderColor = op.color; 
+    document.getElementById('builderName').value = op.name; 
+    document.getElementById('builderGroup').value = op.group || ''; 
+    const colorInput = document.getElementById('builderColor'); 
+    if (colorInput) colorInput.value = op.color; 
+    document.getElementById('builderDesc').value = op.description || ''; 
+    document.getElementById('newMoveInput').value = ''; 
+    document.getElementById('newExpl').value = ''; 
+    builderPath = []; 
+    showScreen('builderScreen'); 
+    
+    // FIXED: Init Builder Board Singleton
+    if(window.initVisualBoard) {
+        window.initVisualBoard('builder', true)
+            .then(() => renderBuilder());
+    } else {
+        renderBuilder();
     }
 }
 
-document.addEventListener('DOMContentLoaded', init);
+function renderBuilder() { 
+    try { 
+        if (!builderTree) return; 
+        
+        let node = builderTree; 
+        const game = new Chess();
+        const rootMove = builderTree.move.replace(/^[0-9]+\.+/, '').trim();
+        game.move(rootMove);
+
+        let historyHtml = `<div class="breadcrumb-item ${builderPath.length===0?'active':''}" onclick="jumpToBuilderStep(-1)">${builderTree.move}</div>`; 
+        let tempNode = builderTree; 
+        for (let i = 0; i < builderPath.length; i++) { 
+            const id = builderPath[i]; 
+            const child = tempNode.children.find(c => c.id === id); 
+            if (child) { 
+                tempNode = child; 
+                game.move(child.move.replace(/^[0-9]+\.+/, '').trim());
+                historyHtml += `<span style="color:#64748b">›</span> <div class="breadcrumb-item ${i===builderPath.length-1?'active':''}" onclick="jumpToBuilderStep(${i})">${child.move}</div>`; 
+            } 
+        } 
+        node = tempNode; 
+        
+        // Update Board
+        if(window.updateBoardPosition) {
+            window.updateBoardPosition('builder', game.fen(), builderColor);
+        }
+        
+        document.getElementById('builderHistory').innerHTML = historyHtml; 
+        
+        const ply = builderPath.length + 1; 
+        const nextMoveColor = (ply % 2 !== 0) ? 'black' : 'white'; 
+        const isOpponent = (builderColor === 'white' && nextMoveColor === 'white') || 
+                           (builderColor === 'black' && nextMoveColor === 'black'); 
+        const turnLabel = nextMoveColor === 'white' ? "White to Move" : "Black to Move"; 
+        
+        document.getElementById('builderCurrentNode').className = isOpponent ? 'current-move-card opponent' : 'current-move-card'; 
+        document.getElementById('builderCurrentNode').innerHTML = `
+            <div class="move-label">${node.player === builderColor ? "Your Move" : "Opponent's Move"}</div>
+            <h2>${node.move}</h2>
+            <p>${node.explanation || 'No explanation'}</p>
+            <div style="margin-top:5px;">
+                <span class="version-tag">${node.status || '-'}</span>
+                <span class="version-tag">${node.type || '-'}</span>
+            </div>
+            ${renderEditExplanation(node)}
+        `; 
+        
+        const list = document.getElementById('builderResponses'); 
+        list.innerHTML = ''; 
+        if (node.children) { 
+            node.children.forEach(c => { 
+                list.innerHTML += `<div class="option-btn ${getColorClass(c.type)}" onclick="navigateToChild('${c.id}')">
+                    <div class="main"><h4>${c.move}</h4><p>${c.status}</p></div>
+                    <button class="delete-item-btn" onclick="event.stopPropagation(); deleteChild('${c.id}')">×</button>
+                </div>`; 
+            }); 
+        } 
+        
+        const formTitle = document.getElementById('addFormTitle'); 
+        if (formTitle) formTitle.innerText = `Add Move (${turnLabel})`; 
+        const deleteBtn = document.getElementById('btnDeleteBranch'); 
+        if (deleteBtn) { deleteBtn.innerText = builderPath.length === 0 ? "Delete Root (Reset)" : "Delete Current Branch"; } 
+        setupEnter(); 
+    } catch(e) { alert("Render Error: " + e.message); } 
+}
+
+function jumpToBuilderStep(index) { if (index === -1) builderPath = []; else builderPath = builderPath.slice(0, index + 1); renderBuilder(); }
+function addBuilderMove() { try { const inputEl = document.getElementById('newMoveInput'); const moveRaw = inputEl.value.trim(); if (!moveRaw) return; const game = new Chess(); const cleanMoveRegex = /^[0-9]+\.+/; if (!builderTree.move) throw new Error("Root move is missing."); let rootClean = builderTree.move.replace(cleanMoveRegex, '').trim(); const rootResult = game.move(rootClean); if (!rootResult) { alert("Error: Root move is invalid."); return; } let node = builderTree; for (let id of builderPath) { node = node.children.find(c => c.id === id); let cleanMove = node.move.replace(cleanMoveRegex, '').trim(); game.move(cleanMove); } const moveObj = game.move(moveRaw); if (moveObj === null) { alert(`Illegal move: ${moveRaw}`); return; } const fen = game.fen(); const fenParts = fen.split(' '); const currentMoveNum = parseInt(fenParts[5]); const turn = game.turn(); let notation = ""; let player = ""; if (turn === 'b') { notation = `${currentMoveNum}. ${moveObj.san}`; player = 'white'; } else { notation = `${currentMoveNum - 1}... ${moveObj.san}`; player = 'black'; } if(!node.children) node.children = []; const newId = 'n' + Date.now(); node.children.push({ id: newId, move: notation, player: player, status: document.getElementById('newStatus').value, type: document.getElementById('newType').value, explanation: document.getElementById('newExpl').value, children: [] }); inputEl.value = ''; document.getElementById('newExpl').value = ''; document.getElementById('newStatus').selectedIndex = 0; builderPath.push(newId); renderBuilder(); } catch (err) { alert("Error: " + err.message); } }
+function deleteBuilderNode() { if (builderPath.length === 0) { if (confirm("Reset entire opening?")) showNewOpeningModal(); return; } if (!confirm('Delete current branch?')) return; const currentId = builderPath.pop(); let node = builderTree; for (let id of builderPath) node = node.children.find(c => c.id === id); node.children = node.children.filter(c => c.id !== currentId); renderBuilder(); }
+function deleteChild(id) { if(!confirm('Delete move?'))return; let n=builderTree; for(let pid of builderPath) n=n.children.find(c=>c.id===pid); n.children=n.children.filter(c=>c.id!==id); renderBuilder(); }
+function saveExplanation() { const val=document.getElementById('editExpl').value; let n=builderTree; for(let id of builderPath) n=n.children.find(c=>c.id===id); n.explanation=val; renderBuilder(); }
+function renderEditExplanation(node) { return `<div style="margin-top:10px; border-top:1px solid #475569; padding-top:10px;"><textarea id="editExpl" rows="2" style="width:100%; background:#1e293b; color:#fff; border-radius:8px; padding:8px;">${node.explanation || ''}</textarea><button class="nav-btn" style="margin-top:4px; font-size:0.8rem;" onclick="saveExplanation()">Update Notes</button></div>`; }
+function getColorClass(type) { if (!type) return 'blue'; const t = type.toLowerCase(); if (t.includes('tact')||t.includes('forc')) return 'red'; if (t.includes('dynam')) return 'purple'; if (t.includes('defen')) return 'green'; return 'blue'; }
+function toggleDetails() { const d=document.getElementById('builderDetails'); d.style.display=d.style.display==='none'?'block':'none'; }
+function toggleRefModal() { document.getElementById('refModal').style.display = document.getElementById('refModal').style.display === 'flex' ? 'none' : 'flex'; }
+function setupEnter() { setTimeout(() => { document.getElementById('newMoveInput')?.focus(); }, 50); }
+function navigateToChild(id) { builderPath.push(id); renderBuilder(); }
+function builderBack() { builderPath.pop(); renderBuilder(); }
+function goBack() { showScreen('menuScreen'); }
+function exitBuilder() { showScreen('menuScreen'); renderMenu(); }
+
+function saveOpening() { const name = document.getElementById('builderName').value || "Untitled"; const key = editingKey || (name.toLowerCase().replace(/\s/g, '_') + '_' + Date.now()); const color = document.getElementById('builderColor').value || 'white'; OPENINGS[key] = { version: "4.0", name: name, group: document.getElementById('builderGroup').value || "Uncategorized", color: color, description: document.getElementById('builderDesc').value, tree: builderTree, startingMoves: "Custom" }; saveStorage(); exitBuilder(); }
+function buildOpeningObj() { return { version:"4.0", name:document.getElementById('builderName').value, color:builderColor, tree:builderTree }; }
+function backupLibrary() { const json = JSON.stringify(OPENINGS, null, 2); const blob = new Blob([json], {type: 'application/json'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'chess_library_backup.json'; a.click(); }
+function restoreLibrary(input) { const file = input.files[0]; if (!file) return; if (!confirm("Overwrite library?")) return; const reader = new FileReader(); reader.onload = (e) => { try { OPENINGS = JSON.parse(e.target.result); saveStorage(); alert("Restored!"); renderMenu(); } catch (err) { alert("Invalid Backup"); } }; reader.readAsText(file); }
+function handleFileUpload(input) { const file = input.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = (e) => { try { const json = JSON.parse(e.target.result); if(!validateTree(json.tree)) throw new Error("Invalid V4 Structure"); const migrated = migrateOpening(json); const key = 'import_' + Date.now(); OPENINGS[key] = migrated; saveStorage(); alert('Imported!'); renderMenu(); } catch (err) { alert('Invalid JSON: '+err.message); } }; reader.readAsText(file); }
+async function importFromUrl() { try { const res = await fetch(document.getElementById('importUrl').value); const json = await res.json(); const migrated = migrateOpening(json); OPENINGS['import_' + Date.now()] = migrated; saveStorage(); alert('Imported!'); document.getElementById('urlImportBox').style.display='none'; renderMenu(); } catch (e) { alert('Error loading URL'); } }
+function toggleUrlImport() { document.getElementById('jsonImportBox').style.display = 'none'; const el = document.getElementById('urlImportBox'); el.style.display = el.style.display === 'none' ? 'block' : 'none'; }
+function toggleJsonImport() { document.getElementById('urlImportBox').style.display = 'none'; const el = document.getElementById('jsonImportBox'); el.style.display = el.style.display === 'none' ? 'block' : 'none'; }
+function switchTab(t) { document.getElementById('tabBuild').classList.toggle('active', t === 'build'); document.getElementById('tabJson').classList.toggle('active', t === 'json'); document.getElementById('buildTab').style.display = t === 'build' ? 'block' : 'none'; document.getElementById('jsonTab').style.display = t === 'json' ? 'block' : 'none'; if (t === 'json') { if (builderTree && builderTree.children) { document.getElementById('jsonIn').value = JSON.stringify(buildOpeningObj(), null, 2); } else { document.getElementById('jsonIn').value = ""; } } }
+function importBuilderJson() { try { let raw = document.getElementById('jsonIn').value; raw = raw.replace(/```json/g, '').replace(/```/g, '').trim(); const json = JSON.parse(raw); if(!validateTree(json.tree)) throw new Error("Invalid V4 Tree Structure"); builderTree = json.tree; builderColor = json.color; document.getElementById('builderName').value = json.name; document.getElementById('builderGroup').value = json.group || ""; document.getElementById('builderColor').value = json.color; document.getElementById('builderDesc').value = json.description || ""; alert("JSON loaded successfully. Click 'Save' to finish."); switchTab('build'); renderBuilder(); } catch(e) { alert("Error: " + e.message); } }
+function copyBuilderJson() { const txt = document.getElementById('jsonIn'); txt.select(); navigator.clipboard.writeText(txt.value); alert("Copied!"); }
+
+init();
+</script>
+
+<script type="module">
+    import { Chessboard, COLOR, MARKER_TYPE, INPUT_EVENT_TYPE } 
+    from "https://unpkg.com/cm-chessboard@4/src/cm-chessboard/Chessboard.js"
+
+    // GLOBAL SINGLETONS
+    window.trainerBoard = null;
+    window.builderBoard = null;
+
+    // Initialize or Reuse Board
+    window.initVisualBoard = async function(type, interactive = false) {
+        const boardId = type === 'trainer' ? 'trainerBoard' : 'builderBoard';
+        const globalKey = type === 'trainer' ? 'trainerBoard' : 'builderBoard';
+        
+        // CHECK IF EXISTS
+        if (window[globalKey]) {
+            // Already created, just ensure it's visible/updated
+            return window[globalKey];
+        }
+
+        // CREATE NEW ONCE
+        window[globalKey] = await new Chessboard(document.getElementById(boardId), {
+            position: "start",
+            assetsUrl: "https://unpkg.com/cm-chessboard@4/assets/",
+            style: {
+                cssClass: "default",
+                showCoordinates: true, 
+            },
+            responsive: true,
+            // Ensure sprite is explicit
+            sprite: { url: "https://unpkg.com/cm-chessboard@4/assets/images/chessboard-sprite.svg" }
+        });
+
+        if (interactive) {
+            window[globalKey].enableMoveInput((event) => {
+                switch (event.type) {
+                    case INPUT_EVENT_TYPE.moveInputFinished:
+                        if (event.legalMove) {
+                            if(window.handleBoardInput) window.handleBoardInput(event.moveFrom, event.moveTo);
+                            return true; 
+                        }
+                        return false; 
+                }
+            });
+        }
+        return window[globalKey];
+    }
+
+    // Generic Update Function
+    window.updateBoardPosition = function(type, fen, orientation = 'white') {
+        const board = type === 'trainer' ? window.trainerBoard : window.builderBoard;
+        if(board) {
+            // Force reset if position differs to ensure pieces appear
+            if(board.getPosition() !== fen) {
+                board.setPosition(fen, false); // False = instant, no animation (prevents visual lag)
+            }
+            board.setOrientation(orientation === 'white' ? COLOR.white : COLOR.black);
+        }
+    }
+    
+    // Coach Arrow Logic
+    window.drawCoachArrows = function(type, moves) {
+        const board = type === 'trainer' ? window.trainerBoard : window.builderBoard;
+        if(!board) return;
+        
+        board.removeMarkers(MARKER_TYPE.arrow);
+        moves.forEach(m => {
+            board.addMarker(MARKER_TYPE.arrow, {from: m.from, to: m.to});
+        });
+    }
+
+    window.clearArrows = function(type) {
+        const board = type === 'trainer' ? window.trainerBoard : window.builderBoard;
+        if(board) board.removeMarkers(MARKER_TYPE.arrow);
+    }
+    
+    // Builder Input Handler
+    window.handleBoardInput = function(from, to) {
+        const event = new CustomEvent('boardMove', { detail: { from, to } });
+        document.dispatchEvent(event);
+    }
+</script>
+
+<script>
+// Builder Listener
+document.addEventListener('boardMove', (e) => {
+    const { from, to } = e.detail;
+    const game = new Chess();
+    if (!builderTree) return;
+    const rootMove = builderTree.move.replace(/^[0-9]+\.+/, '').trim();
+    game.move(rootMove);
+    let node = builderTree;
+    for (let id of builderPath) {
+        node = node.children.find(c => c.id === id);
+        game.move(node.move.replace(/^[0-9]+\.+/, '').trim());
+    }
+    try {
+        const move = game.move({ from, to, promotion: 'q' });
+        if (move) {
+            document.getElementById('newMoveInput').value = move.san;
+            addBuilderMove();
+        }
+    } catch(err) {
+        console.log("Invalid Board Move");
+    }
+});
 </script>
 </body>
 </html>
